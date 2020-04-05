@@ -11,8 +11,9 @@
     "typescript": "^3.7.2"
   },
   "scripts": {
-    "prettier": "prettier --write .",
-    "prettier:check": "prettier --check ."
+    "prettier": "prettier --write '**/*.{ts,tsx}'",
+    "prettier:check": "prettier --check '**/*.{ts,tsx}'",
+    "deploy:functions": "firebase deploy --only functions"
   },
   "devDependencies": {
     "prettier": "^2.0.2"
