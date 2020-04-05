@@ -4,5 +4,10 @@
   "description": "Roborally game",
   "main": "index.js",
   "repository": "https://github.com/loicnico96/roborally.git",
-  "author": "loicnico96 <loicnico96@gmail.com>"
+  "author": "loicnico96 <loicnico96@gmail.com>",
+  "license": "MIT",
+  "dependencies": {
+    "@types/node": "^13.11.0",
+    "typescript": "^3.7.2"
+  }
 }
