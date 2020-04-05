@@ -12,7 +12,7 @@ class App extends Component<{}, State> {
     super(props)
     this.state = {
       currentItem: '',
-      username: ''
+      username: '',
     }
     this.handleChange = this.handleChange.bind(this)
     this.handleSubmit = this.handleSubmit.bind(this)
@@ -20,49 +20,60 @@ class App extends Component<{}, State> {
 
   handleChange(e: ChangeEvent<HTMLInputElement>) {
     this.setState({
-      [e.target.name]: e.target.value
-    } as State);
+      [e.target.name]: e.target.value,
+    } as State)
   }
 
   handleSubmit(e: FormEvent) {
-    e.preventDefault();
+    e.preventDefault()
     const itemsCol = firebase.firestore().collection('items')
     const item = {
       title: this.state.currentItem,
-      user: this.state.username
+      user: this.state.username,
     }
-    itemsCol.add(item);
+    itemsCol.add(item)
     this.setState({
       currentItem: '',
-      username: ''
-    });
+      username: '',
+    })
   }
 
   render() {
     return (
-      <div className='app'>
+      <div className="app">
         <header>
-            <div className='wrapper'>
-              <h1>Roborally</h1>
-            </div>
+          <div className="wrapper">
+            <h1>Roborally</h1>
+          </div>
         </header>
-        <div className='container'>
+        <div className="container">
           <section className="add-item">
             <form onSubmit={this.handleSubmit}>
-              <input type="text" name="username" placeholder="What's your name?" onChange={this.handleChange} value={this.state.username} />
-              <input type="text" name="currentItem" placeholder="What are you bringing?" onChange={this.handleChange} value={this.state.currentItem} />
+              <input
+                type="text"
+                name="username"
+                placeholder="What's your name?"
+                onChange={this.handleChange}
+                value={this.state.username}
+              />
+              <input
+                type="text"
+                name="currentItem"
+                placeholder="What are you bringing?"
+                onChange={this.handleChange}
+                value={this.state.currentItem}
+              />
               <button>Add Item</button>
             </form>
           </section>
-          <section className='display-item'>
-            <div className='wrapper'>
-              <ul>
-              </ul>
+          <section className="display-item">
+            <div className="wrapper">
+              <ul></ul>
             </div>
           </section>
         </div>
       </div>
-    );
+    )
   }
 }
 export default App

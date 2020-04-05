@@ -9,5 +9,12 @@
   "dependencies": {
     "@types/node": "^13.11.0",
     "typescript": "^3.7.2"
+  },
+  "scripts": {
+    "prettier": "prettier --write .",
+    "prettier:check": "prettier --check ."
+  },
+  "devDependencies": {
+    "prettier": "^2.0.2"
   }
 }
