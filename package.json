@@ -1,0 +1,8 @@
+{
+  "name": "Roborally",
+  "version": "0.1.0",
+  "description": "Roborally game",
+  "main": "index.js",
+  "repository": "https://github.com/loicnico96/roborally.git",
+  "author": "loicnico96 <loicnico96@gmail.com>"
+}
