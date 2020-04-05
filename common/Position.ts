@@ -14,7 +14,7 @@ export enum Rotation {
   Left = 3,
 }
 
-export const MOVES: Record<Direction, Position> = {
+const MOVES: Record<Direction, Position> = {
   [Direction.North]: [0, 1],
   [Direction.East]: [1, 0],
   [Direction.South]: [0, -1],
@@ -31,4 +31,8 @@ export function move(pos: Position, dir: Direction, dis: number = 1): Position {
 
 export function rotate(dir: Direction, rot: Rotation): Direction {
   return (dir + rot) % 4
+}
+
+export function reverse(dir: Direction): Direction {
+  return rotate(dir, Rotation.Reverse)
 }
