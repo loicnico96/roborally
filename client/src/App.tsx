@@ -1,79 +1,21 @@
-import React, { Component, ChangeEvent, FormEvent } from 'react'
-import firebase from './firebase'
-import './App.css'
+import React from 'react'
+import {ROUTES} from './routes'
+import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
+import RoomPage from './RoomPage'
 
-type State = {
-  currentItem: string
-  username: string
+const ROOM_TEST_ID = 'id_test'
+
+const App = () => {
+  return (
+    <Router>
+      <Route path={ROUTES.home()}>
+        <Redirect to={ROUTES.room(ROOM_TEST_ID)} />
+      </Route>
+      <Route path={ROUTES.room(':room_id')}>
+        <RoomPage />
+      </Route>
+    </Router>
+  )
 }
 
-class App extends Component<{}, State> {
-  constructor(props: {}) {
-    super(props)
-    this.state = {
-      currentItem: '',
-      username: '',
-    }
-    this.handleChange = this.handleChange.bind(this)
-    this.handleSubmit = this.handleSubmit.bind(this)
-  }
-
-  handleChange(e: ChangeEvent<HTMLInputElement>) {
-    this.setState({
-      [e.target.name]: e.target.value,
-    } as State)
-  }
-
-  handleSubmit(e: FormEvent) {
-    e.preventDefault()
-    const itemsCol = firebase.firestore().collection('items')
-    const item = {
-      title: this.state.currentItem,
-      user: this.state.username,
-    }
-    itemsCol.add(item)
-    this.setState({
-      currentItem: '',
-      username: '',
-    })
-  }
-
-  render() {
-    return (
-      <div className="app">
-        <header>
-          <div className="wrapper">
-            <h1>Roborally</h1>
-          </div>
-        </header>
-        <div className="container">
-          <section className="add-item">
-            <form onSubmit={this.handleSubmit}>
-              <input
-                type="text"
-                name="username"
-                placeholder="What's your name?"
-                onChange={this.handleChange}
-                value={this.state.username}
-              />
-              <input
-                type="text"
-                name="currentItem"
-                placeholder="What are you bringing?"
-                onChange={this.handleChange}
-                value={this.state.currentItem}
-              />
-              <button>Add Item</button>
-            </form>
-          </section>
-          <section className="display-item">
-            <div className="wrapper">
-              <ul></ul>
-            </div>
-          </section>
-        </div>
-      </div>
-    )
-  }
-}
 export default App
