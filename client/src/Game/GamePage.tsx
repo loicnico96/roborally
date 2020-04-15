@@ -2,6 +2,7 @@ import React, { FC } from 'react'
 import { useFirestore } from '../utils/firestore'
 import { BoardData } from '../common/BoardData'
 import { GameData } from '../common/GameData'
+import Board from './Board'
 
 type GamePageProps = {
   game_id: string
@@ -20,7 +21,10 @@ const GamePage: FC<GamePageProps> = ({ game_id, game_data }) => {
     case 'done':
       return (
         <div>
-          Game page {game_id} {board_id} {JSON.stringify(board.data.cells)}
+          <div>
+            Game page {game_id} {board_id}
+          </div>
+          <Board board_data={board.data} />
         </div>
       )
   }
