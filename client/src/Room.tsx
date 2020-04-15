@@ -1,7 +1,7 @@
 import React, { FC } from 'react'
 import { useRouteMatch } from 'react-router-dom'
 import { useFirestore } from './utils/firestore'
-import { GameData } from './Game/GameData'
+import { GameData } from './common/GameData'
 import GamePage from './Game/GamePage'
 
 type RouteParams = {

@@ -54,7 +54,9 @@ export const useFirestore = <T extends DocumentData = DocumentData>(
               data: data as T,
             })
           } else {
-            console.warn('The requested document does not exist or has been removed.')
+            console.warn(
+              'The requested document does not exist or has been removed.'
+            )
             set_result({
               status: 'error',
               data: Error('not-found'),

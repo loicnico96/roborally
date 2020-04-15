@@ -1,6 +1,7 @@
 import React, { FC } from 'react'
 import { useFirestore } from '../utils/firestore'
-import { GameData } from './GameData'
+import { BoardData } from '../common/BoardData'
+import { GameData } from '../common/GameData'
 
 type GamePageProps = {
   game_id: string
@@ -8,7 +9,8 @@ type GamePageProps = {
 }
 
 const GamePage: FC<GamePageProps> = ({ game_id, game_data }) => {
-  const board = useFirestore('board', game_data.board_id)
+  const { board_id } = game_data
+  const board = useFirestore<BoardData>('board', board_id)
 
   switch (board.status) {
     case 'pending':
@@ -16,7 +18,11 @@ const GamePage: FC<GamePageProps> = ({ game_id, game_data }) => {
     case 'error':
       return <div>Invalid board ID</div>
     case 'done':
-      return <div>Game page {game_id}</div>
+      return (
+        <div>
+          Game page {game_id} {board_id} {JSON.stringify(board.data.cells)}
+        </div>
+      )
   }
 }
 
