@@ -1,5 +1,6 @@
 const separator = '/'
-const route = (...paths: string[]): string => `${separator}${paths.join(separator)}`
+const route = (...paths: string[]): string =>
+  `${separator}${paths.join(separator)}`
 
 const ROOM_PREFIX = 'room'
 

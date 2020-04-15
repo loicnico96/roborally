@@ -1,19 +1,21 @@
 import React from 'react'
-import {ROUTES} from './routes'
-import {BrowserRouter as Router, Route, Redirect} from 'react-router-dom'
-import RoomPage from './RoomPage'
+import { BrowserRouter as Router, Switch, Route, Redirect } from 'react-router-dom'
+import { ROUTES } from './routes'
+import Room from './Room'
 
 const ROOM_TEST_ID = 'id_test'
 
 const App = () => {
   return (
     <Router>
-      <Route path={ROUTES.home()}>
-        <Redirect to={ROUTES.room(ROOM_TEST_ID)} />
-      </Route>
-      <Route path={ROUTES.room(':room_id')}>
-        <RoomPage />
-      </Route>
+      <Switch>
+        <Route path={ROUTES.home()} exact>
+          <Redirect to={ROUTES.room(ROOM_TEST_ID)} />
+        </Route>
+        <Route path={ROUTES.room(':room_id')}>
+          <Room />
+        </Route>
+      </Switch>
     </Router>
   )
 }
