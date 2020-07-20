@@ -10,7 +10,7 @@
     "@types/lodash": "^4.14.149",
     "@types/node": "^13.11.0",
     "immutability-helper": "^3.0.2",
-    "lodash": "^4.17.15",
+    "lodash": "^4.17.19",
     "typescript": "^3.7.2"
   },
   "scripts": {
