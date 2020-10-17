@@ -1,12 +1,18 @@
 export type BoardId = string
 export type PlayerId = string
 export type Card = number
-export type Program = [Card | null, Card | null, Card | null, Card | null, Card | null]
+export type Program = [
+  Card | null,
+  Card | null,
+  Card | null,
+  Card | null,
+  Card | null
+]
 
 export enum GamePhase {
-  STANDBY = "standby",
-  PROGRAM = "program",
-  RESOLVE = "resolve"
+  STANDBY = 'standby',
+  PROGRAM = 'program',
+  RESOLVE = 'resolve',
 }
 
 export type PlayerState = {
@@ -40,7 +46,7 @@ export function getInitialPlayerState(): PlayerState {
   return {
     cards: [],
     program: getEmptyProgram(),
-    ready: false
+    ready: false,
   }
 }
 
@@ -50,10 +56,13 @@ export function getInitialGameState(): GameState {
   }
 }
 
-export function getInitialGameData(boardId: BoardId, playerIds: PlayerId[]): GameData {
+export function getInitialGameData(
+  boardId: BoardId,
+  playerIds: PlayerId[]
+): GameData {
   const players = playerIds.reduce((players, playerId) => {
     return Object.assign(players, {
-      [playerId]: getInitialPlayerState()
+      [playerId]: getInitialPlayerState(),
     })
   }, {} as Record<PlayerId, PlayerState>)
 
@@ -64,8 +73,8 @@ export function getInitialGameData(boardId: BoardId, playerIds: PlayerId[]): Gam
     turn: 0,
     state: {
       current: getInitialGameState(),
-      previous: getInitialGameState()
-    }
+      previous: getInitialGameState(),
+    },
   }
 }
 
@@ -80,7 +89,6 @@ export function getInitialGameData(boardId: BoardId, playerIds: PlayerId[]): Gam
 // 3) Resolving turn
 // STARTS WHEN: server has status "standby"
 // Client sets status "resolve" during resolution, independent from server
-
 
 // SERVER HAS 2 MODES:
 
