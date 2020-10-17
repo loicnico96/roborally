@@ -6,5 +6,5 @@ const ROOM_PREFIX = 'room'
 
 export const ROUTES = {
   home: () => route(),
-  room: (room_id: string) => route(ROOM_PREFIX, room_id),
+  room: (roomId: string) => route(ROOM_PREFIX, roomId),
 }

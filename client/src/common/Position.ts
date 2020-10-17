@@ -1,4 +1,7 @@
-export type Position = [number, number]
+export type Position = {
+  x: number
+  y: number
+}
 
 export enum Direction {
   North = 0,
@@ -8,25 +11,24 @@ export enum Direction {
 }
 
 export enum Rotation {
-  None = 0,
+  Left = -1,
   Right = 1,
   Reverse = 2,
-  Left = -1,
+  None = 0,
 }
 
 const MOVES: Record<Direction, Position> = {
-  [Direction.North]: [0, 1],
-  [Direction.East]: [1, 0],
-  [Direction.South]: [0, -1],
-  [Direction.West]: [-1, 0],
-}
-
-export function pos({ x, y }: { x: number; y: number }): Position {
-  return [x, y]
+  [Direction.North]: { x: 0, y: +1 },
+  [Direction.East]: { x: +1, y: 0 },
+  [Direction.South]: { x: 0, y: -1 },
+  [Direction.West]: { x: -1, y: 0 },
 }
 
 export function move(pos: Position, dir: Direction, dis: number = 1): Position {
-  return [pos[0] + MOVES[dir][0] * dis, pos[1] + MOVES[dir][1] * dis]
+  return {
+    x: pos.x + MOVES[dir].x * dis,
+    y: pos.y + MOVES[dir].y * dis,
+  }
 }
 
 export function rotate(dir: Direction, rot: Rotation): Direction {

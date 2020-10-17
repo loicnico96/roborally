@@ -22,7 +22,7 @@ export type BoardData = {
   dimensions: [number, number]
 }
 
-export function is_in_bounds(board: BoardData, pos: Position): boolean {
+export function isInBounds(board: BoardData, pos: Position): boolean {
   return (
     pos[0] >= 0 &&
     pos[0] < board.dimensions[0] &&
@@ -31,17 +31,17 @@ export function is_in_bounds(board: BoardData, pos: Position): boolean {
   )
 }
 
-export function get_cell(board: BoardData, pos: Position): CellData {
-  return is_in_bounds(board, pos)
+export function getCell(board: BoardData, pos: Position): CellData {
+  return isInBounds(board, pos)
     ? board.cells[pos[0] + pos[1] * board.dimensions[0]]
     : { type: CellType.HOLE }
 }
 
-export function is_wall(
+export function isWall(
   board: BoardData,
   pos: Position,
   dir: Direction
 ): boolean {
-  const { wall } = get_cell(board, pos)
+  const { wall } = getCell(board, pos)
   return wall !== undefined && (wall & (1 << dir)) !== 0
 }

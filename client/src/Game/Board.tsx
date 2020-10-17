@@ -1,14 +1,14 @@
 import React, { FC } from 'react'
 import { BoardData } from '../common/BoardData'
 import styles from './Board.module.css'
-import BoardCell from './BoardCell';
+import BoardCell from './BoardCell'
 
 type BoardProps = {
-  board_data: BoardData
+  boardData: BoardData
 }
 
-const Board: FC<BoardProps> = ({ board_data }) => {
-  const { dimensions, cells } = board_data
+const Board: FC<BoardProps> = ({ boardData }) => {
+  const { dimensions, cells } = boardData
 
   return (
     <div className={styles.container}>
