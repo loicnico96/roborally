@@ -1,4 +1,6 @@
-import { ReduxState } from "./types"
+export type ReduxState = {
+  // @TODO
+}
 
 export const INITIAL_STATE: ReduxState = {
   // @TODO

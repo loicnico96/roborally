@@ -1,24 +1,27 @@
 import { ThunkAction, ThunkDispatch } from "redux-thunk"
-import { Fn, Params } from "../utils/types"
-
-export type ReduxState = {
-  // TODO
-}
+import { ActionCreators } from "./actions"
+import { ReduxState } from "./ReduxState"
 
 export type ReduxReducer<T> = (state: ReduxState, payload: T) => ReduxState
 
-export type ReduxActionType = string
+export type ReduxActionType = keyof ActionCreators
 
-export type ReduxAction<T = any> = {
-  type: ReduxActionType
-  payload: T
-  reducer: ReduxReducer<T>
-}
+export type ReduxActionCreator<
+  T extends ReduxActionType = ReduxActionType
+> = ActionCreators[T]
+
+export type ReduxAction<
+  T extends ReduxActionType = ReduxActionType
+> = ReturnType<ReduxActionCreator<T>>
+
+export type ReduxActionPayload<
+  T extends ReduxActionType = ReduxActionType
+> = ReduxAction<T>["payload"]
 
 export type ReduxThunk<T = void> = ThunkAction<T, ReduxState, {}, ReduxAction>
 
 export type ReduxDispatch = ThunkDispatch<ReduxState, {}, ReduxAction>
 
-export type ReduxActionCreator<P extends Params, T> = Fn<P, ReduxAction<T>>
-
-export type ReduxActionDispatch<P extends Params> = Fn<P, void>
+export type ReduxActionDispatch<T extends ReduxActionType> = (
+  ...args: Parameters<ReduxActionCreator<T>>
+) => void
