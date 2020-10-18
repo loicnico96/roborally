@@ -1,33 +1,27 @@
-import React, { FC } from "react"
-import { useFirestore } from "../utils/firestore"
-import { BoardData } from "../common/BoardData"
-import { GameData } from "../common/GameData"
+import React from "react"
 import Game from "./Game"
+import { useGameData } from "../Room/hooks/useGameData"
+import { useBoardLoader } from "../Room/hooks/useBoardLoader"
+import { useSelector } from "react-redux"
+import { getBoardState } from "../Redux/selectors/getBoardState"
+import { isLoading, isError } from "../utils/ObjectState"
 
-type GamePageProps = {
-  gameId: string
-  gameData: GameData
-}
+const GamePage = () => {
+  const { boardId } = useGameData()
 
-const GamePage: FC<GamePageProps> = ({ gameId, gameData }) => {
-  const { boardId } = gameData
-  const board = useFirestore<BoardData>("board", boardId)
+  useBoardLoader(boardId)
 
-  switch (board.status) {
-    case "pending":
-      return <div>Loading board...</div>
-    case "error":
-      return <div>Invalid board ID</div>
-    case "done":
-      return (
-        <Game
-          boardId={boardId}
-          boardData={board.data}
-          gameId={gameId}
-          gameData={gameData}
-        />
-      )
+  const boardState = useSelector(getBoardState)
+
+  if (boardState === null || isLoading(boardState)) {
+    return <div>Loading board...</div>
   }
+
+  if (isError(boardState)) {
+    return <div>Invalid board ID</div>
+  }
+
+  return <Game />
 }
 
 export default GamePage

@@ -1,4 +1,4 @@
-import React, { FC } from "react"
+import React from "react"
 import { Position } from "../common/Position"
 import { CellData, CellType } from "../common/BoardData"
 import styles from "./Board.module.css"
@@ -8,13 +8,13 @@ type BoardCellProps = {
   pos: Position
 }
 
-const BoardCell: FC<BoardCellProps> = ({ cell, pos }) => {
+const BoardCell = ({ cell, pos }: BoardCellProps) => {
   return (
     <div
       className={styles.tile}
       style={{
         backgroundColor: cell.type === CellType.NORMAL ? "grey" : "black",
-        transform: `translate(${pos[0] * 36 + 36}px, ${pos[1] * 36 + 36}px)`,
+        transform: `translate(${pos.x * 36 + 36}px, ${pos.y * 36 + 36}px)`,
         borderTopColor:
           !!cell.wall && (cell.wall & 1) !== 0 ? "yellow" : "black",
         borderRightColor:

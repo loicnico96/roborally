@@ -24,16 +24,16 @@ export type BoardData = {
 
 export function isInBounds(board: BoardData, pos: Position): boolean {
   return (
-    pos[0] >= 0 &&
-    pos[0] < board.dimensions[0] &&
-    pos[1] >= 0 &&
-    pos[1] < board.dimensions[1]
+    pos.x >= 0 &&
+    pos.x < board.dimensions[0] &&
+    pos.y >= 0 &&
+    pos.y < board.dimensions[1]
   )
 }
 
 export function getCell(board: BoardData, pos: Position): CellData {
   return isInBounds(board, pos)
-    ? board.cells[pos[0] + pos[1] * board.dimensions[0]]
+    ? board.cells[pos.x + pos.y * board.dimensions[0]]
     : { type: CellType.HOLE }
 }
 

@@ -1,5 +1,5 @@
 import { ReduxReducer } from "../types"
-import ACTIONS from "."
+import ACTIONS from "./index"
 
 export type Action<T extends string, P> = {
   type: T

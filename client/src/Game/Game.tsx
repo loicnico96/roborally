@@ -1,22 +1,14 @@
-import React, { FC } from "react"
-import { BoardData } from "../common/BoardData"
-import { GameData } from "../common/GameData"
+import React from "react"
 import Board from "./Board"
+import { useGameData } from "../Room/hooks/useGameData"
 
-type GameProps = {
-  boardId: string
-  boardData: BoardData
-  gameId: string
-  gameData: GameData
-}
+const Game = () => {
+  const { boardId } = useGameData()
 
-const Game: FC<GameProps> = ({ boardId, boardData, gameId }) => {
   return (
     <div>
-      <div>
-        Game page {gameId} {boardId}
-      </div>
-      <Board board_data={boardData} />
+      <div>Game page {boardId}</div>
+      <Board />
     </div>
   )
 }

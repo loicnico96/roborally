@@ -3,23 +3,23 @@ import { Provider } from "react-redux"
 import { createStore, applyMiddleware, Middleware } from "redux"
 import { createLogger } from "redux-logger"
 import thunkMiddleware from "redux-thunk"
-import { ReduxAction } from "./types"
+import { ReduxActionType, ReduxActionPayload } from "./types"
 import { ReduxState, INITIAL_STATE } from "./ReduxState"
+import { Action } from "./actions"
 
 const REDUX_LOGGING_ENABLED = true
 
 function initStore(initialState: ReduxState) {
   const reducer = (
     state: ReduxState = initialState,
-    action: ReduxAction
-  ): ReduxState => {
-    return action.reducer(state, action.payload)
-  }
+    action: Action<ReduxActionType, ReduxActionPayload>
+  ): ReduxState => action.reducer(state, action.payload)
 
   const middlewares: Middleware[] = [thunkMiddleware]
 
   if (REDUX_LOGGING_ENABLED) {
-    middlewares.push(createLogger({ collapsed: true }))
+    const loggerMiddleware = createLogger({ collapsed: true })
+    middlewares.push(loggerMiddleware)
   }
 
   return createStore(reducer, initialState, applyMiddleware(...middlewares))
