@@ -19,7 +19,10 @@ module.exports = {
     },
     "extends": [
         "prettier",
-        "prettier/@typescript-eslint"
+        "prettier/@typescript-eslint",
+        "plugin:react/recommended",
+        "plugin:react-hooks/recommended",
+        "plugin:react-redux/recommended"
     ],
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
@@ -28,7 +31,10 @@ module.exports = {
     },
     "plugins": [
         "eslint-plugin-import",
-        "@typescript-eslint"
+        "@typescript-eslint",
+        "react",
+        "react-hooks",
+        "react-redux"
     ],
     "rules": {
         "@typescript-eslint/adjacent-overload-signatures": "error",
@@ -41,26 +47,15 @@ module.exports = {
         "@typescript-eslint/prefer-for-of": "warn",
         "@typescript-eslint/triple-slash-reference": "error",
         "@typescript-eslint/unified-signatures": "warn",
-        "comma-dangle": [
-          "warn",
-          "always-multiline"
-        ],
+        "comma-dangle": ["warn", "always-multiline"],
         "constructor-super": "error",
-        "eqeqeq": [
-            "warn",
-            "always"
-        ],
+        "eqeqeq": ["warn", "always"],
         "import/no-deprecated": "warn",
         "import/no-extraneous-dependencies": "error",
         "no-cond-assign": "error",
         "no-duplicate-case": "error",
         "no-duplicate-imports": "error",
-        "no-empty": [
-            "error",
-            {
-                "allowEmptyCatch": true
-            }
-        ],
+        "no-empty": "error",
         "no-invalid-this": "error",
         "no-new-wrappers": "error",
         "no-param-reassign": "error",
@@ -71,6 +66,8 @@ module.exports = {
         "no-unused-labels": "error",
         "no-var": "warn",
         "no-void": "error",
-        "prefer-const": "warn"
+        "prefer-const": "warn",
+        "react-hooks/rules-of-hooks": "error",
+        "react-hooks/exhaustive-deps": "error"
     }
 };
