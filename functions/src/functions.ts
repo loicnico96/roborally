@@ -1,3 +1,3 @@
-import * as functions from 'firebase-functions'
+import * as functions from "firebase-functions"
 
-export default functions.region('europe-west3')
+export default functions.region("europe-west3")
