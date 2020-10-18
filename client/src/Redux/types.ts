@@ -1,5 +1,5 @@
-import { ThunkAction, ThunkDispatch } from 'redux-thunk'
-import { Fn, Params } from '../utils/types'
+import { ThunkAction, ThunkDispatch } from "redux-thunk"
+import { Fn, Params } from "../utils/types"
 
 export type ReduxState = {
   // TODO

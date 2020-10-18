@@ -1,8 +1,8 @@
-import React, { FC } from 'react'
-import { useFirestore } from '../utils/firestore'
-import { BoardData } from '../common/BoardData'
-import { GameData } from '../common/GameData'
-import Game from './Game'
+import React, { FC } from "react"
+import { useFirestore } from "../utils/firestore"
+import { BoardData } from "../common/BoardData"
+import { GameData } from "../common/GameData"
+import Game from "./Game"
 
 type GamePageProps = {
   gameId: string
@@ -11,14 +11,14 @@ type GamePageProps = {
 
 const GamePage: FC<GamePageProps> = ({ gameId, gameData }) => {
   const { boardId } = gameData
-  const board = useFirestore<BoardData>('board', boardId)
+  const board = useFirestore<BoardData>("board", boardId)
 
   switch (board.status) {
-    case 'pending':
+    case "pending":
       return <div>Loading board...</div>
-    case 'error':
+    case "error":
       return <div>Invalid board ID</div>
-    case 'done':
+    case "done":
       return (
         <Game
           boardId={boardId}

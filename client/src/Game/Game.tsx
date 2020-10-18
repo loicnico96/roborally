@@ -1,7 +1,7 @@
-import React, { FC } from 'react'
-import { BoardData } from '../common/BoardData'
-import { GameData } from '../common/GameData'
-import Board from './Board'
+import React, { FC } from "react"
+import { BoardData } from "../common/BoardData"
+import { GameData } from "../common/GameData"
+import Board from "./Board"
 
 type GameProps = {
   boardId: string

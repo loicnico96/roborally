@@ -1,10 +1,10 @@
-import React from 'react'
-import { Provider } from 'react-redux'
-import { createStore, applyMiddleware, Middleware } from 'redux'
-import { createLogger } from 'redux-logger'
-import thunkMiddleware from 'redux-thunk'
-import { ReduxAction, ReduxState } from './types'
-import { INITIAL_STATE } from './ReduxState'
+import React from "react"
+import { Provider } from "react-redux"
+import { createStore, applyMiddleware, Middleware } from "redux"
+import { createLogger } from "redux-logger"
+import thunkMiddleware from "redux-thunk"
+import { ReduxAction, ReduxState } from "./types"
+import { INITIAL_STATE } from "./ReduxState"
 
 const REDUX_LOGGING_ENABLED = true
 

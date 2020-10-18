@@ -10,9 +10,9 @@ export type Program = [
 ]
 
 export enum GamePhase {
-  STANDBY = 'standby',
-  PROGRAM = 'program',
-  RESOLVE = 'resolve',
+  STANDBY = "standby",
+  PROGRAM = "program",
+  RESOLVE = "resolve",
 }
 
 export type PlayerState = {

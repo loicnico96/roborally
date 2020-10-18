@@ -1,13 +1,13 @@
-import { useEffect } from 'react'
-import { DocumentData, Collection } from './types'
+import { useEffect } from "react"
+import { DocumentData, Collection } from "./types"
 import {
   ObjectId,
   ObjectState,
   getLoadingState,
   getErrorState,
   getLoadedState,
-} from '../utils/ObjectState'
-import useFirestore from './useFirestore'
+} from "../utils/ObjectState"
+import useFirestore from "./useFirestore"
 
 function useFirestoreLoader<T extends DocumentData>(
   collectionId: Collection,
@@ -28,8 +28,8 @@ function useFirestoreLoader<T extends DocumentData>(
           if (data) {
             handler(getLoadedState(documentId, data as T))
           } else {
-            console.warn('This document does not exist or has been removed.')
-            handler(getErrorState(documentId, Error('not-found')))
+            console.warn("This document does not exist or has been removed.")
+            handler(getErrorState(documentId, Error("not-found")))
           }
         },
         error => {

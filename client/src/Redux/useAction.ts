@@ -1,7 +1,7 @@
-import { useCallback } from 'react'
-import { useDispatch } from 'react-redux'
-import { ReduxActionCreator, ReduxActionDispatch } from './types'
-import { Params } from '../utils/types'
+import { useCallback } from "react"
+import { useDispatch } from "react-redux"
+import { ReduxActionCreator, ReduxActionDispatch } from "./types"
+import { Params } from "../utils/types"
 
 function useAction<P extends Params, T>(
   actionCreator: ReduxActionCreator<P, T>

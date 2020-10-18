@@ -1,7 +1,7 @@
 export enum Collection {
-  BOARD = 'board',
-  GAME = 'game',
-  ROOM = 'room',
+  BOARD = "board",
+  GAME = "game",
+  ROOM = "room",
 }
 
 export type DocumentData = firebase.firestore.DocumentData

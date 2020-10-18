@@ -1,8 +1,8 @@
-const separator = '/'
+const separator = "/"
 const route = (...paths: string[]): string =>
   `${separator}${paths.join(separator)}`
 
-const ROOM_PREFIX = 'room'
+const ROOM_PREFIX = "room"
 
 export const ROUTES = {
   home: () => route(),

@@ -1,4 +1,4 @@
-import { Direction, Position, Rotation } from './Position'
+import { Direction, Position, Rotation } from "./Position"
 
 export enum CellType {
   NORMAL,

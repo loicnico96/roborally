@@ -1,7 +1,7 @@
-import React, { FC } from 'react'
-import { BoardData } from '../common/BoardData'
-import styles from './Board.module.css'
-import BoardCell from './BoardCell'
+import React, { FC } from "react"
+import { BoardData } from "../common/BoardData"
+import styles from "./Board.module.css"
+import BoardCell from "./BoardCell"
 
 type BoardProps = {
   boardData: BoardData
