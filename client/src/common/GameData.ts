@@ -19,6 +19,8 @@ export type PlayerState = {
   cards: Card[]
   program: Program
   ready: boolean
+  down: boolean
+  downNext: boolean
 }
 
 export type GameState = {
