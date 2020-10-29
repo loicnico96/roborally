@@ -1,5 +1,11 @@
 import { initializeApp } from "firebase-admin"
+import { HttpTrigger } from "./common/functions"
+import { httpReady } from "./http/httpReady"
 
 initializeApp()
 
-export { httpReady } from "./httpReady"
+const functions = {
+  [HttpTrigger.READY]: httpReady
+}
+
+export default functions

@@ -1,7 +1,7 @@
 import { firestore } from "./firestore"
-import { BoardData } from "../../../client/src/common/BoardData"
-import { GameData } from "../../../client/src/common/GameData"
-import { RoomData } from "../../../client/src/common/RoomData"
+import { BoardData } from "../common/BoardData"
+import { GameData } from "../common/GameData"
+import { RoomData } from "../common/RoomData"
 
 export enum Collection {
   BOARD = "board",

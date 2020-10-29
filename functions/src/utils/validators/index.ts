@@ -1,8 +1,33 @@
-import { Program } from "../../../../client/src/common/GameData"
+import { GamePhase, Program } from "../../common/GameData"
+import { isEnum } from "../../common/utils/types"
 
 export function validateBoolean(value: unknown): boolean {
   if (typeof value !== "boolean") {
     throw Error("Not a boolean")
+  }
+
+  return value
+}
+
+export function validateGamePhase(value: unknown): GamePhase {
+  if (!isEnum(value, GamePhase)) {
+    throw Error("Not a game phase")
+  }
+
+  return value
+}
+
+export function validateInteger(value: unknown): number {
+  if (typeof value !== "number" || !Number.isInteger(value)) {
+    throw Error("Not an integer")
+  }
+
+  return value
+}
+
+export function validateNumber(value: unknown): number {
+  if (typeof value !== "number" || !Number.isFinite(value)) {
+    throw Error("Not a number")
   }
 
   return value

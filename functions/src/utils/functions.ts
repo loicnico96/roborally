@@ -1,6 +1,6 @@
 import { region } from "firebase-functions"
+import { DEPLOYMENT_REGION } from "../common/functions"
 
-const DEPLOYMENT_REGION = "europe-west3"
 const FUNCTION_TIMEOUT_SECONDS = 60
 const FUNCTION_MEMORY = "128MB"
 

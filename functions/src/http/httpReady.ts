@@ -1,21 +1,23 @@
-import { getCollection, Collection } from "./utils/collections"
-import { preconditionError, validationError } from "./utils/error"
-import { firestore } from "./utils/firestore"
-import { httpsCallable } from "./utils/httpsCallable"
-import { optional, required } from "./utils/validation"
-import { validateBoolean, validateProgram, validateString } from "./utils/validators"
-import { GamePhase, GameData } from "../../client/src/common/GameData"
-import { confirmPlayerProgram } from "./game/confirmPlayerProgram"
-import { isValidProgram } from "./game/isValidProgram"
-import { readyPlayerForTurn } from "./game/readyPlayerForTurn"
-import { resolveTurn } from "./game/resolveTurn"
-import { startTurn } from "./game/startTurn"
+import { getCollection, Collection } from "../utils/collections"
+import { preconditionError, validationError } from "../utils/error"
+import { firestore } from "../utils/firestore"
+import { httpsCallable } from "../utils/httpsCallable"
+import { optional, required } from "../utils/validation"
+import { validateBoolean, validateProgram, validateString, validateGamePhase, validateInteger } from "../utils/validators"
+import { GamePhase, GameData } from "../common/GameData"
+import { confirmPlayerProgram } from "../common/game/confirmPlayerProgram"
+import { isValidProgram } from "../common/game/isValidProgram"
+import { readyPlayerForTurn } from "../common/game/readyPlayerForTurn"
+import { resolveTurn } from "../common/game/resolveTurn"
+import { startTurn } from "../common/game/startTurn"
 
 const validationSchema = {
   gameId: required(validateString),
+  phase: required(validateGamePhase),
   playerId: required(validateString),
+  poweredDown: optional(validateBoolean),
   program: optional(validateProgram),
-  poweredDown: optional(validateBoolean)
+  turn: required(validateInteger),
 }
 
 function allPlayersReady(gameData: GameData): boolean {
@@ -23,12 +25,20 @@ function allPlayersReady(gameData: GameData): boolean {
 }
 
 export const httpReady = httpsCallable(validationSchema, async (data) => {
-  await firestore.runTransaction(async (transaction) => {
+  const success = await firestore.runTransaction(async (transaction) => {
     const gameRef = getCollection(Collection.GAME).doc(data.gameId)
     const gameDoc = await transaction.get(gameRef)
     const initialState = gameDoc.data()
     if (initialState === undefined) {
       throw preconditionError("Invalid game ID")
+    }
+
+    if (initialState.phase !== data.phase) {
+      throw preconditionError("Inconsistent state - wrong phase")
+    }
+
+    if (initialState.turn !== data.turn) {
+      throw preconditionError("Inconsistent state - wrong turn")
     }
 
     const { playerId } = data
@@ -38,7 +48,7 @@ export const httpReady = httpsCallable(validationSchema, async (data) => {
     }
 
     if (player.ready) {
-      return
+      return false
     }
 
     let gameState = initialState
@@ -52,6 +62,8 @@ export const httpReady = httpsCallable(validationSchema, async (data) => {
           gameState = startTurn(gameState)
           transaction.set(gameRef, gameState)
         }
+
+        return true
       }
 
       case GamePhase.PROGRAM: {
@@ -74,10 +86,14 @@ export const httpReady = httpsCallable(validationSchema, async (data) => {
           gameState = resolveTurn(gameState)
           transaction.set(gameRef, gameState)
         }
+
+        return true
       }
 
       default:
         throw preconditionError("Invalid game state")
     }
   })
+
+  return { success }
 })

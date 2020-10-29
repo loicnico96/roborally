@@ -1,10 +1,11 @@
 import { functions } from "./functions"
 import { authenticationError } from "./error"
-import { validate, ObjectRecord, SchemaValidators } from "./validation"
+import { validate, SchemaValidators } from "./validation"
+import { HttpTrigger, HttpParams, HttpResponse } from "../common/functions"
 
-export function httpsCallable<T extends ObjectRecord>(
-  validators: SchemaValidators<T>,
-  handler: (data: T, userId: string) => Promise<void>
+export function httpsCallable<T extends HttpTrigger>(
+  validators: SchemaValidators<HttpParams<T>>,
+  handler: (data: HttpParams<T>, userId: string) => Promise<HttpResponse<T>>
 ): CallableFunction {
   // TODO: Remove default UID to enforce authentication
   return functions.https.onCall(async (data: unknown, { auth = { uid: "" } }) => {
