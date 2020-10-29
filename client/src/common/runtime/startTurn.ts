@@ -1,6 +1,6 @@
 import update from "immutability-helper"
-import { mapValues } from "lodash";
-import { GameData, GamePhase } from "../../../client/src/common/GameData";
+import { mapValues } from "../utils/mapValues"
+import { GameData, GamePhase } from "../model/GameData"
 
 export function startTurn(gameState: GameData): GameData {
   return update(gameState, {

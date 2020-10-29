@@ -1,4 +1,4 @@
-import { PlayerState, Program } from "../../../client/src/common/GameData"
+import { PlayerState, Program } from "../model/GameData"
 
 export function isValidProgram(program: Program, player: PlayerState): boolean {
   if (false) { // TODO: Is powered down

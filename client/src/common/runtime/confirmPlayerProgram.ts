@@ -1,5 +1,5 @@
 import update from "immutability-helper"
-import { GameData, Program } from "../../../client/src/common/GameData";
+import { GameData, Program } from "../model/GameData"
 
 export function confirmPlayerProgram(gameState: GameData, playerId: string, program: Program, poweredDown: boolean): GameData {
   return update(gameState, {
