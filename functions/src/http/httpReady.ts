@@ -1,15 +1,22 @@
-import { getCollection, Collection } from "../utils/collections"
+import { getCollection } from "../utils/collections"
 import { preconditionError, validationError } from "../utils/error"
 import { firestore } from "../utils/firestore"
 import { httpsCallable } from "../utils/httpsCallable"
 import { optional, required } from "../utils/validation"
-import { validateBoolean, validateProgram, validateString, validateGamePhase, validateInteger } from "../utils/validators"
-import { GamePhase, GameData } from "../common/GameData"
-import { confirmPlayerProgram } from "../common/game/confirmPlayerProgram"
-import { isValidProgram } from "../common/game/isValidProgram"
-import { readyPlayerForTurn } from "../common/game/readyPlayerForTurn"
-import { resolveTurn } from "../common/game/resolveTurn"
-import { startTurn } from "../common/game/startTurn"
+import {
+  validateBoolean,
+  validateProgram,
+  validateString,
+  validateGamePhase,
+  validateInteger,
+} from "../utils/validators"
+import { GamePhase, GameData } from "../common/model/GameData"
+import { confirmPlayerProgram } from "../common/runtime/confirmPlayerProgram"
+import { isValidProgram } from "../common/runtime/isValidProgram"
+import { readyPlayerForTurn } from "../common/runtime/readyPlayerForTurn"
+import { resolveTurn } from "../common/runtime/resolveTurn"
+import { startTurn } from "../common/runtime/startTurn"
+import { Collection } from "../common/functions/collections"
 
 const validationSchema = {
   gameId: required(validateString),
@@ -24,8 +31,8 @@ function allPlayersReady(gameData: GameData): boolean {
   return Object.values(gameData.players).every(player => player.ready)
 }
 
-export const httpReady = httpsCallable(validationSchema, async (data) => {
-  const success = await firestore.runTransaction(async (transaction) => {
+export const httpReady = httpsCallable(validationSchema, async data => {
+  const success = await firestore.runTransaction(async transaction => {
     const gameRef = getCollection(Collection.GAME).doc(data.gameId)
     const gameDoc = await transaction.get(gameRef)
     const initialState = gameDoc.data()
@@ -79,7 +86,12 @@ export const httpReady = httpsCallable(validationSchema, async (data) => {
           throw preconditionError("Invalid program")
         }
 
-        gameState = confirmPlayerProgram(gameState, playerId, data.program, data.poweredDown)
+        gameState = confirmPlayerProgram(
+          gameState,
+          playerId,
+          data.program,
+          data.poweredDown
+        )
         transaction.set(gameRef, gameState)
 
         if (allPlayersReady(gameState)) {

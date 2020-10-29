@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux"
-import { BoardData } from "../../common/BoardData"
+import { BoardData } from "../../common/model/BoardData"
 import { getBoardState } from "../../Redux/selectors"
 import { isLoaded } from "../../utils/ObjectState"
 

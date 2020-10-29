@@ -1,4 +1,3 @@
-
 export function mapValues<T, R, K extends string>(
   obj: Record<K, T>,
   mapFn: (value: T, key: K, obj: Record<K, T>) => R

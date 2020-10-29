@@ -1,5 +1,10 @@
 import firebase from "firebase"
-import { HttpTrigger, HttpParams, HttpResponse, DEPLOYMENT_REGION } from "../common/functions"
+import {
+  HttpTrigger,
+  HttpParams,
+  HttpResponse,
+  DEPLOYMENT_REGION,
+} from "../common/functions"
 
 const functions = firebase.app().functions(DEPLOYMENT_REGION)
 
@@ -17,4 +22,3 @@ export async function triggerReady(
   const response = await httpTrigger(HttpTrigger.READY, params)
   return response.success
 }
-

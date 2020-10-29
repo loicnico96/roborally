@@ -8,16 +8,18 @@ export function httpsCallable<T extends HttpTrigger>(
   handler: (data: HttpParams<T>, userId: string) => Promise<HttpResponse<T>>
 ): CallableFunction {
   // TODO: Remove default UID to enforce authentication
-  return functions.https.onCall(async (data: unknown, { auth = { uid: "" } }) => {
-    try {
-      if (!auth) {
-        throw authenticationError("Not unauthenticated")
-      }
+  return functions.https.onCall(
+    async (data: unknown, { auth = { uid: "" } }) => {
+      try {
+        if (!auth) {
+          throw authenticationError("Not unauthenticated")
+        }
 
-      await handler(validate(data, validators), auth.uid)
-    } catch (error) {
-      console.error(error)
-      throw error
+        await handler(validate(data, validators), auth.uid)
+      } catch (error) {
+        console.error(error)
+        throw error
+      }
     }
-  })
+  )
 }

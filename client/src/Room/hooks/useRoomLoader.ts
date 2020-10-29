@@ -1,9 +1,10 @@
 import { useCallback } from "react"
 import { useDispatch } from "../../Redux"
 import { setRoomState } from "../../Redux/actions/setRoomState"
-import { useFirestoreLoader, Collection } from "../../Firestore"
+import { useFirestoreLoader } from "../../Firestore"
 import { ObjectId, ObjectState } from "../../utils/ObjectState"
-import { RoomData } from "../../common/RoomData"
+import { RoomData } from "../../common/model/RoomData"
+import { Collection } from "../../common/functions/collections"
 
 export function useRoomLoader(roomId: ObjectId) {
   const dispatch = useDispatch()

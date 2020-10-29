@@ -8,9 +8,7 @@ export type SchemaValidators<T extends ObjectRecord> = {
   [K in keyof T]: SchemaValidator<T[K]>
 }
 
-export function required<T>(
-  validator: Validator<T>
-): SchemaValidator<T> {
+export function required<T>(validator: Validator<T>): SchemaValidator<T> {
   return (data: ObjectRecord, key: string) => {
     if (key in data) {
       try {

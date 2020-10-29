@@ -1,5 +1,4 @@
 import { useEffect } from "react"
-import { DocumentData, Collection } from "./types"
 import {
   ObjectId,
   ObjectState,
@@ -8,11 +7,12 @@ import {
   getLoadedState,
 } from "../utils/ObjectState"
 import useFirestore from "./useFirestore"
+import { Collection, CollectionData } from "../common/functions/collections"
 
-function useFirestoreLoader<T extends DocumentData>(
-  collectionId: Collection,
+function useFirestoreLoader<T extends Collection>(
+  collectionId: T,
   documentId: ObjectId,
-  handler: (state: ObjectState<T>) => void
+  handler: (state: ObjectState<CollectionData<T>>) => void
 ) {
   const firestore = useFirestore()
 
@@ -26,7 +26,7 @@ function useFirestoreLoader<T extends DocumentData>(
         snapshot => {
           const data = snapshot.data()
           if (data) {
-            handler(getLoadedState(documentId, data as T))
+            handler(getLoadedState(documentId, data as CollectionData<T>))
           } else {
             console.warn("This document does not exist or has been removed.")
             handler(getErrorState(documentId, Error("not-found")))

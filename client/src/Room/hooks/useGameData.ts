@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux"
-import { GameData } from "../../common/GameData"
+import { GameData } from "../../common/model/GameData"
 import { getGameState } from "../../Redux/selectors"
 import { isLoaded } from "../../utils/ObjectState"
 

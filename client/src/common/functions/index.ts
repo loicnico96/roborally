@@ -7,7 +7,7 @@ export type HttpBasicResponse = {
 }
 
 export enum HttpTrigger {
-  READY = "httpReady"
+  READY = "httpReady",
 }
 
 export type HttpParams<T extends HttpTrigger = HttpTrigger> = {

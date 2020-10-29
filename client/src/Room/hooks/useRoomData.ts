@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux"
-import { RoomData } from "../../common/RoomData"
+import { RoomData } from "../../common/model/RoomData"
 import { getRoomState } from "../../Redux/selectors"
 import { isLoaded } from "../../utils/ObjectState"
 

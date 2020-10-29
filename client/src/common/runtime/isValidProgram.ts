@@ -1,7 +1,8 @@
 import { PlayerState, Program } from "../model/GameData"
 
 export function isValidProgram(program: Program, player: PlayerState): boolean {
-  if (false) { // TODO: Is powered down
+  if (false) {
+    // TODO: Is powered down
     // Program must be empty
     return program.every(sequence => sequence === null)
   }

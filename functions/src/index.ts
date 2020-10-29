@@ -5,7 +5,7 @@ import { httpReady } from "./http/httpReady"
 initializeApp()
 
 const functions = {
-  [HttpTrigger.READY]: httpReady
+  [HttpTrigger.READY]: httpReady,
 }
 
 export default functions
