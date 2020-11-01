@@ -1,0 +1,38 @@
+import { Card } from "./Card"
+import { Direction, Position } from "./Position"
+import { Program, getEmptyProgram } from "./Program"
+
+export type PlayerId = string
+
+export type PlayerState = {
+  cards: Card[]
+  checkpoint: number
+  checkpointDir: Direction
+  damage: number
+  down: boolean
+  downNext: boolean
+  pos: Position
+  program: Program
+  programLocked: Program
+  ready: boolean
+  rot: number
+}
+
+export function getInitialPlayerState(
+  initialPos: Position,
+  initialDir: Direction
+): PlayerState {
+  return {
+    cards: [],
+    checkpoint: 0,
+    checkpointDir: initialDir,
+    damage: 0,
+    down: false,
+    downNext: false,
+    pos: initialPos,
+    program: getEmptyProgram(),
+    programLocked: getEmptyProgram(),
+    ready: false,
+    rot: initialDir,
+  }
+}

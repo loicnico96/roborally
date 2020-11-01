@@ -29,8 +29,7 @@ module.exports = {
     "@typescript-eslint/explicit-module-boundary-types": ["off"],
     "@typescript-eslint/member-delimiter-style": ["error", {
       "multiline": {
-        "delimiter": "comma",
-        "requireLast": true
+        "delimiter": "none"
       },
       "singleline": {
         "delimiter": "comma",
@@ -52,7 +51,7 @@ module.exports = {
     "@typescript-eslint/prefer-nullish-coalescing": ["error"],
     "@typescript-eslint/prefer-optional-chain": ["error"],
     "@typescript-eslint/prefer-readonly": ["error"],
-    "@typescript-eslint/prefer-reduce-type-parameter": ["error"],
+    "@typescript-eslint/prefer-reduce-type-parameter": ["off"],
     "@typescript-eslint/prefer-string-starts-ends-with": ["error"],
     "@typescript-eslint/prefer-ts-expect-error": ["error"],
     "@typescript-eslint/promise-function-async": ["error"],
@@ -76,7 +75,7 @@ module.exports = {
       "allowSingleLine": true
     }],
     "@typescript-eslint/comma-dangle": ["error", {
-      "arrays": "always-multiline",
+      "arrays": "never", // "always-multiline",
       "enums": "always-multiline",
       "exports": "always-multiline",
       "functions": "never",
@@ -196,9 +195,7 @@ module.exports = {
       "multiline": true
     }],
     "array-bracket-spacing": ["error", "never"],
-    "array-element-newline": ["error", {
-      "multiline": true
-    }],
+    "array-element-newline": ["error", "consistent"],
     "block-spacing": ["error", "always"],
     "camelcase": ["error", {
       "properties": "always"
@@ -230,7 +227,9 @@ module.exports = {
       "maxEOF": 0
     }],
     "no-new-object": ["error"],
-    "no-plusplus": ["error"],
+    "no-plusplus": ["error", {
+      "allowForLoopAfterthoughts": true
+    }],
     "no-tabs": ["error"],
     "no-trailing-spaces": ["error"],
     "no-unneeded-ternary": ["error"],
