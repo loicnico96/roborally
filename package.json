@@ -13,6 +13,17 @@
     "app:test": "cd client && yarn run test",
     "deploy:functions": "firebase deploy --only functions",
     "deploy:hosting": "firebase deploy --only hosting",
-    "functions:build": "cd functions && yarn run build"
+    "functions:build": "cd functions && yarn run build",
+    "functions:lint": "eslint functions/src --ext .js,.ts",
+    "functions:lint:fix": "eslint functions/src --ext .js,.ts --fix",
+    "lint:all": "yarn run app:lint && yarn run functions:lint",
+    "lint:fix": "yarn run app:lint:fix && yarn run functions:lint:fix"
+  },
+  "devDependencies": {
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
+    "eslint": "^7.12.1",
+    "eslint-plugin-import": "^2.22.1",
+    "typescript": "^4.0.5"
   }
 }
