@@ -9,6 +9,8 @@
     "app:build": "cd client && yarn run build",
     "app:start": "cd client && yarn run start",
     "app:test": "cd client && yarn run test",
-    "deploy:hosting": "firebase deploy --only hosting"
+    "deploy:functions": "firebase deploy --only functions",
+    "deploy:hosting": "firebase deploy --only hosting",
+    "functions:build": "cd functions && yarn run build"
   }
 }

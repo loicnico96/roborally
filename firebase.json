@@ -6,11 +6,19 @@
       "**/.*",
       "**/node_modules/**"
     ],
+    "predeploy": [
+      "yarn run app:build"
+    ],
     "rewrites": [
       {
         "source": "**",
         "destination": "/index.html"
       }
+    ]
+  },
+  "functions": {
+    "predeploy": [
+      "yarn run functions:build"
     ]
   }
 }
