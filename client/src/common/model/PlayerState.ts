@@ -20,13 +20,15 @@ export type PlayerState = {
 
 export function getInitialPlayerState(
   initialPos: Position,
-  initialDir: Direction
+  initialDir: Direction,
+  initialCheckpoint = 0,
+  initialDamage = 0
 ): PlayerState {
   return {
     cards: [],
-    checkpoint: 0,
+    checkpoint: initialCheckpoint,
     checkpointDir: initialDir,
-    damage: 0,
+    damage: initialDamage,
     down: false,
     downNext: false,
     pos: initialPos,
