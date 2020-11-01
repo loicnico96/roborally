@@ -3,7 +3,7 @@
   "main": "lib/index.js",
   "private": true,
   "scripts": {
-    "build": "tsc",
+    "build": "tsc && tscpaths -p tsconfig.json -s ./src -o ./lib",
     "deploy": "firebase deploy --only functions",
     "logs": "firebase functions:log",
     "serve": "npm run build && firebase emulators:start --only functions",
@@ -20,6 +20,7 @@
   },
   "devDependencies": {
     "firebase-functions-test": "^0.1.6",
+    "tscpaths": "^0.0.9",
     "typescript": "^3.8.0"
   }
 }
