@@ -1,0 +1,7 @@
+{
+  "name": "Roborally",
+  "version": "0.1.0",
+  "description": "Implementation of Roborally with React/TypeScript/Firebase",
+  "repository": "https://github.com/loicnico96/roborally.git",
+  "author": "loicnico96 <loicnico96@gmail.com>"
+}
