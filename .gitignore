@@ -1,0 +1,14 @@
+# Firebase keys and config
+firebase-config.ts
+
+# Node dependencies
+node_modules
+
+# Production builds
+build
+lib
+
+# Log files
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
