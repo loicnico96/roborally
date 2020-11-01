@@ -3,5 +3,11 @@
   "version": "0.1.0",
   "description": "Implementation of Roborally with React/TypeScript/Firebase",
   "repository": "https://github.com/loicnico96/roborally.git",
-  "author": "loicnico96 <loicnico96@gmail.com>"
+  "author": "loicnico96 <loicnico96@gmail.com>",
+  "license": "UNLICENSED",
+  "scripts": {
+    "app:build": "cd client && yarn run build",
+    "app:start": "cd client && yarn run start",
+    "app:test": "cd client && yarn run test"
+  }
 }
