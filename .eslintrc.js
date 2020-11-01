@@ -115,6 +115,7 @@ module.exports = {
     "@typescript-eslint/no-redeclare": ["error"],
     "@typescript-eslint/no-shadow": ["error"],
     "@typescript-eslint/no-unused-expressions": ["error"],
+    "@typescript-eslint/no-unused-vars": ["error"],
     "@typescript-eslint/no-use-before-define": ["error"],
     "@typescript-eslint/no-useless-constructor": ["error"],
     "@typescript-eslint/quotes": ["error", "double"],
