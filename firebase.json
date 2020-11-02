@@ -17,8 +17,13 @@
     ]
   },
   "functions": {
+    "source": "functions",
     "predeploy": [
       "yarn run functions:build"
     ]
+  },
+  "firestore": {
+    "rules": "firestore/firestore.rules",
+    "indexes": "firestore/indexes.json"
   }
 }

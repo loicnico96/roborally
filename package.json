@@ -14,6 +14,7 @@
     "deploy:db": "ts-node scripts/setupDB.ts",
     "deploy:functions": "firebase deploy --only functions",
     "deploy:hosting": "firebase deploy --only hosting",
+    "deploy:rules": "firebase deploy --only firestore:rules",
     "format": "prettier --write '**/*.{ts,tsx}'",
     "format:check": "prettier --check '**/*.{ts,tsx}'",
     "functions:build": "cd functions && yarn run build",
