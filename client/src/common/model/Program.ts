@@ -5,7 +5,7 @@ export type Program = [
   Card | null,
   Card | null,
   Card | null,
-  Card | null,
+  Card | null
 ]
 
 export function getEmptyProgram(): Program {

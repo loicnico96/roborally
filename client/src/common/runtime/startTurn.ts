@@ -5,8 +5,11 @@ import { GameState, GamePhase } from "../model/GameState"
 export function startTurn(gameState: GameState): GameState {
   return update(gameState, {
     phase: { $set: GamePhase.PROGRAM },
-    players: players => mapValues(players, player => update(player, {
-      ready: { $set: false },
-    })),
+    players: players =>
+      mapValues(players, player =>
+        update(player, {
+          ready: { $set: false },
+        })
+      ),
   })
 }

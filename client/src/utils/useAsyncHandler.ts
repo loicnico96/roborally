@@ -7,7 +7,6 @@ export type ErrorHandler = (error: Error) => any
 
 export function useAsyncHandler<P extends Params>(
   handler: AsyncFn<P>,
-  // eslint-disable-next-line no-console
   onError: ErrorHandler = console.error
 ): [AsyncFn<P, void>, boolean] {
   const [running, setRunning] = useState(false)

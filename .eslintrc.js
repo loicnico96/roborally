@@ -42,7 +42,6 @@ module.exports = {
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-require-imports": ["error"],
     "@typescript-eslint/no-throw-literal": ["error"],
-    "@typescript-eslint/no-unnecessary-type-constraint": ["error"],
     "@typescript-eslint/prefer-enum-initializers": ["error"],
     "@typescript-eslint/prefer-for-of": ["error"],
     "@typescript-eslint/prefer-function-type": ["error"],
@@ -75,14 +74,14 @@ module.exports = {
       "allowSingleLine": true
     }],
     "@typescript-eslint/comma-dangle": ["error", {
-      "arrays": "never", // "always-multiline",
+      "arrays": "always-multiline",
       "enums": "always-multiline",
       "exports": "always-multiline",
       "functions": "never",
       "generics": "never",
       "imports": "always-multiline",
       "objects": "always-multiline",
-      "tuples": "always-multiline",
+      "tuples": "never",
     }],
     "@typescript-eslint/comma-spacing": ["error", {
       "before": false,
@@ -204,8 +203,6 @@ module.exports = {
     "computed-property-spacing": ["error", "never"],
     "eol-last": ["error", "always"],
     "function-call-argument-newline": ["error", "consistent"],
-    "function-paren-newline": ["error", "multiline-arguments"],
-    "implicit-arrow-linebreak": ["error", "beside"],
     "jsx-quotes": ["error", "prefer-double"],
     "key-spacing": ["error", {
       "beforeColon": false,
@@ -270,9 +267,7 @@ module.exports = {
 
     // ES6
     "arrow-body-style": ["error", "as-needed"],
-    "arrow-parens": ["error", "as-needed", {
-      "requireForBlockBody": true
-    }],
+    "arrow-parens": ["error", "as-needed"],
     "arrow-spacing": ["error", {
       "before": true,
       "after": true

@@ -24,11 +24,11 @@
   "lint-staged": {
     "client/src/**/*.{js,jsx,ts,tsx}": [
       "yarn run format",
-      "yarn run app:lint:fix --max-warnings=0"
+      "yarn run app:lint:fix"
     ],
     "functions/src/**/*.{js,jsx,ts,tsx}": [
       "yarn run format",
-      "yarn run functions:lint:fix --max-warnings=0"
+      "yarn run functions:lint:fix"
     ]
   },
   "husky": {

@@ -31,8 +31,8 @@ function allPlayersReady(gameData: GameState): boolean {
   return Object.values(gameData.players).every(player => player.ready)
 }
 
-export const httpReady = httpsCallable(validationSchema, async (data) => {
-  const success = await firestore.runTransaction(async (transaction) => {
+export const httpReady = httpsCallable(validationSchema, async data => {
+  const success = await firestore.runTransaction(async transaction => {
     const gameRef = getCollection(Collection.GAME).doc(data.gameId)
     const gameDoc = await transaction.get(gameRef)
     const initialState = gameDoc.data()

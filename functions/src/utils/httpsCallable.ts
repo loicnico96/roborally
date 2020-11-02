@@ -18,7 +18,6 @@ export function httpsCallable<T extends HttpTrigger>(
         const response = await handler(validate(data, validators), auth.uid)
         return response
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error(error)
         throw error
       }

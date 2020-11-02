@@ -27,7 +27,7 @@ const ACTION_PRIORITY_ORDER = [
   CardAction.MOVE_BACK,
   CardAction.MOVE_1,
   CardAction.MOVE_2,
-  CardAction.MOVE_3
+  CardAction.MOVE_3,
 ]
 
 const CARD_ACTIONS = ACTION_PRIORITY_ORDER.reduce((actions, action) => {
