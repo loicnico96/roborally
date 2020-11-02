@@ -1,7 +1,6 @@
+import { BoardId } from "./BoardData"
 import { Direction, Position } from "./Position"
 import { PlayerId, PlayerState, getInitialPlayerState } from "./PlayerState"
-
-export type BoardId = string
 
 export enum GamePhase {
   STANDBY = "standby",

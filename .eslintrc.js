@@ -17,6 +17,7 @@ module.exports = {
     project: [
       "client/tsconfig.json",
       "functions/tsconfig.json",
+      "tsconfig.json",
     ],
     sourceType: "module",
   },

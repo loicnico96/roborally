@@ -11,6 +11,7 @@
     "app:lint:fix": "cd client && yarn run lint:fix",
     "app:start": "cd client && yarn run start",
     "app:test": "cd client && yarn run test",
+    "deploy:db": "ts-node scripts/setupDB.ts",
     "deploy:functions": "firebase deploy --only functions",
     "deploy:hosting": "firebase deploy --only hosting",
     "format": "prettier --write '**/*.{ts,tsx}'",
@@ -19,16 +20,22 @@
     "functions:lint": "eslint functions/src --ext .js,.ts",
     "functions:lint:fix": "eslint functions/src --ext .js,.ts --fix",
     "lint:all": "yarn run app:lint && yarn run functions:lint",
-    "lint:fix": "yarn run app:lint:fix && yarn run functions:lint:fix"
+    "lint:fix": "yarn run app:lint:fix && yarn run functions:lint:fix",
+    "scripts:lint": "eslint scripts --ext .js,.ts",
+    "scripts:lint:fix": "eslint scripts --ext .js,.ts --fix"
   },
   "lint-staged": {
     "client/src/**/*.{js,jsx,ts,tsx}": [
       "yarn run format",
       "yarn run app:lint:fix"
     ],
-    "functions/src/**/*.{js,jsx,ts,tsx}": [
+    "functions/src/**/*.{js,ts}": [
       "yarn run format",
       "yarn run functions:lint:fix"
+    ],
+    "scripts/**/*.{js,ts}": [
+      "yarn run format",
+      "yarn run scripts:lint:fix"
     ]
   },
   "husky": {
@@ -42,9 +49,11 @@
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
     "eslint-plugin-import": "^2.22.1",
+    "firebase-admin": "^9.3.0",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.1",
     "prettier": "^2.1.2",
+    "ts-node": "^9.0.0",
     "typescript": "^4.0.5"
   }
 }

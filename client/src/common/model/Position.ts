@@ -24,6 +24,10 @@ const MOVES: Record<Direction, Position> = {
   [Direction.West]: { x: -1, y: 0 },
 }
 
+export function Pos(x: number, y: number): Position {
+  return { x, y }
+}
+
 export function move(pos: Position, dir: Direction, dis = 1): Position {
   return {
     x: pos.x + MOVES[dir].x * dis,
