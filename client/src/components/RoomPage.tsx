@@ -1,11 +1,11 @@
 import React, { useState } from "react"
 import { useParams } from "react-router-dom"
-import { useCurrentPlayerId } from "hooks/useCurrentPlayerId"
 import { Resource, isLoading, isError, isLoaded } from "utils/resources"
 import { RoomData } from "common/model/RoomData"
 import { GameState } from "common/model/GameState"
 import { Collection } from "common/firestore/collections"
 import { useFirestoreLoader } from "firestore/useFirestoreLoader"
+import GamePage from "./GamePage"
 
 type RouteParams = {
   roomId: string
@@ -13,7 +13,6 @@ type RouteParams = {
 
 const RoomPage = () => {
   const { roomId } = useParams<RouteParams>()
-  const playerId = useCurrentPlayerId()
 
   const [roomResource, setRoomResource] = useState<Resource<RoomData> | null>(
     null
@@ -35,26 +34,10 @@ const RoomPage = () => {
   }
 
   if (gameResource !== null && isLoaded(gameResource)) {
-    const gameState = gameResource.data
-    const player = gameState.players[playerId]
-    if (player === undefined) {
-      return <div>Invalid player ID</div>
-    }
-
-    return (
-      <div>
-        <p>
-          Room {roomId} - Turn {gameState.turn} - Phase {gameState.phase}
-        </p>
-        <p>
-          Player {playerId} - Position: ({player.pos.x}-{player.pos.y})
-        </p>
-        <p>Ready {player.ready ? "true" : "false"}</p>
-      </div>
-    )
-  } else {
-    return <div>Room {roomId}</div>
+    return <GamePage roomId={roomId} gameState={gameResource.data} />
   }
+
+  return <div>Room {roomId}</div>
 }
 
 export default RoomPage
