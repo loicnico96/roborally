@@ -121,7 +121,6 @@ module.exports = {
     "@typescript-eslint/quotes": ["error", "double"],
     "@typescript-eslint/return-await": ["error"],
     "@typescript-eslint/semi": ["error", "never"],
-    "@typescript-eslint/space-infix-ops": ["error"],
     "@typescript-eslint/space-before-function-paren": ["error", {
       "anonymous": "always",
       "asyncArrow": "always",
@@ -254,6 +253,7 @@ module.exports = {
     }],
     "space-before-blocks": ["error", "always"],
     "space-in-parens": ["error", "never"],
+    "space-infix-ops": ["error"],
     "space-unary-ops": ["error", {
       "nonwords": false,
       "words": true
