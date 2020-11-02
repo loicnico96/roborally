@@ -15,7 +15,8 @@ export function httpsCallable<T extends HttpTrigger>(
         //   throw authenticationError("Not unauthenticated")
         // }
 
-        await handler(validate(data, validators), auth.uid)
+        const response = await handler(validate(data, validators), auth.uid)
+        return response
       } catch (error) {
         // eslint-disable-next-line no-console
         console.error(error)
