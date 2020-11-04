@@ -2,14 +2,12 @@ import React from "react"
 import { GamePhase, GameState } from "common/model/GameState"
 import { RoomId } from "common/model/RoomData"
 import { useCurrentUserId } from "hooks/useCurrentUserId"
-import { BoardData } from "common/model/BoardData"
 import GameUiHeader from "./GameUiHeader"
 import GameUiTurnPhase from "./GameUiTurnPhase"
 import GameUiPlayerCard from "./GameUiPlayerCard"
 import GameUiProgram from "./GameUiProgram"
 
 type GameProps = {
-  boardData: BoardData
   gameState: GameState
   roomId: RoomId
 }

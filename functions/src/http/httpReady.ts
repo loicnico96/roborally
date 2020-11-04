@@ -77,14 +77,6 @@ export const httpReady = httpsCallable(validationSchema, async data => {
       return false
     }
 
-    const { boardId } = initialState
-    const boardRef = getCollection(Collection.BOARD).doc(boardId)
-    const boardDoc = await transaction.get(boardRef)
-    const boardData = boardDoc.data()
-    if (boardData === undefined) {
-      throw preconditionError("Invalid board ID")
-    }
-
     let gameState = initialState
 
     switch (gameState.phase) {
@@ -122,7 +114,7 @@ export const httpReady = httpsCallable(validationSchema, async data => {
         transaction.set(gameRef, gameState)
 
         if (allPlayersReady(gameState)) {
-          gameState = await resolveTurn(gameState, boardData)
+          gameState = await resolveTurn(gameState)
           transaction.set(gameRef, gameState)
         }
 

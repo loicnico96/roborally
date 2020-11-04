@@ -60,7 +60,6 @@ function getOrderedPlayerActions(
 
 export async function resolveTurn(
   initialState: GameState,
-  boardData: BoardData,
   onStateChanged: StateChangeHandler | null = null
 ): Promise<GameState> {
   let gameState = initialState
@@ -177,7 +176,7 @@ export async function resolveTurn(
 
   async function resolveConveyors(activeCells: CellType[]) {
     return updatePlayers(player => {
-      const { type, dir, rot } = getCell(boardData, player.pos)
+      const { type, dir, rot } = getCell(getBoard(), player.pos)
       if (activeCells.includes(type) && dir !== undefined) {
         return update(player, {
           pos: p => move(p, dir),
@@ -190,7 +189,7 @@ export async function resolveTurn(
 
   async function resolveGears(activeCells: CellType[]) {
     return updatePlayers(player => {
-      const { type, rot } = getCell(boardData, player.pos)
+      const { type, rot } = getCell(getBoard(), player.pos)
       if (activeCells.includes(type) && rot !== undefined) {
         return update(player, {
           rot: r => r + rot,
@@ -220,7 +219,7 @@ export async function resolveTurn(
 
   async function resolveRepairs(activeCells: CellType[]) {
     return updatePlayers(player => {
-      const { type } = getCell(boardData, player.pos)
+      const { type } = getCell(getBoard(), player.pos)
       if (activeCells.includes(type) && player.damage > 1) {
         return update(player, {
           damage: dmg => dmg - 1,
@@ -246,7 +245,7 @@ export async function resolveTurn(
     movedPlayers: PlayerId[] = []
   ): PlayerId[] {
     const oldPos = getPlayer(playerId).pos
-    if (getWall(boardData, oldPos, dir) !== WallType.NONE) {
+    if (getWall(getBoard(), oldPos, dir) !== WallType.NONE) {
       return []
     }
 
@@ -266,6 +265,10 @@ export async function resolveTurn(
     }
 
     return [...movedPlayers, playerId]
+  }
+
+  function getBoard(): BoardData {
+    return gameState.board
   }
 
   function getPlayer(playerId: PlayerId): PlayerState {
