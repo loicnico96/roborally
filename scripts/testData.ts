@@ -1,9 +1,15 @@
-import { BoardId, BoardData } from "../client/src/common/model/BoardData"
+import {
+  BoardId,
+  BoardData,
+  getEmptyBoard,
+  setCell,
+  getHole,
+} from "../client/src/common/model/BoardData"
 import {
   GameState,
   getInitialGameState,
 } from "../client/src/common/model/GameState"
-import { Pos, Direction } from "../client/src/common/model/Position"
+import { getPos, Direction } from "../client/src/common/model/Position"
 import { RoomId, RoomData } from "../client/src/common/model/RoomData"
 
 export const TEST_ROOM_ID = "id_test"
@@ -20,13 +26,16 @@ export const GAMES: Record<RoomId, GameState> = {
   [TEST_ROOM_ID]: getInitialGameState(
     TEST_BOARD_ID,
     TEST_PLAYER_IDS,
-    Pos(0, 0),
-    Direction.North
+    getPos(0, 0),
+    Direction.NORTH
   ),
 }
 
+let BOARD = getEmptyBoard(10, 10)
+BOARD = setCell(BOARD, getPos(5, 5), getHole())
+BOARD = setCell(BOARD, getPos(6, 6), getHole())
+BOARD = setCell(BOARD, getPos(7, 7), getHole())
+
 export const BOARDS: Record<BoardId, BoardData> = {
-  [TEST_BOARD_ID]: {
-    // TODO
-  },
+  [TEST_BOARD_ID]: BOARD,
 }
