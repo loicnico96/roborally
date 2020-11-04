@@ -116,7 +116,7 @@ module.exports = {
     "@typescript-eslint/no-shadow": ["error"],
     "@typescript-eslint/no-unused-expressions": ["error"],
     "@typescript-eslint/no-unused-vars": ["error"],
-    "@typescript-eslint/no-use-before-define": ["error"],
+    "@typescript-eslint/no-use-before-define": ["warn"],
     "@typescript-eslint/no-useless-constructor": ["error"],
     "@typescript-eslint/quotes": ["error", "double"],
     "@typescript-eslint/return-await": ["error"],
@@ -129,7 +129,7 @@ module.exports = {
 
 
     // Possible Errors
-    "no-await-in-loop": ["error"],
+    "no-await-in-loop": ["warn"],
     "no-console": ["warn"],
     "no-promise-executor-return": ["error"],
     "no-unreachable-loop": ["error"],

@@ -2,29 +2,48 @@ import { getCollection } from "../utils/collections"
 import { preconditionError, validationError } from "../utils/errors"
 import { firestore } from "../utils/firestore"
 import { httpsCallable } from "../utils/httpsCallable"
-import { optional, required } from "../utils/validation"
-import {
-  validateBoolean,
-  validateProgram,
-  validateString,
-  validateGamePhase,
-  validateInteger,
-} from "../utils/validators"
 import { Collection } from "common/firestore/collections"
 import { GameState, GamePhase } from "common/model/GameState"
+import { Program } from "common/model/Program"
 import { confirmPlayerProgram } from "common/runtime/confirmPlayerProgram"
 import { isValidProgram } from "common/runtime/isValidProgram"
 import { readyPlayerForTurn } from "common/runtime/readyPlayerForTurn"
 import { resolveTurn } from "common/runtime/resolveTurn"
 import { startTurn } from "common/runtime/startTurn"
+import {
+  optional,
+  required,
+  validateBoolean,
+  validateEnum,
+  validateNumber,
+  validateString,
+} from "common/utils/validation"
+
+function validateProgram(value: unknown): Program {
+  if (!Array.isArray(value)) {
+    throw Error("Not an array")
+  }
+
+  if (value.length !== 5) {
+    throw Error("Invalid length")
+  }
+
+  value.forEach((sequence, index) => {
+    if (sequence !== null && !Number.isInteger(sequence)) {
+      throw Error(`Invalid sequence ${index}`)
+    }
+  })
+
+  return value as Program
+}
 
 const validationSchema = {
-  gameId: required(validateString),
-  phase: required(validateGamePhase),
-  playerId: required(validateString),
-  poweredDown: optional(validateBoolean),
+  gameId: required(validateString()),
+  phase: required(validateEnum(GamePhase)),
+  playerId: required(validateString()),
+  poweredDown: optional(validateBoolean()),
   program: optional(validateProgram),
-  turn: required(validateInteger),
+  turn: required(validateNumber({ integer: true })),
 }
 
 function allPlayersReady(gameData: GameState): boolean {
@@ -41,11 +60,11 @@ export const httpReady = httpsCallable(validationSchema, async data => {
     }
 
     if (initialState.phase !== data.phase) {
-      throw preconditionError("Inconsistent state - wrong phase")
+      throw preconditionError("Inconsistent state - Wrong phase")
     }
 
     if (initialState.turn !== data.turn) {
-      throw preconditionError("Inconsistent state - wrong turn")
+      throw preconditionError("Inconsistent state - Wrong turn")
     }
 
     const { playerId } = data
@@ -56,6 +75,14 @@ export const httpReady = httpsCallable(validationSchema, async data => {
 
     if (player.ready) {
       return false
+    }
+
+    const { boardId } = initialState
+    const boardRef = getCollection(Collection.BOARD).doc(boardId)
+    const boardDoc = await transaction.get(boardRef)
+    const boardData = boardDoc.data()
+    if (boardData === undefined) {
+      throw preconditionError("Invalid board ID")
     }
 
     let gameState = initialState
@@ -75,11 +102,11 @@ export const httpReady = httpsCallable(validationSchema, async data => {
 
       case GamePhase.PROGRAM: {
         if (data.poweredDown === undefined) {
-          throw validationError("Missing field 'poweredDown'")
+          throw validationError("Missing field \"poweredDown\"")
         }
 
         if (data.program === undefined) {
-          throw validationError("Missing field 'program'")
+          throw validationError("Missing field \"program\"")
         }
 
         if (!isValidProgram(data.program, player)) {
@@ -95,7 +122,7 @@ export const httpReady = httpsCallable(validationSchema, async data => {
         transaction.set(gameRef, gameState)
 
         if (allPlayersReady(gameState)) {
-          gameState = resolveTurn(gameState)
+          gameState = await resolveTurn(gameState, boardData)
           transaction.set(gameRef, gameState)
         }
 

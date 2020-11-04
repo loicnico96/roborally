@@ -4,28 +4,32 @@ export type Position = {
 }
 
 export enum Direction {
-  North = 0,
-  East = 1,
-  South = 2,
-  West = 3,
+  NORTH = 0,
+  EAST = 1,
+  SOUTH = 2,
+  WEST = 3,
 }
 
 export enum Rotation {
-  Left = -1,
-  Right = 1,
-  Reverse = 2,
-  None = 0,
+  LEFT = -1,
+  RIGHT = 1,
+  REVERSE = 2,
+  NONE = 0,
 }
 
 const MOVES: Record<Direction, Position> = {
-  [Direction.North]: { x: 0, y: +1 },
-  [Direction.East]: { x: +1, y: 0 },
-  [Direction.South]: { x: 0, y: -1 },
-  [Direction.West]: { x: -1, y: 0 },
+  [Direction.NORTH]: { x: 0, y: +1 },
+  [Direction.EAST]: { x: +1, y: 0 },
+  [Direction.SOUTH]: { x: 0, y: -1 },
+  [Direction.WEST]: { x: -1, y: 0 },
 }
 
-export function Pos(x: number, y: number): Position {
+export function getPos(x: number, y: number): Position {
   return { x, y }
+}
+
+export function getDir(rot: number): Direction {
+  return ((rot % 4) + 4) % 4
 }
 
 export function move(pos: Position, dir: Direction, dis = 1): Position {
@@ -36,9 +40,9 @@ export function move(pos: Position, dir: Direction, dis = 1): Position {
 }
 
 export function rotate(dir: Direction, rot: number): Direction {
-  return (((dir + rot) % 4) + 4) % 4
+  return getDir(dir + rot)
 }
 
 export function reverse(dir: Direction): Direction {
-  return rotate(dir, Rotation.Reverse)
+  return rotate(dir, Rotation.REVERSE)
 }

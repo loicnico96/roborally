@@ -13,7 +13,6 @@ export type PlayerState = {
   downNext: boolean
   pos: Position
   program: Program
-  programLocked: Program
   ready: boolean
   rot: number
 }
@@ -33,7 +32,6 @@ export function getInitialPlayerState(
     downNext: false,
     pos: initialPos,
     program: getEmptyProgram(),
-    programLocked: getEmptyProgram(),
     ready: false,
     rot: initialDir,
   }

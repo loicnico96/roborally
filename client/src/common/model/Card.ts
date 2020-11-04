@@ -48,3 +48,7 @@ export function getCardAction(card: Card): CardAction {
 export function getCardPriority(card: Card): number {
   return card * 10
 }
+
+export function getAllCards(): Card[] {
+  return Array(CARD_ACTIONS.length).map((_, i) => i)
+}
