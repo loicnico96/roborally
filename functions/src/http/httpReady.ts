@@ -94,11 +94,11 @@ export const httpReady = httpsCallable(validationSchema, async data => {
 
       case GamePhase.PROGRAM: {
         if (data.poweredDown === undefined) {
-          throw validationError("Missing field \"poweredDown\"")
+          throw validationError('Missing field "poweredDown"')
         }
 
         if (data.program === undefined) {
-          throw validationError("Missing field \"program\"")
+          throw validationError('Missing field "program"')
         }
 
         if (!isValidProgram(data.program, player)) {

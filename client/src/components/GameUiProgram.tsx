@@ -70,7 +70,7 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
     (card: Card) => {
       const index = program.indexOf(null)
       if (index >= 0 && hand.includes(card)) {
-        setProgram(program.map((c, i) => i === index ? card : c) as Program)
+        setProgram(program.map((c, i) => (i === index ? card : c)) as Program)
       }
     },
     [program, hand]
@@ -79,7 +79,7 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
   const onRemoveCard = useCallback(
     (index: number) => {
       if (program[index] !== null && lockedProgram[index] === null) {
-        setProgram(program.map((c, i) => i === index ? null : c) as Program)
+        setProgram(program.map((c, i) => (i === index ? null : c)) as Program)
       }
     },
     [program, lockedProgram]

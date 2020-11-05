@@ -6,8 +6,8 @@ type GameUiTurnPhaseProps = {
   phase: GamePhase
 }
 
-const GameUiTurnPhase = ({ isCurrent, phase }: GameUiTurnPhaseProps) =>
+const GameUiTurnPhase = ({ isCurrent, phase }: GameUiTurnPhaseProps) => (
   <p>{isCurrent ? <b>{phase}</b> : phase}</p>
-
+)
 
 export default GameUiTurnPhase

@@ -8,8 +8,8 @@ type GamePageProps = {
   gameState: GameState
 }
 
-const GamePage = ({ roomId, gameState }: GamePageProps) =>
+const GamePage = ({ roomId, gameState }: GamePageProps) => (
   <Game gameState={gameState} roomId={roomId} />
-
+)
 
 export default GamePage

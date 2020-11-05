@@ -103,12 +103,6 @@ module.exports = {
     }],
     "@typescript-eslint/no-dupe-class-members": ["error"],
     "@typescript-eslint/no-duplicate-imports": ["error"],
-    "@typescript-eslint/no-extra-parens": ["error", "all", {
-      "enforceForNewInMemberExpressions": false,
-      "enforceForFunctionPrototypeMethods": false,
-      "ignoreJSX": "multi-line",
-      "nestedBinaryExpressions": false
-    }],
     "@typescript-eslint/no-invalid-this": ["error"],
     "@typescript-eslint/no-loop-func": ["error"],
     "@typescript-eslint/no-loss-of-precision": ["error"],
@@ -118,7 +112,6 @@ module.exports = {
     "@typescript-eslint/no-unused-vars": ["error"],
     "@typescript-eslint/no-use-before-define": ["warn"],
     "@typescript-eslint/no-useless-constructor": ["error"],
-    "@typescript-eslint/quotes": ["error", "double"],
     "@typescript-eslint/return-await": ["error"],
     "@typescript-eslint/semi": ["error", "never"],
     "@typescript-eslint/space-before-function-paren": ["error", {

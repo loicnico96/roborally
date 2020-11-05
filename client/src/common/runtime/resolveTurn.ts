@@ -180,7 +180,7 @@ export async function resolveTurn(
       if (activeCells.includes(type) && dir !== undefined) {
         return update(player, {
           pos: p => move(p, dir),
-          rot: r => rot !== undefined ? r + rot : r,
+          rot: r => (rot !== undefined ? r + rot : r),
         })
       }
       return player
