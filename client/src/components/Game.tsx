@@ -36,7 +36,7 @@ const Game = ({ gameState, roomId }: GameProps) => {
           <p>Board</p>
         </div>
         <div id="GameUiContentMainRight">
-          {Object.keys(gameState.players).map(playerId => (
+          {gameState.playerOrder.map(playerId => (
             <GameUiPlayerCard
               key={playerId}
               isCurrentUser={playerId === userId}

@@ -11,6 +11,7 @@ export enum GamePhase {
 export type GameState = {
   board: BoardData
   phase: GamePhase
+  playerOrder: PlayerId[]
   players: Record<PlayerId, PlayerState>
   turn: number
 }
@@ -24,6 +25,7 @@ export function getInitialGameState(
   return {
     board,
     phase: GamePhase.STANDBY,
+    playerOrder: playerIds,
     players: playerIds.reduce((players, playerId) => {
       players[playerId] = getInitialPlayerState(initialPos, initialDir)
       return players
