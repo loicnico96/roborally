@@ -10,32 +10,48 @@ export enum CardAction {
   ROTATE_BACK = "rotate_back",
 }
 
-const ACTION_COUNTS: Record<CardAction, number> = {
-  [CardAction.MOVE_1]: 20,
-  [CardAction.MOVE_2]: 20,
-  [CardAction.MOVE_3]: 20,
-  [CardAction.MOVE_BACK]: 20,
-  [CardAction.ROTATE_LEFT]: 20,
-  [CardAction.ROTATE_RIGHT]: 20,
-  [CardAction.ROTATE_BACK]: 20,
+export type DeckSpec = {
+  actions: CardAction[]
+  count: number
+}[]
+
+function buildActions(deckSpec: DeckSpec): CardAction[] {
+  return deckSpec.reduce<CardAction[]>((deck, spec) => {
+    for (let i = 0; i < spec.count; i++) {
+      deck.push(...spec.actions)
+    }
+    return deck
+  }, [])
 }
 
-const ACTION_PRIORITY_ORDER = [
-  CardAction.ROTATE_BACK,
-  CardAction.ROTATE_LEFT,
-  CardAction.ROTATE_RIGHT,
-  CardAction.MOVE_BACK,
-  CardAction.MOVE_1,
-  CardAction.MOVE_2,
-  CardAction.MOVE_3,
+const DEFAULT_DECK_SPEC: DeckSpec = [
+  {
+    actions: [CardAction.ROTATE_BACK],
+    count: 6,
+  },
+  {
+    actions: [CardAction.ROTATE_LEFT, CardAction.ROTATE_RIGHT],
+    count: 18,
+  },
+  {
+    actions: [CardAction.MOVE_BACK],
+    count: 6,
+  },
+  {
+    actions: [CardAction.MOVE_1],
+    count: 18,
+  },
+  {
+    actions: [CardAction.MOVE_2],
+    count: 12,
+  },
+  {
+    actions: [CardAction.MOVE_3],
+    count: 6,
+  },
 ]
 
-const CARD_ACTIONS = ACTION_PRIORITY_ORDER.reduce((actions, action) => {
-  for (let i = 0; i < ACTION_COUNTS[action]; i++) {
-    actions.push(action)
-  }
-  return actions
-}, [] as CardAction[])
+const CARD_ACTIONS = buildActions(DEFAULT_DECK_SPEC)
 
 export function isValidCard(card: Card): boolean {
   return Number.isInteger(card) && card >= 0 && card < CARD_ACTIONS.length
@@ -46,9 +62,11 @@ export function getCardAction(card: Card): CardAction {
 }
 
 export function getCardPriority(card: Card): number {
-  return card * 10
+  return (card + 1) * 10
 }
 
 export function getAllCards(): Card[] {
-  return Array(CARD_ACTIONS.length).map((_, i) => i)
+  return Array(CARD_ACTIONS.length)
+    .fill(0)
+    .map((_, i) => i)
 }

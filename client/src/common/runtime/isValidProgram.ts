@@ -1,5 +1,6 @@
 import { PlayerState } from "../model/PlayerState"
 import { Program } from "../model/Program"
+import { getLockedProgram } from "./getLockedProgram"
 
 export function isValidProgram(program: Program, player: PlayerState): boolean {
   if (player.down) {
@@ -9,9 +10,11 @@ export function isValidProgram(program: Program, player: PlayerState): boolean {
 
   // Program must be complete
   return program.every((sequence, index) => {
+    const lockedProgram = getLockedProgram(player)
+
     // Sequence must match locked program if able
-    if (player.program[index] !== null) {
-      return player.program[index] === sequence
+    if (lockedProgram[index] !== null) {
+      return lockedProgram[index] === sequence
     }
 
     // Sequence must not be empty
