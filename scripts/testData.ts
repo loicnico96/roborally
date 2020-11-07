@@ -27,6 +27,7 @@ export const BOARDS: Record<BoardId, BoardData> = {
 
 export const GAMES: Record<RoomId, GameState> = {
   [TEST_ROOM_ID]: getInitialGameState(
+    TEST_BOARD_ID,
     TEST_BOARD,
     TEST_PLAYER_IDS,
     getPos(0, 0),

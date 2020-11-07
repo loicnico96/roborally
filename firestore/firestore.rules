@@ -5,12 +5,16 @@ service cloud.firestore {
       allow read: if true;
       allow write: if false;
     }
-    match /game/{gameId} {
+    match /client/{gameId} {
       allow read: if true;
       allow write: if false;
     }
     match /room/{roomId} {
       allow read: if true;
+      allow write: if false;
+    }
+    match /server/{gameId} {
+      allow read: if false;
       allow write: if false;
     }
   }

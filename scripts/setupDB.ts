@@ -7,7 +7,8 @@ for (const boardId in BOARDS) {
 }
 
 for (const gameId in GAMES) {
-  firestoreAdmin.collection(Collection.GAME).doc(gameId).set(GAMES[gameId])
+  firestoreAdmin.collection(Collection.CLIENT).doc(gameId).set(GAMES[gameId])
+  firestoreAdmin.collection(Collection.SERVER).doc(gameId).set(GAMES[gameId])
 }
 
 for (const roomId in ROOMS) {

@@ -1,4 +1,4 @@
-import { BoardData } from "./BoardData"
+import { BoardData, BoardId } from "./BoardData"
 import { Direction, Position } from "./Position"
 import { PlayerId, PlayerState, getInitialPlayerState } from "./PlayerState"
 
@@ -10,6 +10,7 @@ export enum GamePhase {
 
 export type GameState = {
   board: BoardData
+  boarId: BoardId
   phase: GamePhase
   playerOrder: PlayerId[]
   players: Record<PlayerId, PlayerState>
@@ -17,13 +18,15 @@ export type GameState = {
 }
 
 export function getInitialGameState(
-  board: BoardData,
+  boarId: BoardId,
+  boardData: BoardData,
   playerIds: PlayerId[],
   initialPos: Position,
   initialDir: Direction
 ): GameState {
   return {
-    board,
+    boarId,
+    board: boardData,
     phase: GamePhase.STANDBY,
     playerOrder: playerIds,
     players: playerIds.reduce((players, playerId) => {

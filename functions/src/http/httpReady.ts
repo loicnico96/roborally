@@ -52,9 +52,10 @@ function allPlayersReady(gameData: GameState): boolean {
 
 export const httpReady = httpsCallable(validationSchema, async data => {
   const success = await firestore.runTransaction(async transaction => {
-    const gameRef = getCollection(Collection.GAME).doc(data.gameId)
-    const gameDoc = await transaction.get(gameRef)
-    const initialState = gameDoc.data()
+    const clientRef = getCollection(Collection.CLIENT).doc(data.gameId)
+    const serverRef = getCollection(Collection.SERVER).doc(data.gameId)
+    const serverDoc = await transaction.get(serverRef)
+    const initialState = serverDoc.data()
     if (initialState === undefined) {
       throw preconditionError("Invalid game ID")
     }
@@ -82,12 +83,13 @@ export const httpReady = httpsCallable(validationSchema, async data => {
     switch (gameState.phase) {
       case GamePhase.STANDBY: {
         gameState = readyPlayerForTurn(gameState, playerId)
-        transaction.set(gameRef, gameState)
 
         if (allPlayersReady(gameState)) {
           gameState = startTurn(gameState)
-          transaction.set(gameRef, gameState)
         }
+
+        transaction.set(clientRef, gameState)
+        transaction.set(serverRef, gameState)
 
         return true
       }
@@ -111,12 +113,14 @@ export const httpReady = httpsCallable(validationSchema, async data => {
           data.program,
           data.poweredDown
         )
-        transaction.set(gameRef, gameState)
+
+        transaction.set(clientRef, gameState)
 
         if (allPlayersReady(gameState)) {
           gameState = await resolveTurn(gameState)
-          transaction.set(gameRef, gameState)
         }
+
+        transaction.set(serverRef, gameState)
 
         return true
       }

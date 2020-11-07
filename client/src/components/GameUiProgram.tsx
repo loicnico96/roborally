@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react"
+import React, { useCallback, useEffect, useMemo, useState } from "react"
 import { GamePhase, GameState } from "common/model/GameState"
 import { PlayerId } from "common/model/PlayerState"
 import { RoomId } from "common/model/RoomData"
@@ -52,7 +52,7 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
   const player = players[playerId]
   const { downNext, cards } = player
 
-  const lockedProgram = getLockedProgram(player)
+  const lockedProgram = useMemo(() => getLockedProgram(player), [player])
 
   const [program, setProgram] = useState(getEmptyProgram())
   const [poweredDown, setPoweredDown] = useState(false)

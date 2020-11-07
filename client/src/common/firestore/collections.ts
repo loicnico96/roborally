@@ -4,12 +4,14 @@ import { RoomData } from "../model/RoomData"
 
 export enum Collection {
   BOARD = "board",
-  GAME = "game",
+  CLIENT = "client",
   ROOM = "room",
+  SERVER = "server",
 }
 
 export type CollectionData<T extends Collection = Collection> = {
   [Collection.BOARD]: BoardData
-  [Collection.GAME]: GameState
+  [Collection.CLIENT]: GameState
   [Collection.ROOM]: RoomData
+  [Collection.SERVER]: GameState
 }[T]
