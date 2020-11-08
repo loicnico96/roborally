@@ -6,46 +6,14 @@ import { triggerReady } from "functions/triggers"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { getEmptyProgram, Program } from "common/model/Program"
 import { getLockedProgram } from "common/runtime/getLockedProgram"
-import { Card, getCardAction, getCardPriority } from "common/model/Card"
+import { Card } from "common/model/Card"
+import GameUiCard from "./GameUiCard"
 
 type GameUiProgramProps = {
   gameState: GameState
   playerId: PlayerId
   roomId: RoomId
 }
-
-type GameUiCardProps = {
-  card: Card
-  disabled: boolean
-  onClick: () => any
-}
-
-function getCardText(card: Card): string {
-  return `${getCardAction(card)} (${getCardPriority(card)})`
-}
-
-const GameUiCard = ({ card, onClick, disabled }: GameUiCardProps) => (
-  <button onClick={onClick} disabled={disabled}>
-    {getCardText(card)}
-  </button>
-)
-
-type GameUiProgramSlotProps = {
-  card: Card | null
-  disabled: boolean
-  isLocked: boolean
-  onClick: () => any
-}
-
-const GameUiProgramSlot = ({
-  card,
-  onClick,
-  disabled,
-}: GameUiProgramSlotProps) => (
-  <button onClick={onClick} disabled={disabled}>
-    {card === null ? "(Empty)" : getCardText(card)}
-  </button>
-)
 
 const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
   const { phase, players, turn } = gameState
@@ -62,9 +30,9 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
   useEffect(() => {
     if (phase !== GamePhase.PROGRAM) {
       setPoweredDown(downNext)
-      setProgram(lockedProgram)
+      setProgram(player.program)
     }
-  }, [phase, lockedProgram, downNext])
+  }, [phase, player.program, downNext])
 
   const onPlayCard = useCallback(
     (card: Card) => {
@@ -106,7 +74,7 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
     <div id="GameUiProgram">
       <div id="GameUiProgramSequence">
         {program.map((card, index) => (
-          <GameUiProgramSlot
+          <GameUiCard
             key={index}
             card={card}
             disabled={
