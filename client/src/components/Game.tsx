@@ -7,6 +7,8 @@ import GameUiTurnPhase from "./GameUiTurnPhase"
 import GameUiPlayerCard from "./GameUiPlayerCard"
 import GameUiProgram from "./GameUiProgram"
 
+import boardBackground from "../assets/Boards/Base Game/Island.png"
+
 type GameProps = {
   gameState: GameState
   roomId: RoomId
@@ -43,7 +45,7 @@ const Game = ({ gameState, roomId }: GameProps) => {
           ))}
         </div>
         <div id="GameUiBoard">
-          <p>Board</p>
+          <img src={boardBackground} />
         </div>
         <div id="GameUiContentMainRight">
           {gameState.playerOrder.map(playerId => (
