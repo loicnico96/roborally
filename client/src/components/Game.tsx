@@ -12,7 +12,16 @@ type GameProps = {
   roomId: RoomId
 }
 
-const TURN_PHASES = [GamePhase.STANDBY, GamePhase.PROGRAM, GamePhase.RESOLVE]
+const TURN_PHASES = [
+  GamePhase.STANDBY,
+  GamePhase.PROGRAM,
+  GamePhase.RESOLVE_PLAYERS,
+  GamePhase.RESOLVE_CONVEYORS_FAST,
+  GamePhase.RESOLVE_CONVEYORS,
+  GamePhase.RESOLVE_GEARS,
+  GamePhase.RESOLVE_LASERS,
+  GamePhase.RESOLVE_CHECKPOINTS,
+]
 
 const Game = ({ gameState, roomId }: GameProps) => {
   const userId = useCurrentUserId()
@@ -28,6 +37,7 @@ const Game = ({ gameState, roomId }: GameProps) => {
             <GameUiTurnPhase
               key={phase}
               isCurrent={phase === gameState.phase}
+              sequence={gameState.sequence + 1}
               phase={phase}
             />
           ))}

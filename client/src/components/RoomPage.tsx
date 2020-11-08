@@ -51,7 +51,7 @@ const RoomPage = () => {
 
         if (animDuration > 0) {
           await new Promise(resolve => {
-            setTimeout(resolve, animDuration * 1000)
+            setTimeout(resolve, animDuration * 500)
           })
         }
       }

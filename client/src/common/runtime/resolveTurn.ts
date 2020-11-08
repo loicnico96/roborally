@@ -80,13 +80,13 @@ export async function resolveTurn(
   async function startResolving() {
     return updateState(
       {
-        phase: { $set: GamePhase.RESOLVE },
         players: players =>
           mapValues(players, player =>
             update(player, {
               cards: { $set: [] },
             })
           ),
+        sequence: { $set: 0 },
       },
       1
     )
@@ -112,12 +112,25 @@ export async function resolveTurn(
   }
 
   async function resolveSequence(sequence: number) {
+    await updateState(
+      {
+        sequence: { $set: sequence },
+        phase: { $set: GamePhase.RESOLVE_PLAYERS },
+        playerCurrent: { $set: null },
+      },
+      1
+    )
     await resolvePlayerActions(sequence)
+    await updateState({ phase: { $set: GamePhase.RESOLVE_CONVEYORS_FAST } }, 1)
     await resolveConveyors([CellType.CONVEYOR_FAST, CellType.CONVEYOR])
+    await updateState({ phase: { $set: GamePhase.RESOLVE_CONVEYORS } }, 1)
     await resolveConveyors([CellType.CONVEYOR])
+    await updateState({ phase: { $set: GamePhase.RESOLVE_GEARS } }, 1)
     await resolveGears([CellType.GEAR])
+    await updateState({ phase: { $set: GamePhase.RESOLVE_LASERS } }, 1)
     await resolveBoardLasers()
     await resolvePlayerLasers()
+    await updateState({ phase: { $set: GamePhase.RESOLVE_CHECKPOINTS } }, 1)
     await resolveRepairs([CellType.REPAIR])
     await resolveCheckpoints()
   }
@@ -125,6 +138,7 @@ export async function resolveTurn(
   async function resolvePlayerActions(sequence: number) {
     const playerActions = getOrderedPlayerActions(gameState, sequence)
     return forEachAsync(playerActions, async ({ playerId, card }) => {
+      await updateState({ playerCurrent: { $set: playerId } }, 1)
       await resolvePlayerAction(playerId, getCardAction(card))
     })
   }
