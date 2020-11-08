@@ -9,6 +9,7 @@ export type PlayerState = {
   checkpoint: number
   checkpointDir: Direction
   damage: number
+  destroyed: boolean
   down: boolean
   downNext: boolean
   pos: Position
@@ -28,6 +29,7 @@ export function getInitialPlayerState(
     checkpoint: initialCheckpoint,
     checkpointDir: initialDir,
     damage: initialDamage,
+    destroyed: false,
     down: false,
     downNext: false,
     pos: initialPos,

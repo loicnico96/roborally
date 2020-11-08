@@ -1,7 +1,11 @@
 import update, { Spec } from "immutability-helper"
 import { mapValues } from "../utils/mapValues"
 import { GameState, GamePhase } from "../model/GameState"
-import { PlayerId, PlayerState } from "common/model/PlayerState"
+import {
+  PlayerId,
+  PlayerState,
+  getInitialPlayerState,
+} from "common/model/PlayerState"
 import {
   Card,
   CardAction,
@@ -15,6 +19,7 @@ import {
   Direction,
   Rotation,
   reverse,
+  getPos,
 } from "common/model/Position"
 import {
   BoardData,
@@ -55,8 +60,9 @@ function getOrderedPlayerActions(
 ): PlayerAction[] {
   const playerActions: PlayerAction[] = []
   Object.keys(players).forEach(playerId => {
-    const card = players[playerId].program[sequence]
-    if (card !== null) {
+    const player = players[playerId]
+    const card = player.program[sequence]
+    if (card !== null && !player.destroyed) {
       playerActions.push({
         playerId,
         card,
@@ -86,6 +92,7 @@ export async function resolveTurn(
     await resolveSequence(sequence)
   }
 
+  await respawnPlayers()
   await startNextTurn()
 
   return gameState
@@ -103,6 +110,27 @@ export async function resolveTurn(
       },
       1
     )
+  }
+
+  async function respawnPlayers() {
+    const destroyedPlayers = gameState.playerOrder.filter(playerId => {
+      const player = getPlayer(playerId)
+      return player.destroyed
+    })
+
+    if (destroyedPlayers.length > 0) {
+      await updatePlayers(
+        destroyedPlayers,
+        player =>
+          getInitialPlayerState(
+            getPos(0, 0),
+            player.checkpointDir,
+            player.checkpoint,
+            2
+          ),
+        1
+      )
+    }
   }
 
   async function startNextTurn() {
@@ -135,16 +163,16 @@ export async function resolveTurn(
     )
     await resolvePlayerActions(sequence)
     await updateState({ phase: { $set: GamePhase.RESOLVE_CONVEYORS_FAST } }, 1)
-    await resolveConveyors([CellType.CONVEYOR_FAST, CellType.CONVEYOR])
+    await resolveBoardMoves([CellType.CONVEYOR_FAST])
     await updateState({ phase: { $set: GamePhase.RESOLVE_CONVEYORS } }, 1)
-    await resolveConveyors([CellType.CONVEYOR])
+    await resolveBoardMoves([CellType.CONVEYOR_FAST, CellType.CONVEYOR])
     await updateState({ phase: { $set: GamePhase.RESOLVE_GEARS } }, 1)
-    await resolveGears([CellType.GEAR])
+    await resolveBoardMoves([CellType.GEAR])
     await updateState({ phase: { $set: GamePhase.RESOLVE_LASERS } }, 1)
     await resolveBoardLasers()
     await resolvePlayerLasers()
     await updateState({ phase: { $set: GamePhase.RESOLVE_CHECKPOINTS } }, 1)
-    await resolveRepairs([CellType.REPAIR])
+    await resolveRepairs()
     await resolveCheckpoints()
   }
 
@@ -201,29 +229,57 @@ export async function resolveTurn(
     }
   }
 
-  async function resolveConveyors(activeCells: CellType[]) {
-    return updatePlayers(player => {
-      const { type, dir, rot } = getCell(getBoard(), player.pos)
-      if (activeCells.includes(type) && dir !== undefined) {
-        return update(player, {
-          pos: p => move(p, dir),
-          rot: r => (rot !== undefined ? r + rot : r),
-        })
+  async function checkHoles() {
+    const fallingPlayers = gameState.playerOrder.filter(playerId => {
+      const player = getPlayer(playerId)
+      if (player.destroyed) {
+        return false
       }
-      return player
-    }, 1)
+
+      const { type } = getCell(getBoard(), player.pos)
+      return type === CellType.HOLE
+    })
+
+    if (fallingPlayers.length > 0) {
+      await updatePlayers(
+        fallingPlayers,
+        player =>
+          update(player, {
+            destroyed: { $set: true },
+            pos: {
+              x: { $set: -1 },
+              y: { $set: -1 },
+            },
+          }),
+        1
+      )
+    }
   }
 
-  async function resolveGears(activeCells: CellType[]) {
-    return updatePlayers(player => {
-      const { type, rot } = getCell(getBoard(), player.pos)
-      if (activeCells.includes(type) && rot !== undefined) {
-        return update(player, {
-          rot: r => r + rot,
-        })
-      }
-      return player
-    }, 1)
+  async function resolveBoardMoves(activeCells: CellType[]) {
+    const movingPlayers = gameState.playerOrder.filter(playerId => {
+      const player = getPlayer(playerId)
+      const { type } = getCell(getBoard(), player.pos)
+      return !player.destroyed && activeCells.includes(type)
+    })
+
+    if (movingPlayers.length > 0) {
+      await updatePlayers(
+        movingPlayers,
+        player => {
+          const { type, dir, rot } = getCell(getBoard(), player.pos)
+          if (activeCells.includes(type)) {
+            return update(player, {
+              pos: p => (dir !== undefined ? move(p, dir) : p),
+              rot: r => (rot !== undefined ? r + rot : r),
+            })
+          }
+          return player
+        },
+        1
+      )
+      await checkHoles()
+    }
   }
 
   async function resolveBoardLasers() {
@@ -231,7 +287,7 @@ export async function resolveTurn(
       {
         // TODO
       },
-      1
+      0 // TOOD
     )
   }
 
@@ -240,20 +296,27 @@ export async function resolveTurn(
       {
         // TODO
       },
-      1
+      0 // TOOD
     )
   }
 
-  async function resolveRepairs(activeCells: CellType[]) {
-    return updatePlayers(player => {
+  async function resolveRepairs() {
+    const repairedPlayers = gameState.playerOrder.filter(playerId => {
+      const player = getPlayer(playerId)
       const { type } = getCell(getBoard(), player.pos)
-      if (activeCells.includes(type) && player.damage > 1) {
-        return update(player, {
-          damage: dmg => dmg - 1,
-        })
-      }
-      return player
-    }, 1)
+      return !player.destroyed && type === CellType.REPAIR && player.damage > 0
+    })
+
+    if (repairedPlayers.length > 0) {
+      await updatePlayers(
+        repairedPlayers,
+        player =>
+          update(player, {
+            damage: dmg => dmg - 1,
+          }),
+        1
+      )
+    }
   }
 
   async function resolveCheckpoints() {
@@ -261,7 +324,7 @@ export async function resolveTurn(
       {
         // TODO
       },
-      1
+      0 // TOOD
     )
   }
 
@@ -308,17 +371,17 @@ export async function resolveTurn(
     dis: number,
     pushPlayers = true
   ) {
-    for (let i = 0; i < dis; i++) {
-      const movedPlayers = movePlayerCheckRecursive(playerId, dir, pushPlayers)
-      await updatePlayers((player, id) => {
-        if (movedPlayers.includes(id)) {
-          return update(player, {
+    for (let i = 0; i < dis && !getPlayer(playerId).destroyed!; i++) {
+      const movingPlayers = movePlayerCheckRecursive(playerId, dir, pushPlayers)
+      await updatePlayers(
+        movingPlayers,
+        player =>
+          update(player, {
             pos: pos => move(pos, dir, 1),
-          })
-        }
-
-        return player
-      }, 1)
+          }),
+        1
+      )
+      await checkHoles()
     }
   }
 
@@ -338,12 +401,17 @@ export async function resolveTurn(
   }
 
   async function updatePlayers(
-    updateFn: (player: PlayerState, playerId: PlayerId) => PlayerState,
+    playerIds: PlayerId[],
+    updateSpec: Spec<PlayerState, never>,
     animDuration: number
   ) {
     return updateState(
       {
-        players: players => mapValues(players, updateFn),
+        players: playerIds.reduce(
+          (updates, playerId) =>
+            Object.assign(updates, { [playerId]: updateSpec }),
+          {} as Record<PlayerId, Spec<PlayerState, never>>
+        ),
       },
       animDuration
     )

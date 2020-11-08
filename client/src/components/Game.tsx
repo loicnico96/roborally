@@ -69,13 +69,16 @@ const Game = ({ gameState, roomId }: GameProps) => {
           ))}
         </div>
         <GameUiBoardWrapper id="GameUiBoard">
-          {gameState.playerOrder.map((playerId, index) => (
-            <GameUiPlayerRobot
-              key={playerId}
-              player={gameState.players[playerId]}
-              playerIndex={index}
-            />
-          ))}
+          {gameState.playerOrder.map(
+            (playerId, index) =>
+              !gameState.players[playerId].destroyed && (
+                <GameUiPlayerRobot
+                  key={playerId}
+                  player={gameState.players[playerId]}
+                  playerIndex={index}
+                />
+              )
+          )}
           <GameUiBoardBackground board={gameState.board} />
         </GameUiBoardWrapper>
         <div id="GameUiContentMainRight">

@@ -14,11 +14,9 @@ const GameUiPlayerCard = ({
 }: GameUiPlayerCardProps) => (
   <div>
     <p>{isCurrentUser ? <b>{playerId}</b> : playerId}</p>
-    <p>
-      Position: ({player.pos.x}, {player.pos.y})
-    </p>
     <p>Checkpoint: {player.checkpoint}</p>
     <p>Damage: {player.damage}</p>
+    {player.destroyed && <p>Destroyed</p>}
     <p>{player.ready ? "Ready" : "Waiting..."}</p>
   </div>
 )
