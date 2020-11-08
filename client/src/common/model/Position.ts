@@ -18,9 +18,9 @@ export enum Rotation {
 }
 
 const MOVES: Record<Direction, Position> = {
-  [Direction.NORTH]: { x: 0, y: +1 },
+  [Direction.NORTH]: { x: 0, y: -1 },
   [Direction.EAST]: { x: +1, y: 0 },
-  [Direction.SOUTH]: { x: 0, y: -1 },
+  [Direction.SOUTH]: { x: 0, y: +1 },
   [Direction.WEST]: { x: -1, y: 0 },
 }
 

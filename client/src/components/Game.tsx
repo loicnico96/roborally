@@ -9,6 +9,7 @@ import GameUiPlayerCard from "./GameUiPlayerCard"
 import GameUiProgram from "./GameUiProgram"
 
 import boardBackground from "../assets/Boards/Base Game/Island.png"
+import GameUiPlayerRobot from "./GameUiPlayerRobot"
 
 type GameProps = {
   gameState: GameState
@@ -34,14 +35,18 @@ const GameUiBoardWrapper = styled.div`
   min-height: 0;
   min-width: 0;
   overflow: auto;
+  position: relative;
 `
+
+const BOARD_SIZE = 12
+const CELL_SIZE = 100
 
 const GameUiBoardBackground = styled.div`
   background-image: url(${boardBackground});
   background-repeat: no-repeat;
-  background-size: 1200px;
-  height: 1200px;
-  width: 1200px;
+  background-size: ${BOARD_SIZE * CELL_SIZE}px;
+  height: ${BOARD_SIZE * CELL_SIZE}px;
+  width: ${BOARD_SIZE * CELL_SIZE}px;
 `
 
 const TURN_PHASES = [
@@ -75,6 +80,13 @@ const Game = ({ gameState, roomId }: GameProps) => {
           ))}
         </div>
         <GameUiBoardWrapper id="GameUiBoard">
+          {gameState.playerOrder.map((playerId, index) => (
+            <GameUiPlayerRobot
+              key={playerId}
+              player={gameState.players[playerId]}
+              playerIndex={index}
+            />
+          ))}
           <GameUiBoardBackground />
         </GameUiBoardWrapper>
         <div id="GameUiContentMainRight">

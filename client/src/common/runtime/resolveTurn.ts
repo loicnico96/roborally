@@ -29,9 +29,18 @@ type StateChangeHandler = (
   animDuration: number
 ) => Promise<void>
 
-function sortBy<T>(array: T[], fn: (value: T) => number): T[] {
+enum SortDirection {
+  ASC = 1,
+  DESC = -1,
+}
+
+function sortBy<T>(
+  array: readonly T[],
+  sortFn: (value: T) => number,
+  sortDirection: SortDirection = SortDirection.ASC
+): T[] {
   const result = [...array]
-  result.sort((a, b) => fn(a) - fn(b))
+  result.sort((a, b) => (sortFn(a) - sortFn(b)) * sortDirection)
   return result
 }
 
@@ -55,7 +64,11 @@ function getOrderedPlayerActions(
     }
   })
 
-  return sortBy(playerActions, action => getCardPriority(action.card))
+  return sortBy(
+    playerActions,
+    action => getCardPriority(action.card),
+    SortDirection.DESC
+  )
 }
 
 export async function resolveTurn(
