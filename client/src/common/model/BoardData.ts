@@ -30,7 +30,9 @@ export type CellData = {
   rot?: Rotation
 }
 
-export type BoardId = string
+export enum BoardId {
+  ISLAND = "Island",
+}
 
 export type BoardData = {
   cells: CellData[]
