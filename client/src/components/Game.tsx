@@ -1,4 +1,5 @@
 import React from "react"
+import styled from "styled-components"
 import { GamePhase, GameState } from "common/model/GameState"
 import { RoomId } from "common/model/RoomData"
 import { useCurrentUserId } from "hooks/useCurrentUserId"
@@ -13,6 +14,35 @@ type GameProps = {
   gameState: GameState
   roomId: RoomId
 }
+
+const GameUiContentWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+`
+
+const GameUiContentMain = styled.div`
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: row;
+  overflow: hidden;
+`
+
+const GameUiBoardWrapper = styled.div`
+  flex: 1 1 auto;
+  min-height: 0;
+  min-width: 0;
+  overflow: auto;
+`
+
+const GameUiBoardBackground = styled.div`
+  background-image: url(${boardBackground});
+  background-repeat: no-repeat;
+  background-size: 1200px;
+  height: 1200px;
+  width: 1200px;
+`
 
 const TURN_PHASES = [
   GamePhase.STANDBY,
@@ -31,9 +61,9 @@ const Game = ({ gameState, roomId }: GameProps) => {
   const isPlayer = userId in gameState.players
 
   return (
-    <div id="GameUi">
+    <GameUiContentWrapper id="GameUi">
       <GameUiHeader currentTurn={gameState.turn} roomId={roomId} />
-      <div id="GameUiContentMain">
+      <GameUiContentMain id="GameUiContentMain">
         <div id="GameUiTurnPhaseSequence">
           {TURN_PHASES.map(phase => (
             <GameUiTurnPhase
@@ -44,9 +74,9 @@ const Game = ({ gameState, roomId }: GameProps) => {
             />
           ))}
         </div>
-        <div id="GameUiBoard">
-          <img src={boardBackground} />
-        </div>
+        <GameUiBoardWrapper id="GameUiBoard">
+          <GameUiBoardBackground />
+        </GameUiBoardWrapper>
         <div id="GameUiContentMainRight">
           {gameState.playerOrder.map(playerId => (
             <GameUiPlayerCard
@@ -57,7 +87,7 @@ const Game = ({ gameState, roomId }: GameProps) => {
             />
           ))}
         </div>
-      </div>
+      </GameUiContentMain>
       {isPlayer && (
         <GameUiProgram
           gameState={gameState}
@@ -65,7 +95,7 @@ const Game = ({ gameState, roomId }: GameProps) => {
           roomId={roomId}
         />
       )}
-    </div>
+    </GameUiContentWrapper>
   )
 }
 
