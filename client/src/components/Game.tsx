@@ -9,7 +9,8 @@ import GameUiPlayerCard from "./GameUiPlayerCard"
 import GameUiProgram from "./GameUiProgram"
 
 import GameUiPlayerRobot from "./GameUiPlayerRobot"
-import GameUiBoardBackground from "./GameUiBoardBackground"
+import GameUiBoard from "./GameUiBoard"
+import GameUiViewport from "./GameUiViewport"
 
 type GameProps = {
   gameState: GameState
@@ -28,14 +29,6 @@ const GameUiContentMain = styled.div`
   flex: 1 1 auto;
   flex-direction: row;
   overflow: hidden;
-`
-
-const GameUiBoardWrapper = styled.div`
-  flex: 1 1 auto;
-  min-height: 0;
-  min-width: 0;
-  overflow: auto;
-  position: relative;
 `
 
 const TURN_PHASES = [
@@ -68,19 +61,17 @@ const Game = ({ gameState, roomId }: GameProps) => {
             />
           ))}
         </div>
-        <GameUiBoardWrapper id="GameUiBoard">
-          {gameState.playerOrder.map(
-            (playerId, index) =>
-              !gameState.players[playerId].destroyed && (
-                <GameUiPlayerRobot
-                  key={playerId}
-                  player={gameState.players[playerId]}
-                  playerIndex={index}
-                />
-              )
-          )}
-          <GameUiBoardBackground board={gameState.board} />
-        </GameUiBoardWrapper>
+        <GameUiViewport>
+          <GameUiBoard board={gameState.board}>
+            {gameState.playerOrder.map((playerId, index) => (
+              <GameUiPlayerRobot
+                key={playerId}
+                player={gameState.players[playerId]}
+                playerIndex={index}
+              />
+            ))}
+          </GameUiBoard>
+        </GameUiViewport>
         <div id="GameUiContentMainRight">
           {gameState.playerOrder.map(playerId => (
             <GameUiPlayerCard

@@ -18,6 +18,10 @@ function getRobotUrl({ playerIndex }: GameUiPlayerRobotProps): string {
   return ROBOT_IMAGES[playerIndex]
 }
 
+function getDisplay({ player }: GameUiPlayerRobotProps): string {
+  return player.destroyed ? "none" : "initial"
+}
+
 function getTransform({ player }: GameUiPlayerRobotProps): string {
   const translateX = player.pos.x * CELL_SIZE + (CELL_SIZE - ROBOT_SIZE) / 2
   const translateY = player.pos.y * CELL_SIZE + (CELL_SIZE - ROBOT_SIZE) / 2
@@ -29,6 +33,7 @@ const GameUiPlayerRobot = styled.div`
   background-image: url(${getRobotUrl});
   background-repeat: no-repeat;
   background-size: ${ROBOT_SIZE}px;
+  display: ${getDisplay};
   height: ${ROBOT_SIZE}px;
   position: absolute;
   transform: ${getTransform};
