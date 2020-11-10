@@ -30,9 +30,9 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
   useEffect(() => {
     if (phase !== GamePhase.PROGRAM) {
       setPoweredDown(downNext)
-      setProgram(player.program)
+      setProgram(lockedProgram)
     }
-  }, [phase, player.program, downNext])
+  }, [phase, lockedProgram, downNext])
 
   const onPlayCard = useCallback(
     (card: Card) => {
@@ -70,10 +70,12 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
 
   const [onReady, onReadyLoading] = useAsyncHandler(onReadyUnsafe)
 
+  const shownProgram = phase === GamePhase.PROGRAM ? program : player.program
+
   return (
     <div id="GameUiProgram">
       <div id="GameUiProgramSequence">
-        {program.map((card, index) => (
+        {shownProgram.map((card, index) => (
           <GameUiCard
             key={index}
             card={card}
