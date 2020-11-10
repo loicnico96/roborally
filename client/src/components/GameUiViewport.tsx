@@ -27,9 +27,12 @@ function getOffsetY({ offset }: GameUiViewportContentProps): number {
 }
 
 const GameUiViewportContainer = styled.div`
+  background-color: black;
   cursor: ${getCursor};
+  height: 100%;
   overflow: hidden;
   position: relative;
+  width: 100%;
 `
 
 const GameUiViewportContent = styled.div`
