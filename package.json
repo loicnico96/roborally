@@ -6,39 +6,39 @@
   "author": "loicnico96 <loicnico96@gmail.com>",
   "license": "UNLICENSED",
   "scripts": {
-    "app:build": "cd client && yarn run build",
-    "app:lint": "cd client && yarn run lint",
-    "app:lint:fix": "cd client && yarn run lint:fix",
-    "app:start": "cd client && yarn run start",
-    "app:test": "cd client && yarn run test",
-    "deploy:all": "firebase deploy && yarn run deploy:db",
+    "app:build": "cd client && yarn build",
+    "app:lint": "cd client && yarn lint",
+    "app:lint:fix": "cd client && yarn lint:fix",
+    "app:start": "cd client && yarn start",
+    "app:test": "cd client && yarn test",
+    "deploy:all": "firebase deploy && yarn deploy:db",
     "deploy:db": "ts-node scripts/setupDB.ts",
     "deploy:functions": "firebase deploy --only functions",
     "deploy:hosting": "firebase deploy --only hosting",
     "deploy:rules": "firebase deploy --only firestore:rules",
     "format": "prettier --write '**/*.{ts,tsx}'",
     "format:check": "prettier --check '**/*.{ts,tsx}'",
-    "functions:build": "cd functions && yarn run build",
+    "functions:build": "cd functions && yarn build",
     "functions:lint": "eslint functions/src --ext .js,.ts",
-    "functions:lint:fix": "eslint functions/src --ext .js,.ts --fix",
-    "functions:start": "cd functions && yarn run serve",
-    "lint:all": "yarn run app:lint && yarn run functions:lint",
-    "lint:fix": "yarn run app:lint:fix && yarn run functions:lint:fix",
+    "functions:lint:fix": "yarn functions:lint --fix",
+    "functions:start": "cd functions && yarn serve",
+    "lint:all": "yarn app:lint && yarn functions:lint && yarn scripts:lint",
+    "lint:fix": "yarn app:lint:fix && yarn functions:lint:fix && yarn scripts:lint:fix",
     "scripts:lint": "eslint scripts --ext .js,.ts",
-    "scripts:lint:fix": "eslint scripts --ext .js,.ts --fix"
+    "scripts:lint:fix": "yarn scripts:lint --fix"
   },
   "lint-staged": {
     "client/src/**/*.{js,jsx,ts,tsx}": [
-      "yarn run format",
-      "yarn run app:lint:fix"
+      "yarn format",
+      "yarn app:lint:fix"
     ],
     "functions/src/**/*.{js,ts}": [
-      "yarn run format",
-      "yarn run functions:lint:fix"
+      "yarn format",
+      "yarn functions:lint:fix"
     ],
     "scripts/**/*.{js,ts}": [
-      "yarn run format",
-      "yarn run scripts:lint:fix"
+      "yarn format",
+      "yarn scripts:lint:fix"
     ]
   },
   "husky": {

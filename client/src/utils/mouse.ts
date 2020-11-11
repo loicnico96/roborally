@@ -1,4 +1,7 @@
-export type Point = { x: number, y: number }
+export type Point = {
+  x: number
+  y: number
+}
 
 export const ORIGIN: Point = Object.freeze({ x: 0, y: 0 })
 

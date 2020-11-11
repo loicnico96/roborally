@@ -27,19 +27,10 @@ module.exports = {
   ],
   rules: {
     // TypeScript
-    "@typescript-eslint/explicit-module-boundary-types": ["off"],
-    "@typescript-eslint/member-delimiter-style": ["error", {
-      "multiline": {
-        "delimiter": "none"
-      },
-      "singleline": {
-        "delimiter": "comma",
-        "requireLast": false
-      }
-    }],
+    "@typescript-eslint/explicit-module-boundary-types": ["warn"],
     "@typescript-eslint/method-signature-style": ["error", "property"],
     "@typescript-eslint/no-dynamic-delete": ["error"],
-    "@typescript-eslint/no-explicit-any": ["off"],
+    "@typescript-eslint/no-explicit-any": ["warn"],
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-require-imports": ["error"],
     "@typescript-eslint/no-throw-literal": ["error"],
@@ -51,23 +42,13 @@ module.exports = {
     "@typescript-eslint/prefer-nullish-coalescing": ["error"],
     "@typescript-eslint/prefer-optional-chain": ["error"],
     "@typescript-eslint/prefer-readonly": ["error"],
-    "@typescript-eslint/prefer-reduce-type-parameter": ["off"],
     "@typescript-eslint/prefer-string-starts-ends-with": ["error"],
     "@typescript-eslint/prefer-ts-expect-error": ["error"],
     "@typescript-eslint/promise-function-async": ["error"],
     "@typescript-eslint/require-array-sort-compare": ["error"],
     "@typescript-eslint/strict-boolean-expressions": ["error"],
     "@typescript-eslint/switch-exhaustiveness-check": ["error"],
-    "@typescript-eslint/type-annotation-spacing": ["error", {
-      "before": false,
-      "after": true,
-      "overrides": {
-        "arrow": {
-          "before": true,
-          "after": true,
-        },
-      },
-    }],
+    "@typescript-eslint/type-annotation-spacing": ["error"],
 
 
     // Typescript Overrides
@@ -98,9 +79,6 @@ module.exports = {
       "before": true,
       "after": true
     }],
-    "@typescript-eslint/lines-between-class-members": ["error", "always", {
-      "exceptAfterSingleLine": true
-    }],
     "@typescript-eslint/no-dupe-class-members": ["error"],
     "@typescript-eslint/no-duplicate-imports": ["error"],
     "@typescript-eslint/no-invalid-this": ["error"],
@@ -114,12 +92,6 @@ module.exports = {
     "@typescript-eslint/no-useless-constructor": ["error"],
     "@typescript-eslint/return-await": ["error"],
     "@typescript-eslint/semi": ["error", "never"],
-    "@typescript-eslint/space-before-function-paren": ["error", {
-      "anonymous": "always",
-      "asyncArrow": "always",
-      "named": "never"
-    }],
-
 
     // Possible Errors
     "no-await-in-loop": ["warn"],
@@ -161,7 +133,7 @@ module.exports = {
     "no-self-compare": ["error"],
     "no-sequences": ["error"],
     "no-throw-literal": ["error"],
-    "no-unmodified-loop-condition": ["warn"],
+    "no-unmodified-loop-condition": ["error"],
     "no-useless-call": ["warn"],
     "no-useless-concat": ["warn"],
     "no-useless-return": ["error"],
@@ -173,14 +145,11 @@ module.exports = {
     "wrap-iife": ["error", "outside"],
     "yoda": ["error", "never"],
 
-
     // Strict
     "strict": ["error", "never"],
 
-
     // Variables
     "no-label-var": ["error"],
-
 
     // Style
     "array-bracket-newline": ["error", {
@@ -257,7 +226,6 @@ module.exports = {
     }],
     "template-tag-spacing": ["error", "never"],
     "unicode-bom": ["error", "never"],
-
 
     // ES6
     "arrow-body-style": ["error", "as-needed"],
