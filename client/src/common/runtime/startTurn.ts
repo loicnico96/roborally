@@ -2,7 +2,7 @@ import update from "immutability-helper"
 import { mapValues } from "../utils/mapValues"
 import { GameState, GamePhase } from "../model/GameState"
 import { Card, getAllCards } from "common/model/Card"
-import { shuffle } from "common/utils/shuffle"
+import { shuffle } from "common/utils/arrays"
 import { PlayerId } from "common/model/PlayerState"
 import { getHandSize, getLockedProgram } from "./getLockedProgram"
 
@@ -20,8 +20,7 @@ function getDeck(gameState: GameState): Card[] {
 }
 
 function drawCards(gameState: GameState): Record<PlayerId, Card[]> {
-  const deck = getDeck(gameState)
-  shuffle(deck)
+  const deck = shuffle(getDeck(gameState))
   let index = 0
   return mapValues(gameState.players, player => {
     if (player.down) {

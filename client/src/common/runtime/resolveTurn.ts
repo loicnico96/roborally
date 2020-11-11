@@ -27,26 +27,12 @@ import {
   getWall,
   WallType,
 } from "common/model/BoardData"
+import { sortBy, SortDirection } from "common/utils/arrays"
 
 type StateChangeHandler = (
   newState: GameState,
   animDuration: number
 ) => Promise<void>
-
-enum SortDirection {
-  ASC = 1,
-  DESC = -1,
-}
-
-function sortBy<T>(
-  array: readonly T[],
-  sortFn: (value: T) => number,
-  sortDirection: SortDirection = SortDirection.ASC
-): T[] {
-  const result = [...array]
-  result.sort((a, b) => (sortFn(a) - sortFn(b)) * sortDirection)
-  return result
-}
 
 type PlayerAction = {
   playerId: PlayerId
