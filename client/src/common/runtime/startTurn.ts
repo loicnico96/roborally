@@ -3,8 +3,11 @@ import { mapValues } from "../utils/objects"
 import { GameState, GamePhase } from "../model/GameState"
 import { Card, getAllCards } from "common/model/Card"
 import { shuffle } from "common/utils/arrays"
-import { PlayerId } from "common/model/PlayerState"
-import { getHandSize, getLockedProgram } from "./getLockedProgram"
+import {
+  getLockedProgram,
+  getPlayerHandSize,
+  PlayerId,
+} from "common/model/PlayerState"
 
 function getDeck(gameState: GameState): Card[] {
   const unavailableCards: Set<Card> = new Set()
@@ -27,7 +30,7 @@ function drawCards(gameState: GameState): Record<PlayerId, Card[]> {
       return []
     }
 
-    const nextIndex = index + getHandSize(player)
+    const nextIndex = index + getPlayerHandSize(player)
     const hand = deck.slice(index, nextIndex)
     index = nextIndex
     return hand
