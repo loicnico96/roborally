@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react"
+import { clamp } from "common/utils/math"
 import { getDimensions, ElementRef } from "utils/dom"
-import { clamp } from "utils/math"
 import { getMousePosition, ORIGIN } from "utils/mouse"
 
 export type Offset = {

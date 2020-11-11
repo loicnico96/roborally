@@ -15,10 +15,9 @@ import {
 import { forEachAsync } from "../utils/forEachAsync"
 import {
   getDir,
-  move,
+  movePos,
   Direction,
   Rotation,
-  reverse,
   getPos,
 } from "common/model/Position"
 import {
@@ -196,7 +195,7 @@ export async function resolveTurn(
         await movePlayer(playerId, getDir(getPlayer(playerId).rot), 3)
         break
       case CardAction.MOVE_BACK:
-        await movePlayer(playerId, reverse(getDir(getPlayer(playerId).rot)), 1)
+        await movePlayer(playerId, getDir(getPlayer(playerId).rot + 2), 1)
         break
       case CardAction.ROTATE_LEFT:
         await updatePlayer(
@@ -270,7 +269,7 @@ export async function resolveTurn(
           const { type, dir, rot } = getCell(getBoard(), player.pos)
           if (activeCells.includes(type)) {
             return update(player, {
-              pos: p => (dir !== undefined ? move(p, dir) : p),
+              pos: p => (dir !== undefined ? movePos(p, dir) : p),
               rot: r => (rot !== undefined ? r + rot : r),
             })
           }
@@ -339,7 +338,7 @@ export async function resolveTurn(
       return []
     }
 
-    const newPos = move(oldPos, dir, 1)
+    const newPos = movePos(oldPos, dir, 1)
     for (const otherPlayerId in gameState.players) {
       const otherPos = getPlayer(otherPlayerId).pos
       if (otherPos.x === newPos.x && otherPos.y === newPos.y) {
@@ -377,7 +376,7 @@ export async function resolveTurn(
         movingPlayers,
         player =>
           update(player, {
-            pos: pos => move(pos, dir, 1),
+            pos: pos => movePos(pos, dir, 1),
           }),
         1
       )

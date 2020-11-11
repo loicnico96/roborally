@@ -1,3 +1,5 @@
+import { mod } from "common/utils/math"
+
 export type Position = {
   x: number
   y: number
@@ -29,20 +31,16 @@ export function getPos(x: number, y: number): Position {
 }
 
 export function getDir(rot: number): Direction {
-  return ((rot % 4) + 4) % 4
+  return mod(rot, 4)
 }
 
-export function move(pos: Position, dir: Direction, dis = 1): Position {
+export function movePos(pos: Position, dir: Direction, dis = 1): Position {
   return {
     x: pos.x + MOVES[dir].x * dis,
     y: pos.y + MOVES[dir].y * dis,
   }
 }
 
-export function rotate(dir: Direction, rot: number): Direction {
-  return getDir(dir + rot)
-}
-
-export function reverse(dir: Direction): Direction {
-  return rotate(dir, Rotation.REVERSE)
+export function isSamePos(pos1: Position, pos2: Position): boolean {
+  return pos1.x === pos2.x && pos1.y === pos2.y
 }
