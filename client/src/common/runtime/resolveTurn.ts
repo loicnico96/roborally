@@ -1,5 +1,5 @@
 import update, { Spec } from "immutability-helper"
-import { mapValues } from "../utils/mapValues"
+import { mapValues } from "../utils/objects"
 import { GameState, GamePhase } from "../model/GameState"
 import {
   PlayerId,

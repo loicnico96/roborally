@@ -1,15 +1,10 @@
 import { isEnum } from "./isEnum"
-import { mapValues } from "./mapValues"
-
-export type ObjectRecord<T = unknown> = Record<string, T>
-export function isObjectRecord(data: unknown): data is ObjectRecord {
-  return typeof data === "object" && data !== null && !Array.isArray(data)
-}
+import { isObjectRecord, keys, mapValues, Key, ObjectRecord } from "./objects"
 
 export type Validator<T> = (data: unknown) => T
 export type SchemaValidator<T> = (data: ObjectRecord, key: string) => T
 export type SchemaValidators<T extends ObjectRecord> = {
-  [K in keyof T]: SchemaValidator<T[K]>
+  [K in Key<T>]: SchemaValidator<T[K]>
 }
 
 export function optional<T>(
@@ -134,12 +129,10 @@ export function validateObject<T extends ObjectRecord>(
       throw Error("Not an object")
     }
 
-    const result = {} as T
-    for (const key in schemaValidators) {
+    return keys(schemaValidators).reduce((result, key) => {
       result[key] = schemaValidators[key](data, key)
-    }
-
-    return result
+      return result
+    }, {} as T)
   }
 }
 

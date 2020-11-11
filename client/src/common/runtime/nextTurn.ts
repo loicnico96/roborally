@@ -1,5 +1,5 @@
 import update from "immutability-helper"
-import { mapValues } from "../utils/mapValues"
+import { mapValues } from "../utils/objects"
 import { GameState, GamePhase } from "../model/GameState"
 
 export function nextTurn(gameState: GameState): GameState {
