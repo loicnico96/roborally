@@ -50,3 +50,10 @@ export function mapValues<T extends ObjectRecord, R>(
     return res
   }, {} as MappedRecord<T, R>)
 }
+
+export function merge<T1 extends ObjectRecord, T2 extends ObjectRecord>(
+  obj: T1,
+  src: T2
+): T1 & T2 {
+  return { ...obj, ...src }
+}

@@ -1,5 +1,7 @@
 import { Card } from "./Card"
 
+export const PROGRAM_SIZE = 5
+
 export type Program = [
   Card | null,
   Card | null,
