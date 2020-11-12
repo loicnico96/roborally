@@ -1,15 +1,15 @@
 import update from "immutability-helper"
 import { mapValues } from "common/utils/objects"
-import { GameState, GamePhase } from "./model/GameState"
+import { RoborallyState, GamePhase } from "./model/RoborallyState"
 import { Card, getAllCards } from "./model/Card"
 import { shuffle } from "common/utils/arrays"
 import {
   getLockedProgram,
   getPlayerHandSize,
   PlayerId,
-} from "./model/PlayerState"
+} from "./model/RoborallyPlayer"
 
-function getDeck(gameState: GameState): Card[] {
+function getDeck(gameState: RoborallyState): Card[] {
   const unavailableCards: Set<Card> = new Set()
   Object.values(gameState.players).forEach(player => {
     getLockedProgram(player).forEach(card => {
@@ -22,7 +22,7 @@ function getDeck(gameState: GameState): Card[] {
   return getAllCards().filter(card => !unavailableCards.has(card))
 }
 
-function drawCards(gameState: GameState): Record<PlayerId, Card[]> {
+function drawCards(gameState: RoborallyState): Record<PlayerId, Card[]> {
   const deck = shuffle(getDeck(gameState))
   let index = 0
   return mapValues(gameState.players, player => {
@@ -37,7 +37,7 @@ function drawCards(gameState: GameState): Record<PlayerId, Card[]> {
   })
 }
 
-export function startTurn(gameState: GameState): GameState {
+export function startTurn(gameState: RoborallyState): RoborallyState {
   const playerHands = drawCards(gameState)
   return update(gameState, {
     phase: { $set: GamePhase.PROGRAM },

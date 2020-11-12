@@ -1,8 +1,8 @@
 import update from "immutability-helper"
 import { mapValues } from "common/utils/objects"
-import { GameState, GamePhase } from "./model/GameState"
+import { RoborallyState, GamePhase } from "./model/RoborallyState"
 
-export function nextTurn(gameState: GameState): GameState {
+export function nextTurn(gameState: RoborallyState): RoborallyState {
   return update(gameState, {
     turn: turn => turn + 1,
     phase: { $set: GamePhase.STANDBY },

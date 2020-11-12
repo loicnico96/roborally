@@ -1,11 +1,11 @@
 import update, { Spec } from "immutability-helper"
 import { mapValues } from "common/utils/objects"
-import { GameState, GamePhase } from "./model/GameState"
+import { RoborallyState, GamePhase } from "./model/RoborallyState"
 import {
   PlayerId,
-  PlayerState,
+  RoborallyPlayer,
   getInitialPlayerState,
-} from "./model/PlayerState"
+} from "./model/RoborallyPlayer"
 import { Card, CardAction, getCardAction, getCardPriority } from "./model/Card"
 import { forEachAsync } from "common/utils/forEachAsync"
 import { getDir, movePos, Direction, Rotation, getPos } from "./model/Position"
@@ -19,7 +19,7 @@ import {
 import { sortBy, SortDirection } from "common/utils/arrays"
 
 type StateChangeHandler = (
-  newState: GameState,
+  newState: RoborallyState,
   animDuration: number
 ) => Promise<void>
 
@@ -29,7 +29,7 @@ type PlayerAction = {
 }
 
 function getOrderedPlayerActions(
-  { players }: GameState,
+  { players }: RoborallyState,
   sequence: number
 ): PlayerAction[] {
   const playerActions: PlayerAction[] = []
@@ -52,9 +52,9 @@ function getOrderedPlayerActions(
 }
 
 export async function resolveTurn(
-  initialState: GameState,
+  initialState: RoborallyState,
   onStateChanged: StateChangeHandler | null = null
-): Promise<GameState> {
+): Promise<RoborallyState> {
   let gameState = initialState
   if (gameState.phase !== GamePhase.PROGRAM) {
     return gameState
@@ -335,7 +335,7 @@ export async function resolveTurn(
     return gameState.board
   }
 
-  function getPlayer(playerId: PlayerId): PlayerState {
+  function getPlayer(playerId: PlayerId): RoborallyPlayer {
     return gameState.players[playerId]
   }
 
@@ -361,7 +361,7 @@ export async function resolveTurn(
 
   async function updatePlayer(
     playerId: PlayerId,
-    updateSpec: Spec<PlayerState, never>,
+    updateSpec: Spec<RoborallyPlayer, never>,
     animDuration: number
   ) {
     return updateState(
@@ -376,7 +376,7 @@ export async function resolveTurn(
 
   async function updatePlayers(
     playerIds: PlayerId[],
-    updateSpec: Spec<PlayerState, never>,
+    updateSpec: Spec<RoborallyPlayer, never>,
     animDuration: number
   ) {
     return updateState(
@@ -384,7 +384,7 @@ export async function resolveTurn(
         players: playerIds.reduce(
           (updates, playerId) =>
             Object.assign(updates, { [playerId]: updateSpec }),
-          {} as Record<PlayerId, Spec<PlayerState, never>>
+          {} as Record<PlayerId, Spec<RoborallyPlayer, never>>
         ),
       },
       animDuration
@@ -392,7 +392,7 @@ export async function resolveTurn(
   }
 
   async function updateState(
-    updateSpec: Spec<GameState, never>,
+    updateSpec: Spec<RoborallyState, never>,
     animDuration: number
   ) {
     gameState = update(gameState, updateSpec)

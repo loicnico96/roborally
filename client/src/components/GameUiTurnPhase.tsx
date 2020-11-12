@@ -1,5 +1,5 @@
 import React from "react"
-import { GamePhase } from "common/roborally/model/GameState"
+import { GamePhase } from "common/roborally/model/RoborallyState"
 
 type GameUiTurnPhaseProps = {
   isCurrent: boolean

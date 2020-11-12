@@ -6,12 +6,12 @@ import {
   getRepair,
   setCell,
   setWall,
-} from "../../client/src/common/roborally/model/BoardData"
+} from "../../../client/src/common/roborally/model/BoardData"
 import {
   Direction,
   getPos,
   Rotation,
-} from "../../client/src/common/roborally/model/Position"
+} from "../../../client/src/common/roborally/model/Position"
 
 let board = getEmptyBoard(12, 12)
 

@@ -3,7 +3,10 @@ import { preconditionError, validationError } from "../utils/errors"
 import { firestore } from "../utils/firestore"
 import { httpsCallable } from "../utils/httpsCallable"
 import { Collection } from "common/firestore/collections"
-import { GameState, GamePhase } from "common/roborally/model/GameState"
+import {
+  RoborallyState,
+  GamePhase,
+} from "common/roborally/model/RoborallyState"
 import { Program } from "common/roborally/model/Program"
 import { confirmPlayerProgram } from "common/roborally/confirmPlayerProgram"
 import { isValidProgram } from "common/roborally/isValidProgram"
@@ -46,7 +49,7 @@ const validationSchema = {
   turn: required(validateNumber({ integer: true })),
 }
 
-function allPlayersReady(gameData: GameState): boolean {
+function allPlayersReady(gameData: RoborallyState): boolean {
   return Object.values(gameData.players).every(player => player.ready)
 }
 

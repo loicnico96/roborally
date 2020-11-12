@@ -1,4 +1,4 @@
-import { PlayerState } from "common/roborally/model/PlayerState"
+import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
 import styled from "styled-components"
 
 import Robot0 from "../assets/Robots/Robot0.png"
@@ -11,7 +11,7 @@ const TRANSITION_DURATION = 0.5
 
 type GameUiPlayerRobotProps = {
   playerIndex: number
-  player: PlayerState
+  player: RoborallyPlayer
 }
 
 function getRobotUrl({ playerIndex }: GameUiPlayerRobotProps): string {

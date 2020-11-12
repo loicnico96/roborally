@@ -1,10 +1,10 @@
 import update from "immutability-helper"
-import { GameState } from "./model/GameState"
+import { RoborallyState } from "./model/RoborallyState"
 
 export function readyPlayerForTurn(
-  gameState: GameState,
+  gameState: RoborallyState,
   playerId: string
-): GameState {
+): RoborallyState {
   return update(gameState, {
     players: {
       [playerId]: {

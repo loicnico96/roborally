@@ -1,9 +1,12 @@
 import React from "react"
-import { PlayerId, PlayerState } from "common/roborally/model/PlayerState"
+import {
+  PlayerId,
+  RoborallyPlayer,
+} from "common/roborally/model/RoborallyPlayer"
 
 type GameUiPlayerCardProps = {
   isCurrentUser: boolean
-  player: PlayerState
+  player: RoborallyPlayer
   playerId: PlayerId
 }
 

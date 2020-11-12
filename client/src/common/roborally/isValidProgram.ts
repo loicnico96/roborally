@@ -1,7 +1,10 @@
-import { getLockedProgram, PlayerState } from "./model/PlayerState"
+import { getLockedProgram, RoborallyPlayer } from "./model/RoborallyPlayer"
 import { Program } from "./model/Program"
 
-export function isValidProgram(program: Program, player: PlayerState): boolean {
+export function isValidProgram(
+  program: Program,
+  player: RoborallyPlayer
+): boolean {
   if (player.down) {
     // Program must be empty
     return program.every(sequence => sequence === null)

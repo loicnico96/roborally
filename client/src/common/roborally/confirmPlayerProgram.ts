@@ -1,13 +1,13 @@
 import update from "immutability-helper"
-import { GameState } from "./model/GameState"
+import { RoborallyState } from "./model/RoborallyState"
 import { Program } from "./model/Program"
 
 export function confirmPlayerProgram(
-  gameState: GameState,
+  gameState: RoborallyState,
   playerId: string,
   program: Program,
   poweredDown: boolean
-): GameState {
+): RoborallyState {
   return update(gameState, {
     players: {
       [playerId]: {

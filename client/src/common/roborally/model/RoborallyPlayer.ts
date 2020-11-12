@@ -1,3 +1,4 @@
+import { PlayerStateBasic } from "common/model/PlayerStateBasic"
 import { clamp } from "common/utils/math"
 import { merge } from "common/utils/objects"
 import { Card } from "./Card"
@@ -8,9 +9,7 @@ export const MAX_DAMAGE = 9
 export const MAX_HAND_SIZE = 10
 export const RESPAWN_DAMAGE = 2
 
-export type PlayerId = string
-
-export type PlayerState = {
+export type RoborallyPlayer = PlayerStateBasic & {
   cards: Card[]
   checkpoint: number
   checkpointDir: Direction
@@ -20,7 +19,6 @@ export type PlayerState = {
   downNext: boolean
   pos: Position
   program: Program
-  ready: boolean
   rot: number
   virtual: boolean
 }
@@ -30,7 +28,7 @@ export function getInitialPlayerState(
   initialDir: Direction,
   initialCheckpoint = 0,
   initialDamage = 0
-): PlayerState {
+): RoborallyPlayer {
   return {
     cards: [],
     checkpoint: initialCheckpoint,
@@ -47,66 +45,66 @@ export function getInitialPlayerState(
   }
 }
 
-export function isAlive(player: PlayerState): boolean {
+export function isAlive(player: RoborallyPlayer): boolean {
   return !player.destroyed
 }
 
-export function isVirtual(player: PlayerState): boolean {
+export function isVirtual(player: RoborallyPlayer): boolean {
   return player.virtual
 }
 
-export function isAbleToFire(player: PlayerState): boolean {
+export function isAbleToFire(player: RoborallyPlayer): boolean {
   return isAlive(player) && !isVirtual(player)
 }
 
-export function isAbleToMove(player: PlayerState): boolean {
+export function isAbleToMove(player: RoborallyPlayer): boolean {
   return isAlive(player)
 }
 
-export function isAbleToRepair(player: PlayerState): boolean {
+export function isAbleToRepair(player: RoborallyPlayer): boolean {
   return isAlive(player) && player.damage > 0
 }
 
-export function isAffectedByCells(player: PlayerState): boolean {
+export function isAffectedByCells(player: RoborallyPlayer): boolean {
   return isAlive(player)
 }
 
 export function isAffectedByCheckpoint(
-  player: PlayerState,
+  player: RoborallyPlayer,
   checkpoint: number
 ): boolean {
   return isAlive(player) && [0, 1].includes(checkpoint - player.checkpoint)
 }
 
-export function isAffectedByHoles(player: PlayerState): boolean {
+export function isAffectedByHoles(player: RoborallyPlayer): boolean {
   return isAlive(player)
 }
 
-export function isAffectedByLasers(player: PlayerState): boolean {
+export function isAffectedByLasers(player: RoborallyPlayer): boolean {
   return isAlive(player) && !isVirtual(player)
 }
 
-export function isAffectedByPlayers(player: PlayerState): boolean {
+export function isAffectedByPlayers(player: RoborallyPlayer): boolean {
   return isAlive(player) && !isVirtual(player)
 }
 
-export function isAffectedByWalls(player: PlayerState): boolean {
+export function isAffectedByWalls(player: RoborallyPlayer): boolean {
   return isAlive(player)
 }
 
-export function isDestroyedByDamage(player: PlayerState): boolean {
+export function isDestroyedByDamage(player: RoborallyPlayer): boolean {
   return player.damage >= MAX_DAMAGE
 }
 
-export function getPlayerHandSize(player: PlayerState): number {
+export function getPlayerHandSize(player: RoborallyPlayer): number {
   return clamp(MAX_HAND_SIZE - player.damage, 0, MAX_HAND_SIZE)
 }
 
-export function getLockedProgramIndex(player: PlayerState): number {
+export function getLockedProgramIndex(player: RoborallyPlayer): number {
   return clamp(MAX_DAMAGE - player.damage, 0, PROGRAM_SIZE)
 }
 
-export function getLockedProgram(player: PlayerState): Program {
+export function getLockedProgram(player: RoborallyPlayer): Program {
   const lockIndex = getLockedProgramIndex(player)
   return player.program.map((card, index) =>
     index >= lockIndex ? card : null
@@ -114,51 +112,57 @@ export function getLockedProgram(player: PlayerState): Program {
 }
 
 export function getPlayerDir(
-  player: PlayerState,
+  player: RoborallyPlayer,
   rot: Rotation = Rotation.NONE
 ): Direction {
   return getDir(player.rot + rot)
 }
 
-export function damagePlayer(player: PlayerState, amount: number): PlayerState {
+export function damagePlayer(
+  player: RoborallyPlayer,
+  amount: number
+): RoborallyPlayer {
   return merge(player, {
     damage: clamp(player.damage + amount, 0, MAX_DAMAGE),
   })
 }
 
-export function destroyPlayer(player: PlayerState): PlayerState {
+export function destroyPlayer(player: RoborallyPlayer): RoborallyPlayer {
   return merge(player, {
     destroyed: true,
   })
 }
 
-export function materializePlayer(player: PlayerState): PlayerState {
+export function materializePlayer(player: RoborallyPlayer): RoborallyPlayer {
   return merge(player, {
     virtual: false,
   })
 }
 
 export function movePlayer(
-  player: PlayerState,
+  player: RoborallyPlayer,
   dir: Direction,
   dis: number
-): PlayerState {
+): RoborallyPlayer {
   return merge(player, {
     pos: movePos(player.pos, dir, dis),
   })
 }
 
-export function repairPlayer(player: PlayerState, amount: number): PlayerState {
+export function repairPlayer(
+  player: RoborallyPlayer,
+  amount: number
+): RoborallyPlayer {
   return merge(player, {
     damage: clamp(player.damage - amount, 0, MAX_DAMAGE),
   })
 }
 
 export function respawnPlayer(
-  player: PlayerState,
+  player: RoborallyPlayer,
   checkpoints: Position[]
-): PlayerState {
-  return getInitialPlayerState(
+): RoborallyPlayer {
+  return getInitialRoborallyPlayer(
     checkpoints[player.checkpoint],
     player.checkpointDir,
     player.checkpoint,
@@ -166,16 +170,19 @@ export function respawnPlayer(
   )
 }
 
-export function rotatePlayer(player: PlayerState, rot: Rotation): PlayerState {
+export function rotatePlayer(
+  player: RoborallyPlayer,
+  rot: Rotation
+): RoborallyPlayer {
   return merge(player, {
     rot: player.rot + rot,
   })
 }
 
 export function triggerPlayerCheckpoint(
-  player: PlayerState,
+  player: RoborallyPlayer,
   checkpoint: number
-): PlayerState {
+): RoborallyPlayer {
   return merge(player, {
     checkpoint,
     checkpointDir: getPlayerDir(player),

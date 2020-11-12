@@ -1,6 +1,7 @@
 import { BoardData, BoardId } from "./BoardData"
 import { Direction, Position } from "./Position"
-import { PlayerId, PlayerState, getInitialPlayerState } from "./PlayerState"
+import { RoborallyPlayer, getInitialPlayerState } from "./RoborallyPlayer"
+import { GameStateBasic, PlayerId } from "common/model/GameStateBasic"
 
 export enum GamePhase {
   STANDBY = "standby",
@@ -13,13 +14,11 @@ export enum GamePhase {
   RESOLVE_CHECKPOINTS = "resolve_checkpoints",
 }
 
-export type GameState = {
+export type RoborallyState = GameStateBasic<RoborallyPlayer> & {
   board: BoardData
   boarId: BoardId
   phase: GamePhase
   playerCurrent: PlayerId | null
-  playerOrder: PlayerId[]
-  players: Record<PlayerId, PlayerState>
   sequence: number
   turn: number
 }
@@ -30,7 +29,7 @@ export function getInitialGameState(
   playerIds: PlayerId[],
   initialPos: Position,
   initialDir: Direction
-): GameState {
+): RoborallyState {
   return {
     boarId,
     board: boardData,
@@ -40,7 +39,7 @@ export function getInitialGameState(
     players: playerIds.reduce((players, playerId) => {
       players[playerId] = getInitialPlayerState(initialPos, initialDir)
       return players
-    }, {} as Record<PlayerId, PlayerState>),
+    }, {} as Record<PlayerId, RoborallyPlayer>),
     sequence: 0,
     turn: 0,
   }

@@ -1,18 +1,9 @@
 import update, { Spec } from "immutability-helper"
-import { size } from "./utils/objects"
+import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
+import { PlayerStateBasic } from "./model/PlayerStateBasic"
+import { size } from "common/utils/objects"
 
 export type StateChangeHandler<T> = (newState: T) => Promise<void>
-
-export type PlayerId = string
-
-export type PlayerStateBasic = {
-  ready: boolean
-}
-
-export type GameStateBasic<P extends PlayerStateBasic = PlayerStateBasic> = {
-  playerOrder: PlayerId[]
-  players: Record<PlayerId, P>
-}
 
 export class GameContext<
   P extends PlayerStateBasic,

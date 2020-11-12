@@ -7,8 +7,8 @@ import {
   isLoaded,
   getLoadedResource,
 } from "utils/resources"
-import { RoomData } from "common/roborally/model/RoomData"
-import { GameState } from "common/roborally/model/GameState"
+import { RoomData } from "common/model/RoomData"
+import { RoborallyState } from "common/roborally/model/RoborallyState"
 import { Collection } from "common/firestore/collections"
 import { useFirestoreLoader } from "firestore/useFirestoreLoader"
 import GamePage from "./GamePage"
@@ -26,18 +26,18 @@ const RoomPage = () => {
   )
 
   const isResolving = useRef(false)
-  const stateQueue = useRef<GameState[]>([])
-  const currentState = useRef<GameState | undefined>(undefined)
+  const stateQueue = useRef<RoborallyState[]>([])
+  const currentState = useRef<RoborallyState | undefined>(undefined)
 
   const [gameResource, setGameResource] = useState<Resource<{
-    prevState: GameState
-    state: GameState
+    prevState: RoborallyState
+    state: RoborallyState
   }> | null>(null)
 
   const handleGameResource = useCallback(
-    async (resource: Resource<GameState>) => {
+    async (resource: Resource<RoborallyState>) => {
       async function handleStateChanged(
-        nextState: GameState,
+        nextState: RoborallyState,
         animDuration: number
       ) {
         setGameResource(
@@ -56,7 +56,7 @@ const RoomPage = () => {
         }
       }
 
-      function allPlayersReady(gameStame: GameState): boolean {
+      function allPlayersReady(gameStame: RoborallyState): boolean {
         const players = Object.values(gameStame.players)
         return players.every(player => player.ready)
       }

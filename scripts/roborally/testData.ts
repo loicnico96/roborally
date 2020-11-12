@@ -1,16 +1,16 @@
 import {
   BoardId,
   BoardData,
-} from "../client/src/common/roborally/model/BoardData"
+} from "../../client/src/common/roborally/model/BoardData"
 import {
-  GameState,
+  RoborallyState,
   getInitialGameState,
-} from "../client/src/common/roborally/model/GameState"
+} from "../../client/src/common/roborally/model/RoborallyState"
 import {
   getPos,
   Direction,
-} from "../client/src/common/roborally/model/Position"
-import { RoomId, RoomData } from "../client/src/common/roborally/model/RoomData"
+} from "../../client/src/common/roborally/model/Position"
+import { RoomId, RoomData } from "../../client/src/common/model/RoomData"
 
 import { BOARD_ISLAND } from "./boards/Island"
 
@@ -21,7 +21,7 @@ export const BOARDS: Record<BoardId, BoardData> = {
   [BoardId.ISLAND]: BOARD_ISLAND,
 }
 
-export const GAMES: Record<RoomId, GameState> = {
+export const GAMES: Record<RoomId, RoborallyState> = {
   [TEST_ROOM_ID]: getInitialGameState(
     BoardId.ISLAND,
     BOARD_ISLAND,

@@ -1,6 +1,9 @@
 import React from "react"
 import styled from "styled-components"
-import { GamePhase, GameState } from "common/roborally/model/GameState"
+import {
+  GamePhase,
+  RoborallyState,
+} from "common/roborally/model/RoborallyState"
 import { RoomId } from "common/roborally/model/RoomData"
 import { useCurrentUserId } from "hooks/useCurrentUserId"
 import GameUiHeader from "./GameUiHeader"
@@ -13,7 +16,7 @@ import GameUiBoard from "./GameUiBoard"
 import GameUiViewport from "./GameUiViewport"
 
 type GameProps = {
-  gameState: GameState
+  gameState: RoborallyState
   roomId: RoomId
 }
 
