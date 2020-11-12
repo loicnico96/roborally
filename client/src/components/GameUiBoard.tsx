@@ -4,8 +4,8 @@ import {
   getCell,
   getWall,
   WallType,
-} from "common/model/BoardData"
-import { Direction, Position, Rotation } from "common/model/Position"
+} from "common/roborally/model/BoardData"
+import { Direction, Position, Rotation } from "common/roborally/model/Position"
 import React, { useCallback, useState } from "react"
 import styled from "styled-components"
 

@@ -1,4 +1,4 @@
-import { PlayerState } from "common/model/PlayerState"
+import { PlayerState } from "common/roborally/model/PlayerState"
 import styled from "styled-components"
 
 import Robot0 from "../assets/Robots/Robot0.png"

@@ -1,32 +1,21 @@
 import update, { Spec } from "immutability-helper"
-import { mapValues } from "../utils/objects"
-import { GameState, GamePhase } from "../model/GameState"
+import { mapValues } from "common/utils/objects"
+import { GameState, GamePhase } from "./model/GameState"
 import {
   PlayerId,
   PlayerState,
   getInitialPlayerState,
-} from "common/model/PlayerState"
-import {
-  Card,
-  CardAction,
-  getCardAction,
-  getCardPriority,
-} from "common/model/Card"
-import { forEachAsync } from "../utils/forEachAsync"
-import {
-  getDir,
-  movePos,
-  Direction,
-  Rotation,
-  getPos,
-} from "common/model/Position"
+} from "./model/PlayerState"
+import { Card, CardAction, getCardAction, getCardPriority } from "./model/Card"
+import { forEachAsync } from "common/utils/forEachAsync"
+import { getDir, movePos, Direction, Rotation, getPos } from "./model/Position"
 import {
   BoardData,
   CellType,
   getCell,
   getWall,
   WallType,
-} from "common/model/BoardData"
+} from "./model/BoardData"
 import { sortBy, SortDirection } from "common/utils/arrays"
 
 type StateChangeHandler = (

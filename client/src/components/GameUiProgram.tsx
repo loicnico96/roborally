@@ -1,11 +1,11 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
-import { GamePhase, GameState } from "common/model/GameState"
-import { getLockedProgram, PlayerId } from "common/model/PlayerState"
-import { RoomId } from "common/model/RoomData"
+import { GamePhase, GameState } from "common/roborally/model/GameState"
+import { getLockedProgram, PlayerId } from "common/roborally/model/PlayerState"
+import { RoomId } from "common/roborally/model/RoomData"
 import { triggerReady } from "functions/triggers"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
-import { getEmptyProgram, Program } from "common/model/Program"
-import { Card } from "common/model/Card"
+import { getEmptyProgram, Program } from "common/roborally/model/Program"
+import { Card } from "common/roborally/model/Card"
 import GameUiCard from "./GameUiCard"
 
 type GameUiProgramProps = {

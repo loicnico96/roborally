@@ -1,5 +1,5 @@
 import React from "react"
-import { PlayerId, PlayerState } from "common/model/PlayerState"
+import { PlayerId, PlayerState } from "common/roborally/model/PlayerState"
 
 type GameUiPlayerCardProps = {
   isCurrentUser: boolean

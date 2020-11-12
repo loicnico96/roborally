@@ -1,5 +1,5 @@
 import update from "immutability-helper"
-import { GameState } from "../model/GameState"
+import { GameState } from "./model/GameState"
 
 export function readyPlayerForTurn(
   gameState: GameState,

@@ -1,5 +1,5 @@
-import { getLockedProgram, PlayerState } from "../model/PlayerState"
-import { Program } from "../model/Program"
+import { getLockedProgram, PlayerState } from "./model/PlayerState"
+import { Program } from "./model/Program"
 
 export function isValidProgram(program: Program, player: PlayerState): boolean {
   if (player.down) {

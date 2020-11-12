@@ -1,6 +1,6 @@
 import React from "react"
-import { GameState } from "common/model/GameState"
-import { RoomId } from "common/model/RoomData"
+import { GameState } from "common/roborally/model/GameState"
+import { RoomId } from "common/roborally/model/RoomData"
 import Game from "./Game"
 
 type GamePageProps = {

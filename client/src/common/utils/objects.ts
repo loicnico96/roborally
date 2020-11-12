@@ -72,3 +72,7 @@ export function pick<T extends ObjectRecord, K extends keyof T>(
     return res
   }, {} as Pick<T, K>)
 }
+
+export function size(obj: ObjectRecord): number {
+  return Object.keys(obj).length
+}

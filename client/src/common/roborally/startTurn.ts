@@ -1,13 +1,13 @@
 import update from "immutability-helper"
-import { mapValues } from "../utils/objects"
-import { GameState, GamePhase } from "../model/GameState"
-import { Card, getAllCards } from "common/model/Card"
+import { mapValues } from "common/utils/objects"
+import { GameState, GamePhase } from "./model/GameState"
+import { Card, getAllCards } from "./model/Card"
 import { shuffle } from "common/utils/arrays"
 import {
   getLockedProgram,
   getPlayerHandSize,
   PlayerId,
-} from "common/model/PlayerState"
+} from "./model/PlayerState"
 
 function getDeck(gameState: GameState): Card[] {
   const unavailableCards: Set<Card> = new Set()

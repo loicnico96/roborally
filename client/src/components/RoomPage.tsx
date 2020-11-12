@@ -7,12 +7,12 @@ import {
   isLoaded,
   getLoadedResource,
 } from "utils/resources"
-import { RoomData } from "common/model/RoomData"
-import { GameState } from "common/model/GameState"
+import { RoomData } from "common/roborally/model/RoomData"
+import { GameState } from "common/roborally/model/GameState"
 import { Collection } from "common/firestore/collections"
 import { useFirestoreLoader } from "firestore/useFirestoreLoader"
 import GamePage from "./GamePage"
-import { resolveTurn } from "common/runtime/resolveTurn"
+import { resolveTurn } from "common/roborally/resolveTurn"
 
 type RouteParams = {
   roomId: string

@@ -1,5 +1,5 @@
 import React from "react"
-import { RoomId } from "common/model/RoomData"
+import { RoomId } from "common/roborally/model/RoomData"
 
 type GameUiHeaderProps = {
   currentTurn: number

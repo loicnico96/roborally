@@ -1,6 +1,6 @@
-import { BoardData } from "../model/BoardData"
-import { GameState } from "../model/GameState"
-import { RoomData } from "../model/RoomData"
+import { BoardData } from "../roborally/model/BoardData"
+import { GameState } from "../roborally/model/GameState"
+import { RoomData } from "../roborally/model/RoomData"
 
 export enum Collection {
   BOARD = "board",

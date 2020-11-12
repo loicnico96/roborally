@@ -9,6 +9,16 @@ export function clone<T>(array: ReadonlyArray<T>): Array<T> {
   return [...array]
 }
 
+export function generate<T extends string | number, R>(
+  array: ReadonlyArray<T>,
+  mapFn: (key: T) => R
+): Record<T, R> {
+  return array.reduce((result, key) => {
+    result[key] = mapFn(key)
+    return result
+  }, {} as Record<T, R>)
+}
+
 export function inlineShuffle<T>(array: Array<T>): void {
   for (let index = array.length - 1; index > 0; index--) {
     const randomIndex = Math.floor(Math.random() * (index + 1))

@@ -1,6 +1,6 @@
 import update from "immutability-helper"
-import { GameState } from "../model/GameState"
-import { Program } from "../model/Program"
+import { GameState } from "./model/GameState"
+import { Program } from "./model/Program"
 
 export function confirmPlayerProgram(
   gameState: GameState,

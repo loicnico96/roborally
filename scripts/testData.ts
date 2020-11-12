@@ -1,10 +1,16 @@
-import { BoardId, BoardData } from "../client/src/common/model/BoardData"
+import {
+  BoardId,
+  BoardData,
+} from "../client/src/common/roborally/model/BoardData"
 import {
   GameState,
   getInitialGameState,
-} from "../client/src/common/model/GameState"
-import { getPos, Direction } from "../client/src/common/model/Position"
-import { RoomId, RoomData } from "../client/src/common/model/RoomData"
+} from "../client/src/common/roborally/model/GameState"
+import {
+  getPos,
+  Direction,
+} from "../client/src/common/roborally/model/Position"
+import { RoomId, RoomData } from "../client/src/common/roborally/model/RoomData"
 
 import { BOARD_ISLAND } from "./boards/Island"
 
