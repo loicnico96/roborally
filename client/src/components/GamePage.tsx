@@ -1,6 +1,6 @@
 import React from "react"
 import { RoborallyState } from "common/roborally/model/RoborallyState"
-import { RoomId } from "common/roborally/model/RoomData"
+import { RoomId } from "common/model/RoomData"
 import Game from "./Game"
 
 type GamePageProps = {

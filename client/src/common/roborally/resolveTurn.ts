@@ -1,151 +1,128 @@
-import update, { Spec } from "immutability-helper"
+import update from "immutability-helper"
 import { mapValues } from "common/utils/objects"
 import { RoborallyState, GamePhase } from "./model/RoborallyState"
-import { RoborallyPlayer, getInitialPlayerState } from "./model/RoborallyPlayer"
-import { Card, CardAction, getCardAction, getCardPriority } from "./model/Card"
+import {
+  destroyPlayer,
+  isAbleToMove,
+  isAbleToRepair,
+  isAffectedByCells,
+  isAffectedByCheckpoint,
+  isAffectedByHoles,
+  repairPlayer,
+  respawnPlayer,
+  triggerPlayerCheckpoint,
+} from "./model/RoborallyPlayer"
+import { CardAction, getCardAction } from "./model/Card"
 import { forEachAsync } from "common/utils/forEachAsync"
-import { getDir, movePos, Direction, Rotation, getPos } from "./model/Position"
-import { Board, getCell, getWall, WallType } from "./model/Board"
-import { sortBy, SortDirection } from "common/utils/arrays"
+import {
+  getDir,
+  movePos,
+  Direction,
+  Rotation,
+  isSamePos,
+} from "./model/Position"
+import { getWall, WallType } from "./model/Board"
 import { PlayerId } from "common/model/GameStateBasic"
 import { CellType } from "./model/CellData"
-
-type StateChangeHandler = (
-  newState: RoborallyState,
-  animDuration: number
-) => Promise<void>
-
-type PlayerAction = {
-  playerId: PlayerId
-  card: Card
-}
-
-function getOrderedPlayerActions(
-  { players }: RoborallyState,
-  sequence: number
-): PlayerAction[] {
-  const playerActions: PlayerAction[] = []
-  Object.keys(players).forEach(playerId => {
-    const player = players[playerId]
-    const card = player.program[sequence]
-    if (card !== null && !player.destroyed) {
-      playerActions.push({
-        playerId,
-        card,
-      })
-    }
-  })
-
-  return sortBy(
-    playerActions,
-    action => getCardPriority(action.card),
-    SortDirection.DESC
-  )
-}
+import { getOrderedPlayerActions } from "./resolvePlayerActions"
+import { StateChangeHandler } from "common/GameContext"
+import { RoborallyContext } from "./RoborallyContext"
 
 export async function resolveTurn(
   initialState: RoborallyState,
-  onStateChanged: StateChangeHandler | null = null
+  onStateChanged?: StateChangeHandler<RoborallyState>
 ): Promise<RoborallyState> {
-  let gameState = initialState
-  if (gameState.phase !== GamePhase.PROGRAM) {
-    return gameState
+  const ctx = new RoborallyContext(initialState, onStateChanged)
+
+  if (ctx.getPhase() === GamePhase.PROGRAM) {
+    await startResolving()
+
+    for (let sequence = 0; sequence < 5; sequence++) {
+      await resolveSequence(sequence)
+    }
+
+    await respawnPlayers()
+    await startNextTurn()
   }
 
-  await startResolving()
-
-  for (let sequence = 0; sequence < 5; sequence++) {
-    await resolveSequence(sequence)
-  }
-
-  await respawnPlayers()
-  await startNextTurn()
-
-  return gameState
+  return ctx.getState()
 
   async function startResolving() {
-    return updateState(
-      {
-        players: players =>
-          mapValues(players, player =>
-            update(player, {
-              cards: { $set: [] },
-            })
-          ),
-        sequence: { $set: 0 },
-      },
-      1
-    )
+    ctx.updateState({
+      players: players =>
+        mapValues(players, player =>
+          update(player, {
+            cards: { $set: [] },
+          })
+        ),
+      sequence: { $set: 0 },
+    })
+    await ctx.post()
   }
 
   async function respawnPlayers() {
-    const destroyedPlayers = gameState.playerOrder.filter(playerId => {
-      const player = getPlayer(playerId)
-      return player.destroyed
+    const updateCount = ctx.updatePlayers(player => {
+      if (player.destroyed) {
+        return respawnPlayer(player, ctx.state.checkpoints)
+      } else {
+        return false
+      }
     })
 
-    if (destroyedPlayers.length > 0) {
-      await updatePlayers(
-        destroyedPlayers,
-        player =>
-          getInitialPlayerState(
-            getPos(0, 0),
-            player.checkpointDir,
-            player.checkpoint,
-            2
-          ),
-        1
-      )
+    if (updateCount > 0) {
+      await ctx.post()
     }
   }
 
   async function startNextTurn() {
-    return updateState(
-      {
-        turn: turn => turn + 1,
-        phase: { $set: GamePhase.STANDBY },
-        players: players =>
-          mapValues(players, player =>
-            update(player, {
-              damage: { $set: player.downNext ? 0 : player.damage },
-              down: { $set: player.downNext },
-              downNext: { $set: false },
-              ready: { $set: false },
-            })
-          ),
-      },
-      1
-    )
+    ctx.updateState({
+      turn: turn => turn + 1,
+      phase: { $set: GamePhase.STANDBY },
+      players: players =>
+        mapValues(players, player =>
+          update(player, {
+            damage: { $set: player.downNext ? 0 : player.damage },
+            down: { $set: player.downNext },
+            downNext: { $set: false },
+            ready: { $set: false },
+          })
+        ),
+    })
+    await ctx.post()
   }
 
   async function resolveSequence(sequence: number) {
-    await updateState(
-      {
-        sequence: { $set: sequence },
-        phase: { $set: GamePhase.RESOLVE_PLAYERS },
-        playerCurrent: { $set: null },
-      },
-      1
-    )
+    ctx.updateState({
+      sequence: { $set: sequence },
+      phase: { $set: GamePhase.RESOLVE_PLAYERS },
+      playerCurrent: { $set: null },
+    })
+    await ctx.post()
     await resolvePlayerActions(sequence)
-    await updateState({ phase: { $set: GamePhase.RESOLVE_CONVEYORS_FAST } }, 1)
+    ctx.updateState({ phase: { $set: GamePhase.RESOLVE_CONVEYORS_FAST } })
+    await ctx.post()
     await resolveBoardMoves([CellType.CONVEYOR_FAST])
-    await updateState({ phase: { $set: GamePhase.RESOLVE_CONVEYORS } }, 1)
+    ctx.updateState({ phase: { $set: GamePhase.RESOLVE_CONVEYORS } })
+    await ctx.post()
     await resolveBoardMoves([CellType.CONVEYOR_FAST, CellType.CONVEYOR])
-    await updateState({ phase: { $set: GamePhase.RESOLVE_GEARS } }, 1)
+    ctx.updateState({ phase: { $set: GamePhase.RESOLVE_GEARS } })
+    await ctx.post()
     await resolveBoardMoves([CellType.GEAR])
-    await updateState({ phase: { $set: GamePhase.RESOLVE_LASERS } }, 1)
+    ctx.updateState({ phase: { $set: GamePhase.RESOLVE_LASERS } })
+    await ctx.post()
     await resolveBoardLasers()
     await resolvePlayerLasers()
-    await updateState({ phase: { $set: GamePhase.RESOLVE_CHECKPOINTS } }, 1)
+    ctx.updateState({ phase: { $set: GamePhase.RESOLVE_CHECKPOINTS } })
+    await ctx.post()
     await resolveRepairs()
     await resolveCheckpoints()
   }
 
   async function resolvePlayerActions(sequence: number) {
-    const playerActions = getOrderedPlayerActions(gameState, sequence)
+    const playerActions = getOrderedPlayerActions(ctx.getState(), sequence)
     return forEachAsync(playerActions, async ({ playerId, card }) => {
-      await updateState({ playerCurrent: { $set: playerId } }, 1)
+      ctx.updateState({ playerCurrent: { $set: playerId } })
+      await ctx.post()
       await resolvePlayerAction(playerId, getCardAction(card))
     })
   }
@@ -153,145 +130,116 @@ export async function resolveTurn(
   async function resolvePlayerAction(playerId: PlayerId, action: CardAction) {
     switch (action) {
       case CardAction.MOVE_1:
-        await movePlayer(playerId, getDir(getPlayer(playerId).rot), 1)
+        await movePlayer(playerId, getDir(ctx.getPlayer(playerId).rot), 1)
         break
       case CardAction.MOVE_2:
-        await movePlayer(playerId, getDir(getPlayer(playerId).rot), 2)
+        await movePlayer(playerId, getDir(ctx.getPlayer(playerId).rot), 2)
         break
       case CardAction.MOVE_3:
-        await movePlayer(playerId, getDir(getPlayer(playerId).rot), 3)
+        await movePlayer(playerId, getDir(ctx.getPlayer(playerId).rot), 3)
         break
       case CardAction.MOVE_BACK:
-        await movePlayer(playerId, getDir(getPlayer(playerId).rot + 2), 1)
+        await movePlayer(playerId, getDir(ctx.getPlayer(playerId).rot + 2), 1)
         break
       case CardAction.ROTATE_LEFT:
-        await updatePlayer(
-          playerId,
-          {
-            rot: rot => rot + Rotation.LEFT,
-          },
-          1
-        )
+        ctx.updatePlayer(playerId, {
+          rot: rot => rot + Rotation.LEFT,
+        })
+        await ctx.post()
         break
       case CardAction.ROTATE_RIGHT:
-        await updatePlayer(
-          playerId,
-          {
-            rot: rot => rot + Rotation.RIGHT,
-          },
-          1
-        )
+        ctx.updatePlayer(playerId, {
+          rot: rot => rot + Rotation.RIGHT,
+        })
+        await ctx.post()
         break
       case CardAction.ROTATE_BACK:
-        await updatePlayer(
-          playerId,
-          {
-            rot: rot => rot + Rotation.REVERSE,
-          },
-          1
-        )
+        ctx.updatePlayer(playerId, {
+          rot: rot => rot + Rotation.REVERSE,
+        })
+        await ctx.post()
         break
       default:
     }
   }
 
   async function checkHoles() {
-    const fallingPlayers = gameState.playerOrder.filter(playerId => {
-      const player = getPlayer(playerId)
-      if (player.destroyed) {
+    const updateCount = ctx.updatePlayers(player => {
+      const { type } = ctx.getCell(player.pos)
+      if (isAffectedByHoles(player) && type === CellType.HOLE) {
+        return destroyPlayer(player)
+      } else {
         return false
       }
-
-      const { type } = getCell(getBoard(), player.pos)
-      return type === CellType.HOLE
     })
 
-    if (fallingPlayers.length > 0) {
-      await updatePlayers(
-        fallingPlayers,
-        player =>
-          update(player, {
-            destroyed: { $set: true },
-            pos: {
-              x: { $set: -1 },
-              y: { $set: -1 },
-            },
-          }),
-        1
-      )
+    if (updateCount > 0) {
+      await ctx.post()
     }
   }
 
   async function resolveBoardMoves(activeCells: CellType[]) {
-    const movingPlayers = gameState.playerOrder.filter(playerId => {
-      const player = getPlayer(playerId)
-      const { type } = getCell(getBoard(), player.pos)
-      return !player.destroyed && activeCells.includes(type)
+    const updateCount = ctx.updatePlayers(player => {
+      const { type, dir, rot } = ctx.getCell(player.pos)
+      if (isAffectedByCells(player) && activeCells.includes(type)) {
+        return update(player, {
+          pos: p => (dir !== undefined ? movePos(p, dir) : p),
+          rot: r => (rot !== undefined ? r + rot : r),
+        })
+      } else {
+        return false
+      }
     })
 
-    if (movingPlayers.length > 0) {
-      await updatePlayers(
-        movingPlayers,
-        player => {
-          const { type, dir, rot } = getCell(getBoard(), player.pos)
-          if (activeCells.includes(type)) {
-            return update(player, {
-              pos: p => (dir !== undefined ? movePos(p, dir) : p),
-              rot: r => (rot !== undefined ? r + rot : r),
-            })
-          }
-          return player
-        },
-        1
-      )
+    if (updateCount > 0) {
+      await ctx.post()
       await checkHoles()
     }
   }
 
   async function resolveBoardLasers() {
-    return updateState(
-      {
-        // TODO
-      },
-      0 // TOOD
-    )
+    ctx.updateState({
+      // TODO
+    })
   }
 
   async function resolvePlayerLasers() {
-    return updateState(
-      {
-        // TODO
-      },
-      0 // TOOD
-    )
+    ctx.updateState({
+      // TODO
+    })
   }
 
   async function resolveRepairs() {
-    const repairedPlayers = gameState.playerOrder.filter(playerId => {
-      const player = getPlayer(playerId)
-      const { type } = getCell(getBoard(), player.pos)
-      return !player.destroyed && type === CellType.REPAIR && player.damage > 0
+    const updateCount = ctx.updatePlayers(player => {
+      const { type } = ctx.getCell(player.pos)
+      if (isAbleToRepair(player) && type === CellType.REPAIR) {
+        return repairPlayer(player, 1)
+      } else {
+        return false
+      }
     })
 
-    if (repairedPlayers.length > 0) {
-      await updatePlayers(
-        repairedPlayers,
-        player =>
-          update(player, {
-            damage: dmg => dmg - 1,
-          }),
-        1
-      )
+    if (updateCount > 0) {
+      await ctx.post()
     }
   }
 
   async function resolveCheckpoints() {
-    return updateState(
-      {
-        // TODO
-      },
-      0 // TOOD
-    )
+    const updateCount = ctx.updatePlayers(player => {
+      const checkpoint = ctx.getCheckpointAtPosition(player.pos)
+      if (
+        checkpoint !== undefined &&
+        isAffectedByCheckpoint(player, checkpoint)
+      ) {
+        return triggerPlayerCheckpoint(player, checkpoint)
+      } else {
+        return false
+      }
+    })
+
+    if (updateCount > 0) {
+      await ctx.post()
+    }
   }
 
   function movePlayerCheckRecursive(
@@ -300,35 +248,29 @@ export async function resolveTurn(
     pushPlayers = true,
     movedPlayers: PlayerId[] = []
   ): PlayerId[] {
-    const oldPos = getPlayer(playerId).pos
-    if (getWall(getBoard(), oldPos, dir) !== WallType.NONE) {
+    const oldPos = ctx.getPlayer(playerId).pos
+    if (getWall(ctx.getBoard(), oldPos, dir) !== WallType.NONE) {
       return []
     }
 
     const newPos = movePos(oldPos, dir, 1)
-    for (const otherPlayerId in gameState.players) {
-      const otherPos = getPlayer(otherPlayerId).pos
-      if (otherPos.x === newPos.x && otherPos.y === newPos.y) {
-        if (pushPlayers) {
-          return movePlayerCheckRecursive(otherPlayerId, dir, pushPlayers, [
-            ...movedPlayers,
-            playerId,
-          ])
-        } else {
-          return []
-        }
+    const collidingPlayerId = ctx.getPlayerOrder().find(otherPlayerId => {
+      const otherPos = ctx.getPlayer(otherPlayerId).pos
+      return isSamePos(newPos, otherPos)
+    })
+
+    if (collidingPlayerId !== undefined) {
+      if (pushPlayers) {
+        return movePlayerCheckRecursive(collidingPlayerId, dir, pushPlayers, [
+          ...movedPlayers,
+          playerId,
+        ])
       }
+
+      return []
     }
 
     return [...movedPlayers, playerId]
-  }
-
-  function getBoard(): Board {
-    return gameState.board
-  }
-
-  function getPlayer(playerId: PlayerId): RoborallyPlayer {
-    return gameState.players[playerId]
   }
 
   async function movePlayer(
@@ -337,59 +279,23 @@ export async function resolveTurn(
     dis: number,
     pushPlayers = true
   ) {
-    for (let i = 0; i < dis && !getPlayer(playerId).destroyed!; i++) {
+    for (let i = 0; i < dis; i++) {
+      if (!isAbleToMove(ctx.getPlayer(playerId))) {
+        return
+      }
+
       const movingPlayers = movePlayerCheckRecursive(playerId, dir, pushPlayers)
-      await updatePlayers(
-        movingPlayers,
-        player =>
-          update(player, {
+      ctx.updatePlayers((player, movingPlayerId) => {
+        if (movingPlayers.includes(movingPlayerId)) {
+          return update(player, {
             pos: pos => movePos(pos, dir, 1),
-          }),
-        1
-      )
+          })
+        } else {
+          return false
+        }
+      })
+      await ctx.post()
       await checkHoles()
-    }
-  }
-
-  async function updatePlayer(
-    playerId: PlayerId,
-    updateSpec: Spec<RoborallyPlayer, never>,
-    animDuration: number
-  ) {
-    return updateState(
-      {
-        players: {
-          [playerId]: updateSpec,
-        },
-      },
-      animDuration
-    )
-  }
-
-  async function updatePlayers(
-    playerIds: PlayerId[],
-    updateSpec: Spec<RoborallyPlayer, never>,
-    animDuration: number
-  ) {
-    return updateState(
-      {
-        players: playerIds.reduce(
-          (updates, playerId) =>
-            Object.assign(updates, { [playerId]: updateSpec }),
-          {} as Record<PlayerId, Spec<RoborallyPlayer, never>>
-        ),
-      },
-      animDuration
-    )
-  }
-
-  async function updateState(
-    updateSpec: Spec<RoborallyState, never>,
-    animDuration: number
-  ) {
-    gameState = update(gameState, updateSpec)
-    if (onStateChanged) {
-      await onStateChanged(gameState, animDuration)
     }
   }
 }

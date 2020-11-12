@@ -3,7 +3,7 @@ import { Board, getCell, getWall, WallType } from "./model/Board"
 import { CellData } from "./model/CellData"
 import { Direction, isSamePos, Position } from "./model/Position"
 import { RoborallyPlayer } from "./model/RoborallyPlayer"
-import { RoborallyState } from "./model/RoborallyState"
+import { GamePhase, RoborallyState } from "./model/RoborallyState"
 
 export class RoborallyContext extends GameContext<
 RoborallyPlayer,
@@ -30,6 +30,10 @@ RoborallyState
 
   getLastCheckpoint(): number {
     return this.state.checkpoints.length - 1
+  }
+
+  getPhase(): GamePhase {
+    return this.state.phase
   }
 
   getSequence(): number {

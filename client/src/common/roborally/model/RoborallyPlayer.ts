@@ -162,7 +162,7 @@ export function respawnPlayer(
   player: RoborallyPlayer,
   checkpoints: Position[]
 ): RoborallyPlayer {
-  return getInitialRoborallyPlayer(
+  return getInitialPlayerState(
     checkpoints[player.checkpoint],
     player.checkpointDir,
     player.checkpoint,
