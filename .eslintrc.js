@@ -171,8 +171,8 @@ module.exports = {
       "afterColon": true
     }],
     "linebreak-style": ["error", "unix"],
-    "max-len": ["error", 80],
-    "max-params": ["error", 5],
+    "max-len": ["warn", 80],
+    "max-params": ["warn", 5],
     "multiline-ternary": ["error", "always-multiline"],
     "new-parens": ["error", "always"],
     "no-array-constructor": ["error"],

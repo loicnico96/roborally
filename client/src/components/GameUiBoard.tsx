@@ -1,10 +1,5 @@
-import {
-  BoardData,
-  CellType,
-  getCell,
-  getWall,
-  WallType,
-} from "common/roborally/model/BoardData"
+import { Board, getCell, getWall, WallType } from "common/roborally/model/Board"
+import { CellType } from "common/roborally/model/CellData"
 import { Direction, Position, Rotation } from "common/roborally/model/Position"
 import React, { useCallback, useState } from "react"
 import styled from "styled-components"
@@ -14,7 +9,7 @@ import BoardIsland from "../assets/Boards/Base Game/Island.png"
 const CELL_SIZE = 100
 
 type GameUiBoardBackgroundProps = {
-  board: BoardData
+  board: Board
   imageUrl: string
 }
 
@@ -58,7 +53,7 @@ function getRot(rot: Rotation): string {
   }
 }
 
-function getCellTooltip(board: BoardData, pos: Position): string {
+function getCellTooltip(board: Board, pos: Position): string {
   const cell = getCell(board, pos)
   switch (cell.type) {
     case CellType.HOLE:
@@ -93,7 +88,7 @@ function getCellTooltip(board: BoardData, pos: Position): string {
 
 const DIRS = [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST]
 
-function getWallTooltip(board: BoardData, pos: Position): string {
+function getWallTooltip(board: Board, pos: Position): string {
   const dirs = DIRS.filter(dir => getWall(board, pos, dir) !== WallType.NONE)
   if (dirs.length > 0) {
     return `Walls: ${dirs.map(getDir).join(", ")}`
@@ -101,7 +96,7 @@ function getWallTooltip(board: BoardData, pos: Position): string {
   return ""
 }
 
-function getTooltip(board: BoardData, pos: Position): string {
+function getTooltip(board: Board, pos: Position): string {
   return [getCellTooltip(board, pos), getWallTooltip(board, pos)]
     .filter(tooltip => tooltip)
     .join("\n")
@@ -117,7 +112,7 @@ const GameUiBoardBackground = styled.div`
 `
 
 type GameUiBoardProps = React.PropsWithChildren<{
-  board: BoardData
+  board: Board
 }>
 
 const GameUiBoard = ({ board, children }: GameUiBoardProps) => {

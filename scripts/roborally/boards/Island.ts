@@ -6,7 +6,7 @@ import {
   getRepair,
   setCell,
   setWall,
-} from "../../../client/src/common/roborally/model/BoardData"
+} from "../../../client/src/common/roborally/model/Board"
 import {
   Direction,
   getPos,

@@ -1,8 +1,6 @@
 import React from "react"
-import {
-  PlayerId,
-  RoborallyPlayer,
-} from "common/roborally/model/RoborallyPlayer"
+import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
+import { PlayerId } from "common/model/GameStateBasic"
 
 type GameUiPlayerCardProps = {
   isCurrentUser: boolean

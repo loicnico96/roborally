@@ -1,4 +1,4 @@
-import { BoardData } from "../roborally/model/BoardData"
+import { Board } from "../roborally/model/Board"
 import { RoborallyState } from "../roborally/model/RoborallyState"
 import { RoomData } from "../model/RoomData"
 
@@ -10,7 +10,7 @@ export enum Collection {
 }
 
 export type CollectionData<T extends Collection = Collection> = {
-  [Collection.BOARD]: BoardData
+  [Collection.BOARD]: Board
   [Collection.CLIENT]: RoborallyState
   [Collection.ROOM]: RoomData
   [Collection.SERVER]: RoborallyState

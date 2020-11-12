@@ -1,7 +1,4 @@
-import {
-  BoardId,
-  BoardData,
-} from "../../client/src/common/roborally/model/BoardData"
+import { BoardId, Board } from "../../client/src/common/roborally/model/Board"
 import {
   RoborallyState,
   getInitialGameState,
@@ -17,7 +14,7 @@ import { BOARD_ISLAND } from "./boards/Island"
 export const TEST_ROOM_ID = "id_test"
 export const TEST_PLAYER_IDS = ["id_player_1"]
 
-export const BOARDS: Record<BoardId, BoardData> = {
+export const BOARDS: Record<BoardId, Board> = {
   [BoardId.ISLAND]: BOARD_ISLAND,
 }
 

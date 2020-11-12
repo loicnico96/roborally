@@ -3,16 +3,14 @@ import {
   GamePhase,
   RoborallyState,
 } from "common/roborally/model/RoborallyState"
-import {
-  getLockedProgram,
-  PlayerId,
-} from "common/roborally/model/RoborallyPlayer"
-import { RoomId } from "common/roborally/model/RoomData"
+import { getLockedProgram } from "common/roborally/model/RoborallyPlayer"
+import { RoomId } from "common/model/RoomData"
 import { triggerReady } from "functions/triggers"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { getEmptyProgram, Program } from "common/roborally/model/Program"
 import { Card } from "common/roborally/model/Card"
 import GameUiCard from "./GameUiCard"
+import { PlayerId } from "common/model/GameStateBasic"
 
 type GameUiProgramProps = {
   gameState: RoborallyState

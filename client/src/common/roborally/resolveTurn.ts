@@ -1,22 +1,14 @@
 import update, { Spec } from "immutability-helper"
 import { mapValues } from "common/utils/objects"
 import { RoborallyState, GamePhase } from "./model/RoborallyState"
-import {
-  PlayerId,
-  RoborallyPlayer,
-  getInitialPlayerState,
-} from "./model/RoborallyPlayer"
+import { RoborallyPlayer, getInitialPlayerState } from "./model/RoborallyPlayer"
 import { Card, CardAction, getCardAction, getCardPriority } from "./model/Card"
 import { forEachAsync } from "common/utils/forEachAsync"
 import { getDir, movePos, Direction, Rotation, getPos } from "./model/Position"
-import {
-  BoardData,
-  CellType,
-  getCell,
-  getWall,
-  WallType,
-} from "./model/BoardData"
+import { Board, getCell, getWall, WallType } from "./model/Board"
 import { sortBy, SortDirection } from "common/utils/arrays"
+import { PlayerId } from "common/model/GameStateBasic"
+import { CellType } from "./model/CellData"
 
 type StateChangeHandler = (
   newState: RoborallyState,
@@ -331,7 +323,7 @@ export async function resolveTurn(
     return [...movedPlayers, playerId]
   }
 
-  function getBoard(): BoardData {
+  function getBoard(): Board {
     return gameState.board
   }
 

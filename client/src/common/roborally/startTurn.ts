@@ -3,11 +3,8 @@ import { mapValues } from "common/utils/objects"
 import { RoborallyState, GamePhase } from "./model/RoborallyState"
 import { Card, getAllCards } from "./model/Card"
 import { shuffle } from "common/utils/arrays"
-import {
-  getLockedProgram,
-  getPlayerHandSize,
-  PlayerId,
-} from "./model/RoborallyPlayer"
+import { getLockedProgram, getPlayerHandSize } from "./model/RoborallyPlayer"
+import { PlayerId } from "common/model/GameStateBasic"
 
 function getDeck(gameState: RoborallyState): Card[] {
   const unavailableCards: Set<Card> = new Set()
