@@ -38,7 +38,7 @@ const RoomPage = () => {
     async (resource: Resource<RoborallyState>) => {
       async function handleStateChanged(
         nextState: RoborallyState,
-        animDuration: number
+        animDuration = 1
       ) {
         setGameResource(
           getLoadedResource(resource.id, {

@@ -1,9 +1,13 @@
 {
   "compilerOptions": {
+    "baseUrl": ".",
     "module": "commonjs",
     "esModuleInterop": true,
     "resolveJsonModule": true,
-    "strict": true
+    "strict": true,
+    "paths": {
+      "common/*": ["./client/src/common/*"],
+    }
   },
   "include": ["scripts"]
 }

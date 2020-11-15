@@ -1,4 +1,4 @@
-import { PlayerId } from "common/model/RoborallyPlayer"
+import { PlayerId } from "common/model/GameStateBasic"
 import { useSearchParams } from "./useSearchParams"
 
 export function useCurrentUserId(): PlayerId {

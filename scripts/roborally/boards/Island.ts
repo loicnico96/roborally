@@ -1,17 +1,11 @@
+import { getEmptyBoard, setCell, setWall } from "common/roborally/model/Board"
 import {
   getConveyor,
-  getEmptyBoard,
   getGear,
   getHole,
   getRepair,
-  setCell,
-  setWall,
-} from "../../../client/src/common/roborally/model/Board"
-import {
-  Direction,
-  getPos,
-  Rotation,
-} from "../../../client/src/common/roborally/model/Position"
+} from "common/roborally/model/CellData"
+import { Direction, getPos, Rotation } from "common/roborally/model/Position"
 
 let board = getEmptyBoard(12, 12)
 

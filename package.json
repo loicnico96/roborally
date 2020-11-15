@@ -10,9 +10,9 @@
     "app:lint": "cd client && yarn lint",
     "app:lint:fix": "cd client && yarn lint:fix",
     "app:start": "cd client && yarn start",
-    "app:test": "cd client && yarn test",
+    "app:typecheck": "cd client && yarn typecheck",
     "deploy:all": "firebase deploy && yarn deploy:db",
-    "deploy:db": "ts-node scripts/setupDB.ts",
+    "deploy:db": "ts-node -r tsconfig-paths/register scripts/setupDB.ts",
     "deploy:functions": "firebase deploy --only functions",
     "deploy:hosting": "firebase deploy --only hosting",
     "deploy:rules": "firebase deploy --only firestore:rules",
@@ -25,12 +25,14 @@
     "lint:all": "yarn app:lint && yarn functions:lint && yarn scripts:lint",
     "lint:fix": "yarn app:lint:fix && yarn functions:lint:fix && yarn scripts:lint:fix",
     "scripts:lint": "eslint scripts --ext .js,.ts",
-    "scripts:lint:fix": "yarn scripts:lint --fix"
+    "scripts:lint:fix": "yarn scripts:lint --fix",
+    "scripts:typecheck": "tsc --noEmit"
   },
   "lint-staged": {
     "client/src/**/*.{js,jsx,ts,tsx}": [
       "yarn format",
-      "yarn app:lint:fix"
+      "yarn app:lint:fix",
+      "bash -c yarn app:typecheck"
     ],
     "functions/src/**/*.{js,ts}": [
       "yarn format",
@@ -38,7 +40,8 @@
     ],
     "scripts/**/*.{js,ts}": [
       "yarn format",
-      "yarn scripts:lint:fix"
+      "yarn scripts:lint:fix",
+      "bash -c yarn scripts:typecheck"
     ]
   },
   "husky": {
@@ -57,6 +60,7 @@
     "lint-staged": "^10.5.1",
     "prettier": "^2.1.2",
     "ts-node": "^9.0.0",
+    "tsconfig-paths": "^3.9.0",
     "typescript": "^4.0.5"
   }
 }

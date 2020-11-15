@@ -84,7 +84,7 @@ import Move3_810 from "../assets/Cards/Movement/Speed 3 810.png"
 import Move3_820 from "../assets/Cards/Movement/Speed 3 820.png"
 import Move3_830 from "../assets/Cards/Movement/Speed 3 830.png"
 import Move3_840 from "../assets/Cards/Movement/Speed 3 840.png"
-import { Card } from "common/model/Card"
+import { Card } from "common/roborally/model/Card"
 import React from "react"
 import styled from "styled-components"
 

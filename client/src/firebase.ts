@@ -1,4 +1,4 @@
-import firebaseConfig from "./firebase-config"
+import firebaseConfig from "./config/firebase-config"
 import firebase from "firebase/app"
 import "firebase/firestore"
 import "firebase/functions"
