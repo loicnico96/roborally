@@ -14,6 +14,7 @@ import GameUiProgram from "./GameUiProgram"
 import GameUiPlayerRobot from "./GameUiPlayerRobot"
 import GameUiBoard from "./GameUiBoard"
 import GameUiViewport from "./GameUiViewport"
+import GameUiCheckpoint from "./GameUiCheckpoint"
 
 type GameProps = {
   gameState: RoborallyState
@@ -21,6 +22,7 @@ type GameProps = {
 }
 
 const GameUiContentWrapper = styled.div`
+  background-color: lightgray;
   display: flex;
   flex-direction: column;
   height: 100%;
@@ -32,6 +34,10 @@ const GameUiContentMain = styled.div`
   flex: 1 1 auto;
   flex-direction: row;
   overflow: hidden;
+`
+
+const GameUiTurnPhaseSequence = styled.div`
+  width: 200px;
 `
 
 const TURN_PHASES = [
@@ -51,22 +57,29 @@ const Game = ({ gameState, roomId }: GameProps) => {
 
   const isPlayer = userId in gameState.players
 
+  const isResolving = ![GamePhase.PROGRAM, GamePhase.STANDBY].includes(
+    gameState.phase
+  )
+
   return (
-    <GameUiContentWrapper id="GameUi">
+    <GameUiContentWrapper>
       <GameUiHeader currentTurn={gameState.turn} roomId={roomId} />
-      <GameUiContentMain id="GameUiContentMain">
-        <div id="GameUiTurnPhaseSequence">
+      <GameUiContentMain>
+        <GameUiTurnPhaseSequence>
+          {isResolving && <p>Sequence {gameState.sequence + 1}</p>}
           {TURN_PHASES.map(phase => (
             <GameUiTurnPhase
               key={phase}
               isCurrent={phase === gameState.phase}
-              sequence={gameState.sequence + 1}
               phase={phase}
             />
           ))}
-        </div>
+        </GameUiTurnPhaseSequence>
         <GameUiViewport>
           <GameUiBoard board={gameState.board}>
+            {gameState.checkpoints.map((checkpoint, index) => (
+              <GameUiCheckpoint key={index} index={index} pos={checkpoint} />
+            ))}
             {gameState.playerOrder.map((playerId, index) => (
               <GameUiPlayerRobot
                 key={playerId}

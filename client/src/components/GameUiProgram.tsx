@@ -75,6 +75,8 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
 
   const shownProgram = phase === GamePhase.PROGRAM ? program : player.program
 
+  const isResolving = ![GamePhase.PROGRAM, GamePhase.STANDBY].includes(phase)
+
   return (
     <div id="GameUiProgram">
       <div id="GameUiProgramSequence">
@@ -87,6 +89,7 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
               card === null ||
               phase !== GamePhase.PROGRAM
             }
+            isHighlighted={isResolving && gameState.sequence === index}
             isLocked={lockedProgram[index] !== null}
             onClick={() => onRemoveCard(index)}
           />

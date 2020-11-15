@@ -176,30 +176,51 @@ const CARD_IMAGES = [
 ]
 
 const CARD_SIZE = 100
+const CARD_SIZE_HIGHLIGHT = 120
 
 type GameUiCardButtonProps = {
   imageUrl: string
+  isHighlighted: boolean
+}
+
+function getImageUrl({ imageUrl }: GameUiCardButtonProps): string {
+  return imageUrl
+}
+
+function getImageWidth({ isHighlighted }: GameUiCardButtonProps): number {
+  return isHighlighted ? CARD_SIZE_HIGHLIGHT : CARD_SIZE
+}
+
+function getImageHeight(props: GameUiCardButtonProps): number {
+  return getImageWidth(props) * 1.5
 }
 
 const GameUiCardButton = styled.button`
-  background-image: url("${(props: GameUiCardButtonProps) => props.imageUrl}");
+  background-image: url("${getImageUrl}");
   background-repeat: no-repeat;
-  background-size: ${CARD_SIZE}px ${CARD_SIZE * 1.5}px;
-  height: ${CARD_SIZE * 1.5}px;
-  width: ${CARD_SIZE}px;
+  background-size: ${getImageWidth}px ${getImageHeight}px;
+  height: ${getImageHeight}px;
+  width: ${getImageWidth}px;
 `
 
 type GameUiCardProps = {
   card: Card | null
   disabled?: boolean
+  isHighlighted?: boolean
   isLocked?: boolean
   onClick: () => any
 }
 
-const GameUiCard = ({ card, onClick, disabled }: GameUiCardProps) => (
+const GameUiCard = ({
+  card,
+  disabled,
+  isHighlighted = false,
+  onClick,
+}: GameUiCardProps) => (
   <GameUiCardButton
     disabled={disabled}
     imageUrl={card === null ? CardBack : CARD_IMAGES[card]}
+    isHighlighted={isHighlighted}
     onClick={onClick}
   />
 )
