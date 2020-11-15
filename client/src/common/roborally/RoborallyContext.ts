@@ -6,8 +6,8 @@ import { RoborallyPlayer } from "./model/RoborallyPlayer"
 import { GamePhase, RoborallyState } from "./model/RoborallyState"
 
 export class RoborallyContext extends GameContext<
-RoborallyPlayer,
-RoborallyState
+  RoborallyPlayer,
+  RoborallyState
 > {
   getBoard(): Board {
     return this.state.board
@@ -19,6 +19,10 @@ RoborallyState
 
   getCheckpoint(checkpoint: number): Position {
     return this.state.checkpoints[checkpoint]
+  }
+
+  getCheckpoints(): Position[] {
+    return this.state.checkpoints
   }
 
   getCheckpointAtPosition(pos: Position): number | undefined {

@@ -12,7 +12,7 @@ import { RoomId, RoomData } from "common/model/RoomData"
 import { BOARD_ISLAND } from "./boards/Island"
 
 export const TEST_ROOM_ID = "id_test"
-export const TEST_PLAYER_IDS = ["id_player_1"]
+export const TEST_PLAYER_IDS = ["id_player_1", "id_player_2"]
 export const TEST_CHECKPOINTS = [getPos(0, 0), getPos(3, 3), getPos(6, 6)]
 
 export const BOARDS: Record<BoardId, Board> = {

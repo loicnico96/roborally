@@ -31,6 +31,9 @@ module.exports = {
     "@typescript-eslint/method-signature-style": ["error", "property"],
     "@typescript-eslint/no-dynamic-delete": ["error"],
     "@typescript-eslint/no-explicit-any": ["warn"],
+    "@typescript-eslint/no-inferrable-types": ["error", {
+      "ignoreParameters": true,
+    }],
     "@typescript-eslint/no-invalid-void-type": ["error"],
     "@typescript-eslint/no-require-imports": ["error"],
     "@typescript-eslint/no-throw-literal": ["error"],

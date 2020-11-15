@@ -1,6 +1,6 @@
 import update from "immutability-helper"
 import { CellData, getEmptyCell, getHole } from "./CellData"
-import { Position, Direction } from "./Position"
+import { Position, Direction, movePos, getDir } from "./Position"
 
 export type Dimension = {
   x: number
@@ -84,19 +84,28 @@ export function setWall(
   board: Board,
   pos: Position,
   dir: Direction,
-  wall: WallType = WallType.NORMAL
+  wall: WallType = WallType.NORMAL,
+  doubleSided: boolean = true
 ): Board {
-  if (!inBounds(board, pos)) {
-    return board
-  }
+  let updatedBoard = board
 
-  return update(board, {
-    walls: {
-      [getCellIndex(board, pos)]: {
-        [dir]: {
-          $set: wall,
+  if (inBounds(board, pos)) {
+    updatedBoard = update(updatedBoard, {
+      walls: {
+        [getCellIndex(board, pos)]: {
+          [dir]: {
+            $set: wall,
+          },
         },
       },
-    },
-  })
+    })
+  }
+
+  if (doubleSided) {
+    const reverseDir = getDir(dir + 2)
+    const reversePos = movePos(pos, dir, 1)
+    return setWall(updatedBoard, reversePos, reverseDir, wall, false)
+  } else {
+    return updatedBoard
+  }
 }

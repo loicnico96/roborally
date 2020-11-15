@@ -1,7 +1,7 @@
 import update, { Spec } from "immutability-helper"
 import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
 import { PlayerStateBasic } from "./model/PlayerStateBasic"
-import { size } from "common/utils/objects"
+import { merge, size } from "common/utils/objects"
 
 export type StateChangeHandler<T> = (newState: T) => Promise<void>
 
@@ -45,6 +45,19 @@ export class GameContext<
     })
   }
 
+  findPlayer(
+    filterFn: (player: P, playerId: PlayerId) => boolean
+  ): PlayerId | undefined {
+    return this.getPlayerOrder().find(playerId => {
+      const player = this.getPlayer(playerId)
+      return filterFn(player, playerId)
+    })
+  }
+
+  mergeState(mergeSpec: Partial<T>) {
+    this.state = merge(this.state, mergeSpec)
+  }
+
   updatePlayer(playerId: PlayerId, updateSpec: Spec<P>) {
     this.updateState({
       players: {
@@ -81,7 +94,7 @@ export class GameContext<
     return updateCount
   }
 
-  updateState(updateSpec: Spec<T>): void {
+  updateState(updateSpec: Spec<T>) {
     this.state = update(this.state, updateSpec)
   }
 

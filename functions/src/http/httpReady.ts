@@ -119,9 +119,7 @@ export const httpReady = httpsCallable(validationSchema, async data => {
 
         transaction.set(clientRef, gameState)
 
-        if (allPlayersReady(gameState)) {
-          gameState = await resolveTurn(gameState)
-        }
+        gameState = await resolveTurn(gameState)
 
         transaction.set(serverRef, gameState)
 

@@ -9,6 +9,7 @@ export enum GamePhase {
   RESOLVE_PLAYERS = "resolve_players",
   RESOLVE_CONVEYORS_FAST = "resolve_conveyors_fast",
   RESOLVE_CONVEYORS = "resolve_conveyors",
+  RESOLVE_CRUSHERS = "resolve_crushers",
   RESOLVE_GEARS = "resolve_gears",
   RESOLVE_LASERS = "resolve_lasers",
   RESOLVE_CHECKPOINTS = "resolve_checkpoints",
@@ -18,8 +19,8 @@ export type RoborallyState = GameStateBasic<RoborallyPlayer> & {
   board: Board
   boarId: BoardId
   checkpoints: Position[]
+  currentPlayer: PlayerId | null
   phase: GamePhase
-  playerCurrent: PlayerId | null
   sequence: number
   turn: number
 }
@@ -36,8 +37,8 @@ export function getInitialGameState(
     boarId,
     board: boardData,
     checkpoints,
+    currentPlayer: null,
     phase: GamePhase.STANDBY,
-    playerCurrent: null,
     playerOrder: playerIds,
     players: playerIds.reduce((players, playerId) => {
       players[playerId] = getInitialPlayerState(initialPos, initialDir)

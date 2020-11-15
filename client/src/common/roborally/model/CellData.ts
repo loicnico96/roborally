@@ -11,6 +11,7 @@ export enum CellType {
 
 export type CellData = {
   type: CellType
+  crush?: number[]
   dir?: Direction
   rot?: Rotation
 }
@@ -43,4 +44,16 @@ export function getGear(rot: Rotation): CellData {
 export function getRepair(): CellData {
   const type = CellType.REPAIR
   return { type }
+}
+
+export function isCellType(cell: CellData, types: CellType[]): boolean {
+  return types.includes(cell.type)
+}
+
+export function isCrusher(cell: CellData, sequence: number): boolean {
+  return cell.crush?.includes(sequence) ?? false
+}
+
+export function isHole(cell: CellData): boolean {
+  return cell.type === CellType.HOLE
 }

@@ -39,9 +39,9 @@ export function getInitialPlayerState(
     downNext: false,
     pos: initialPos,
     program: getEmptyProgram(),
-    ready: true,
+    ready: false,
     rot: initialDir,
-    virtual: true,
+    virtual: false,
   }
 }
 
@@ -63,6 +63,10 @@ export function isAbleToMove(player: RoborallyPlayer): boolean {
 
 export function isAbleToRepair(player: RoborallyPlayer): boolean {
   return isAlive(player) && player.damage > 0
+}
+
+export function isAbleToRespawn(player: RoborallyPlayer): boolean {
+  return !isAlive(player)
 }
 
 export function isAffectedByCells(player: RoborallyPlayer): boolean {
