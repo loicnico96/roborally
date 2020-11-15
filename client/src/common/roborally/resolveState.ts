@@ -2,7 +2,12 @@ import { CellType } from "./model/CellData"
 import { GamePhase } from "./model/RoborallyState"
 import { resolveBoardMoves } from "./resolveBoardMoves"
 import { resolveCheckpoints } from "./resolveCheckpoints"
-import { resolveCrushers } from "./resolveCrushers"
+// import { resolveCrushers } from "./resolveCrushers"
+import {
+  checkDamage,
+  resolveBoardLasers,
+  resolvePlayerLasers,
+} from "./resolveLasers"
 import { resolvePlayerActions } from "./resolvePlayerActions"
 import { resolveRepairs } from "./resolveRepairs"
 import { resolveRespawn } from "./resolveRespawn"
@@ -20,21 +25,24 @@ async function resolveTurnSequence(ctx: RoborallyContext, sequence: number) {
   await setGamePhase(ctx, GamePhase.RESOLVE_PLAYERS)
   await resolvePlayerActions(ctx, sequence)
 
-  await setGamePhase(ctx, GamePhase.RESOLVE_CONVEYORS_FAST)
-  await resolveBoardMoves(ctx, [CellType.CONVEYOR_FAST])
+  // TODO Enable when corresponding board is implemented
+  // await setGamePhase(ctx, GamePhase.RESOLVE_CONVEYORS_FAST)
+  // await resolveBoardMoves(ctx, [CellType.CONVEYOR_FAST])
 
   await setGamePhase(ctx, GamePhase.RESOLVE_CONVEYORS)
   await resolveBoardMoves(ctx, [CellType.CONVEYOR_FAST, CellType.CONVEYOR])
 
-  await setGamePhase(ctx, GamePhase.RESOLVE_CRUSHERS)
-  await resolveCrushers(ctx, sequence)
+  // TODO Enable when corresponding board is implemented
+  // await setGamePhase(ctx, GamePhase.RESOLVE_CRUSHERS)
+  // await resolveCrushers(ctx, sequence)
 
   await setGamePhase(ctx, GamePhase.RESOLVE_GEARS)
   await resolveBoardMoves(ctx, [CellType.GEAR])
 
   await setGamePhase(ctx, GamePhase.RESOLVE_LASERS)
-  // await resolveBoardLasers(ctx)
-  // await resolvePlayerLasers(ctx)
+  await resolveBoardLasers(ctx)
+  await resolvePlayerLasers(ctx)
+  await checkDamage(ctx)
 
   await setGamePhase(ctx, GamePhase.RESOLVE_CHECKPOINTS)
   await resolveRepairs(ctx)

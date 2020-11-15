@@ -127,7 +127,7 @@ export function damagePlayer(
   amount: number
 ): RoborallyPlayer {
   return merge(player, {
-    damage: clamp(player.damage + amount, 0, MAX_DAMAGE),
+    damage: clamp(player.damage + amount, 0, 99),
   })
 }
 

@@ -16,24 +16,29 @@ export type WallData = {
   [dir in Direction]?: WallType
 }
 
+export type LaserData = {
+  damage: number
+  dir: Direction
+  pos: Position
+}
+
 export enum BoardId {
   ISLAND = "Island",
 }
 
 export type Board = {
   cells: CellData[]
-  walls: WallData[]
   dimensions: Dimension
+  lasers: LaserData[]
+  walls: WallData[]
 }
 
 export function getEmptyBoard(x: number, y: number): Board {
   return {
     cells: Array<CellData>(x * y).fill(getEmptyCell()),
+    dimensions: { x, y },
+    lasers: [],
     walls: Array<WallData>(x * y).fill({}),
-    dimensions: {
-      x,
-      y,
-    },
   }
 }
 
@@ -108,4 +113,23 @@ export function setWall(
   } else {
     return updatedBoard
   }
+}
+
+export function addLaser(
+  board: Board,
+  pos: Position,
+  dir: Direction,
+  damage: number
+): Board {
+  return update(board, {
+    lasers: {
+      $push: [
+        {
+          damage,
+          dir,
+          pos,
+        },
+      ],
+    },
+  })
 }
