@@ -1,4 +1,4 @@
-import update from "immutability-helper"
+import update, { Spec } from "immutability-helper"
 import { CellData, getEmptyCell, getHole } from "./CellData"
 import { Position, Direction, movePos, getDir } from "./Position"
 
@@ -60,7 +60,8 @@ export function getCell(board: Board, pos: Position): CellData {
     return getHole()
   }
 
-  return board.cells[getCellIndex(board, pos)] ?? getEmptyCell()
+  const cellIndex = getCellIndex(board, pos)
+  return board.cells[cellIndex] ?? getEmptyCell()
 }
 
 export function getWall(board: Board, pos: Position, dir: Direction): WallType {
@@ -68,20 +69,32 @@ export function getWall(board: Board, pos: Position, dir: Direction): WallType {
     return WallType.NONE
   }
 
-  return board.walls[getCellIndex(board, pos)][dir] ?? WallType.NONE
+  const cellIndex = getCellIndex(board, pos)
+  return board.walls[cellIndex][dir] ?? WallType.NONE
+}
+
+export function updateCell(
+  board: Board,
+  pos: Position,
+  updateSpec: Spec<CellData>
+): Board {
+  let updatedBoard = board
+
+  if (inBounds(updatedBoard, pos)) {
+    const cellIndex = getCellIndex(board, pos)
+    updatedBoard = update(updatedBoard, {
+      cells: {
+        [cellIndex]: updateSpec,
+      },
+    })
+  }
+
+  return updatedBoard
 }
 
 export function setCell(board: Board, pos: Position, cell: CellData): Board {
-  if (!inBounds(board, pos)) {
-    return board
-  }
-
-  return update(board, {
-    cells: {
-      [getCellIndex(board, pos)]: {
-        $set: cell,
-      },
-    },
+  return updateCell(board, pos, {
+    $set: cell,
   })
 }
 
@@ -95,9 +108,10 @@ export function setWall(
   let updatedBoard = board
 
   if (inBounds(board, pos)) {
+    const cellIndex = getCellIndex(board, pos)
     updatedBoard = update(updatedBoard, {
       walls: {
-        [getCellIndex(board, pos)]: {
+        [cellIndex]: {
           [dir]: {
             $set: wall,
           },
@@ -130,6 +144,26 @@ export function addLaser(
           pos,
         },
       ],
+    },
+  })
+}
+
+export function addCrusher(
+  board: Board,
+  pos: Position,
+  sequences: number[]
+): Board {
+  return updateCell(board, pos, {
+    $merge: {
+      crush: sequences,
+    },
+  })
+}
+
+export function addWater(board: Board, pos: Position): Board {
+  return updateCell(board, pos, {
+    $merge: {
+      water: true,
     },
   })
 }

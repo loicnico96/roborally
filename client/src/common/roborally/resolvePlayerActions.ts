@@ -2,6 +2,7 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { sortBy, SortDirection } from "common/utils/arrays"
 import { forEachAsync } from "common/utils/forEachAsync"
 import { Card, CardAction, getCardAction, getCardPriority } from "./model/Card"
+import { isWater } from "./model/CellData"
 import { Direction, Rotation } from "./model/Position"
 import { getPlayerDir, isAbleToMove } from "./model/RoborallyPlayer"
 import {
@@ -78,7 +79,10 @@ async function resolvePlayerMove(
   rot: Rotation,
   distance: number
 ) {
-  for (let i = 0; i < distance; i++) {
+  const startCell = ctx.getCell(ctx.getPlayer(playerId).pos)
+  const realDistance = isWater(startCell) ? distance - 1 : distance
+
+  for (let i = 0; i < realDistance; i++) {
     const player = ctx.getPlayer(playerId)
     if (!isAbleToMove(player)) {
       return

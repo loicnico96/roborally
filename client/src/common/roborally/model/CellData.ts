@@ -14,6 +14,7 @@ export type CellData = {
   crush?: number[]
   dir?: Direction
   rot?: Rotation
+  water?: boolean
 }
 
 export function getEmptyCell(): CellData {
@@ -56,4 +57,8 @@ export function isCrusher(cell: CellData, sequence: number): boolean {
 
 export function isHole(cell: CellData): boolean {
   return cell.type === CellType.HOLE
+}
+
+export function isWater(cell: CellData): boolean {
+  return cell.water ?? false
 }

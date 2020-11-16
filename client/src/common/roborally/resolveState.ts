@@ -32,12 +32,12 @@ async function resolveTurnSequence(ctx: RoborallyContext, sequence: number) {
   await setGamePhase(ctx, GamePhase.RESOLVE_CONVEYORS)
   await resolveBoardMoves(ctx, [CellType.CONVEYOR_FAST, CellType.CONVEYOR])
 
+  await setGamePhase(ctx, GamePhase.RESOLVE_GEARS)
+  await resolveBoardMoves(ctx, [CellType.GEAR])
+
   // TODO Enable when corresponding board is implemented
   // await setGamePhase(ctx, GamePhase.RESOLVE_CRUSHERS)
   // await resolveCrushers(ctx, sequence)
-
-  await setGamePhase(ctx, GamePhase.RESOLVE_GEARS)
-  await resolveBoardMoves(ctx, [CellType.GEAR])
 
   await setGamePhase(ctx, GamePhase.RESOLVE_LASERS)
   await resolveBoardLasers(ctx)
