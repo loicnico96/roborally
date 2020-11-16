@@ -11,6 +11,7 @@ import {
 import { resolvePlayerActions } from "./resolvePlayerActions"
 import { resolveRepairs } from "./resolveRepairs"
 import { resolveRespawn } from "./resolveRespawn"
+import { resolveVirtualPlayers } from "./resolveVirtualPlayers"
 import { RoborallyContext } from "./RoborallyContext"
 import { startNextTurn } from "./startNextTurn"
 
@@ -56,6 +57,7 @@ async function resolveTurn(ctx: RoborallyContext) {
     await resolveTurnSequence(ctx, sequence)
   }
 
+  await resolveVirtualPlayers(ctx)
   await resolveRespawn(ctx)
   await startNextTurn(ctx)
 }
