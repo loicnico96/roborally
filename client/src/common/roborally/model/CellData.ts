@@ -1,3 +1,4 @@
+import { WallData } from "./BoardData"
 import { Direction, Rotation } from "./Position"
 
 export enum CellType {
@@ -15,6 +16,7 @@ export type CellData = {
   dir?: Direction
   rot?: Rotation
   turn?: boolean
+  walls?: WallData
   water?: boolean
 }
 

@@ -1,4 +1,4 @@
-import { BoardId, Board } from "common/roborally/model/Board"
+import { BoardId } from "common/roborally/model/BoardData"
 import {
   RoborallyState,
   getInitialGameState,
@@ -8,21 +8,17 @@ import {
   Direction,
 } from "../../client/src/common/roborally/model/Position"
 import { RoomId, RoomData } from "common/model/RoomData"
-
-import { BOARD_ISLAND } from "./boards/Island"
+import { BOARDS } from "./boards"
 
 export const TEST_ROOM_ID = "id_test"
 export const TEST_PLAYER_IDS = ["id_player_1", "id_player_2"]
 export const TEST_CHECKPOINTS = [getPos(0, 0), getPos(3, 3), getPos(6, 6)]
-
-export const BOARDS: Record<BoardId, Board> = {
-  [BoardId.ISLAND]: BOARD_ISLAND,
-}
+export const TEST_BOARD_ID = BoardId.FLOOD_ZONE
 
 export const GAMES: Record<RoomId, RoborallyState> = {
   [TEST_ROOM_ID]: getInitialGameState(
-    BoardId.ISLAND,
-    BOARD_ISLAND,
+    TEST_BOARD_ID,
+    BOARDS[TEST_BOARD_ID],
     TEST_CHECKPOINTS,
     TEST_PLAYER_IDS,
     TEST_CHECKPOINTS[0],

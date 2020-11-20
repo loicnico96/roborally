@@ -41,7 +41,7 @@ export function getInitialPlayerState(
     program: getEmptyProgram(),
     ready: false,
     rot: initialDir,
-    virtual: true,
+    virtual: false,
   }
 }
 

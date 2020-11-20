@@ -76,7 +76,7 @@ const Game = ({ gameState, roomId }: GameProps) => {
           ))}
         </GameUiTurnPhaseSequence>
         <GameUiViewport>
-          <GameUiBoard board={gameState.board}>
+          <GameUiBoard boardId={gameState.boardId} board={gameState.board}>
             {gameState.checkpoints.map((checkpoint, index) => (
               <GameUiCheckpoint key={index} index={index} pos={checkpoint} />
             ))}

@@ -1,15 +1,27 @@
-import { Board, getCell, getWall, WallType } from "common/roborally/model/Board"
+import {
+  BoardData,
+  BoardId,
+  getCell,
+  getWall,
+  WallType,
+} from "common/roborally/model/BoardData"
 import { CellType } from "common/roborally/model/CellData"
 import { Direction, Position, Rotation } from "common/roborally/model/Position"
 import React, { useCallback, useState } from "react"
 import styled from "styled-components"
 
+import BoardFloodZone from "../assets/Boards/Base Game/Flood Zone.png"
 import BoardIsland from "../assets/Boards/Base Game/Island.png"
+
+const BOARD_IMAGES: Record<BoardId, string> = {
+  [BoardId.FLOOD_ZONE]: BoardFloodZone,
+  [BoardId.ISLAND]: BoardIsland,
+}
 
 const CELL_SIZE = 100
 
 type GameUiBoardBackgroundProps = {
-  board: Board
+  board: BoardData
   imageUrl: string
 }
 
@@ -53,23 +65,23 @@ function getRot(rot: Rotation): string {
   }
 }
 
-function getCellTooltip(board: Board, pos: Position): string {
+function getCellTooltip(board: BoardData, pos: Position): string {
   const cell = getCell(board, pos)
   switch (cell.type) {
     case CellType.HOLE:
       return "Hole"
     case CellType.CONVEYOR:
       if (cell.dir !== undefined) {
-        if (cell.rot !== undefined) {
-          return `Conveyor (${getDir(cell.dir)}, ${getRot(cell.rot)})`
+        if (cell.turn === true) {
+          return `Conveyor (turning, ${getDir(cell.dir)})`
         }
         return `Conveyor (${getDir(cell.dir)})`
       }
       return "Conveyor"
     case CellType.CONVEYOR_FAST:
       if (cell.dir !== undefined) {
-        if (cell.rot !== undefined) {
-          return `Conveyor (fast, ${getDir(cell.dir)}, ${getRot(cell.rot)})`
+        if (cell.turn === true) {
+          return `Conveyor (fast, turning, ${getDir(cell.dir)})`
         }
         return `Conveyor (fast, ${getDir(cell.dir)})`
       }
@@ -82,13 +94,13 @@ function getCellTooltip(board: Board, pos: Position): string {
     case CellType.REPAIR:
       return "Repair site"
     default:
-      return ""
+      return cell.water === true ? "Water" : ""
   }
 }
 
 const DIRS = [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST]
 
-function getWallTooltip(board: Board, pos: Position): string {
+function getWallTooltip(board: BoardData, pos: Position): string {
   const dirs = DIRS.filter(dir => getWall(board, pos, dir) !== WallType.NONE)
   if (dirs.length > 0) {
     return `Walls: ${dirs.map(getDir).join(", ")}`
@@ -96,7 +108,7 @@ function getWallTooltip(board: Board, pos: Position): string {
   return ""
 }
 
-function getTooltip(board: Board, pos: Position): string {
+function getTooltip(board: BoardData, pos: Position): string {
   return [getCellTooltip(board, pos), getWallTooltip(board, pos)]
     .filter(tooltip => tooltip)
     .join("\n")
@@ -112,10 +124,11 @@ const GameUiBoardBackground = styled.div`
 `
 
 type GameUiBoardProps = React.PropsWithChildren<{
-  board: Board
+  boardId: BoardId
+  board: BoardData
 }>
 
-const GameUiBoard = ({ board, children }: GameUiBoardProps) => {
+const GameUiBoard = ({ board, boardId, children }: GameUiBoardProps) => {
   const [tooltip, setTooltip] = useState("")
 
   const onMouseMove = useCallback(
@@ -140,7 +153,7 @@ const GameUiBoard = ({ board, children }: GameUiBoardProps) => {
   return (
     <GameUiBoardBackground
       board={board}
-      imageUrl={BoardIsland}
+      imageUrl={BOARD_IMAGES[boardId]}
       onMouseMove={onMouseMove}
       title={tooltip}
     >

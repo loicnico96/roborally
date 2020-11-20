@@ -1,4 +1,8 @@
-import { getEmptyBoard, setCell, setWall } from "common/roborally/model/Board"
+import {
+  getEmptyBoard,
+  setCell,
+  setWall,
+} from "common/roborally/model/BoardData"
 import {
   getConveyor,
   getGear,
@@ -114,4 +118,4 @@ board = setWall(board, getPos(11, 4), Direction.EAST)
 board = setWall(board, getPos(11, 7), Direction.EAST)
 board = setWall(board, getPos(11, 9), Direction.EAST)
 
-export const BOARD_ISLAND = board
+export default board

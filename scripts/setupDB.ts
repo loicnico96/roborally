@@ -1,6 +1,7 @@
 import { Collection } from "../client/src/common/firestore/collections"
 import { firestoreAdmin } from "./firestore/admin"
-import { ROOMS, GAMES, BOARDS } from "./roborally/testData"
+import { BOARDS } from "./roborally/boards"
+import { ROOMS, GAMES } from "./roborally/testData"
 
 for (const [boardId, boardData] of Object.entries(BOARDS)) {
   firestoreAdmin.collection(Collection.BOARD).doc(boardId).set(boardData)

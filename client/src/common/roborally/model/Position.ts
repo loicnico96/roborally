@@ -34,6 +34,10 @@ export function getDir(rot: number): Direction {
   return mod(rot, 4)
 }
 
+export function getReverseDir(rot: number): Direction {
+  return getDir(rot + Rotation.REVERSE)
+}
+
 export function movePos(pos: Position, dir: Direction, dis = 1): Position {
   return {
     x: pos.x + MOVES[dir].x * dis,

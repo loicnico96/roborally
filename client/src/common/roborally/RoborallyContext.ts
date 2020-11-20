@@ -1,5 +1,5 @@
 import { GameContext } from "common/GameContext"
-import { Board, getCell, getWall, WallType } from "./model/Board"
+import { BoardData, getCell, getWall, WallType } from "./model/BoardData"
 import { CellData } from "./model/CellData"
 import { Direction, isSamePos, Position } from "./model/Position"
 import { RoborallyPlayer } from "./model/RoborallyPlayer"
@@ -9,7 +9,7 @@ export class RoborallyContext extends GameContext<
   RoborallyPlayer,
   RoborallyState
 > {
-  getBoard(): Board {
+  getBoard(): BoardData {
     return this.state.board
   }
 

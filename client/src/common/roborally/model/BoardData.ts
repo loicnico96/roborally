@@ -23,26 +23,39 @@ export type LaserData = {
 }
 
 export enum BoardId {
+  FLOOD_ZONE = "FloodZone",
   ISLAND = "Island",
 }
 
-export type Board = {
-  cells: CellData[]
-  dimensions: Dimension
-  lasers: LaserData[]
-  walls: WallData[]
+export enum FeatureType {
+  CONVEYOR = "conveyor",
+  CONVEYOR_FAST = "conveyor_fast",
+  CRUSHER = "crusher",
+  GEAR = "gear",
+  LASER = "laser",
+  REPAIR = "repair",
+  WATER = "water",
 }
 
-export function getEmptyBoard(x: number, y: number): Board {
+export type BoardData = {
+  cells: CellData[]
+  checkpoints: Position[]
+  dimensions: Dimension
+  features: FeatureType[]
+  lasers: LaserData[]
+}
+
+export function getEmptyBoard(x: number, y: number): BoardData {
   return {
     cells: Array<CellData>(x * y).fill(getEmptyCell()),
+    checkpoints: [],
     dimensions: { x, y },
+    features: [],
     lasers: [],
-    walls: Array<WallData>(x * y).fill({}),
   }
 }
 
-export function inBounds(board: Board, pos: Position): boolean {
+export function inBounds(board: BoardData, pos: Position): boolean {
   return (
     pos.x >= 0 &&
     pos.x < board.dimensions.x &&
@@ -51,11 +64,11 @@ export function inBounds(board: Board, pos: Position): boolean {
   )
 }
 
-export function getCellIndex(board: Board, pos: Position): number {
+export function getCellIndex(board: BoardData, pos: Position): number {
   return pos.x + pos.y * board.dimensions.x
 }
 
-export function getCell(board: Board, pos: Position): CellData {
+export function getCell(board: BoardData, pos: Position): CellData {
   if (!inBounds(board, pos)) {
     return getHole()
   }
@@ -64,20 +77,20 @@ export function getCell(board: Board, pos: Position): CellData {
   return board.cells[cellIndex] ?? getEmptyCell()
 }
 
-export function getWall(board: Board, pos: Position, dir: Direction): WallType {
-  if (!inBounds(board, pos)) {
-    return WallType.NONE
-  }
-
-  const cellIndex = getCellIndex(board, pos)
-  return board.walls[cellIndex][dir] ?? WallType.NONE
+export function getWall(
+  board: BoardData,
+  pos: Position,
+  dir: Direction
+): WallType {
+  const { walls } = getCell(board, pos)
+  return walls?.[dir] ?? WallType.NONE
 }
 
 export function updateCell(
-  board: Board,
+  board: BoardData,
   pos: Position,
   updateSpec: Spec<CellData>
-): Board {
+): BoardData {
   let updatedBoard = board
 
   if (inBounds(updatedBoard, pos)) {
@@ -92,29 +105,36 @@ export function updateCell(
   return updatedBoard
 }
 
-export function setCell(board: Board, pos: Position, cell: CellData): Board {
+export function setCell(
+  board: BoardData,
+  pos: Position,
+  cell: CellData
+): BoardData {
   return updateCell(board, pos, {
     $set: cell,
   })
 }
 
 export function setWall(
-  board: Board,
+  board: BoardData,
   pos: Position,
   dir: Direction,
   wall: WallType = WallType.NORMAL,
   doubleSided: boolean = true
-): Board {
+): BoardData {
   let updatedBoard = board
 
   if (inBounds(board, pos)) {
     const cellIndex = getCellIndex(board, pos)
     updatedBoard = update(updatedBoard, {
-      walls: {
+      cells: {
         [cellIndex]: {
-          [dir]: {
-            $set: wall,
-          },
+          walls: walls =>
+            update(walls ?? {}, {
+              [dir]: {
+                $set: wall,
+              },
+            }),
         },
       },
     })
@@ -130,11 +150,11 @@ export function setWall(
 }
 
 export function addLaser(
-  board: Board,
+  board: BoardData,
   pos: Position,
   dir: Direction,
   damage: number
-): Board {
+): BoardData {
   return update(board, {
     lasers: {
       $push: [
@@ -149,10 +169,10 @@ export function addLaser(
 }
 
 export function addCrusher(
-  board: Board,
+  board: BoardData,
   pos: Position,
   sequences: number[]
-): Board {
+): BoardData {
   return updateCell(board, pos, {
     $merge: {
       crush: sequences,
@@ -160,7 +180,7 @@ export function addCrusher(
   })
 }
 
-export function addWater(board: Board, pos: Position): Board {
+export function addWater(board: BoardData, pos: Position): BoardData {
   return updateCell(board, pos, {
     $merge: {
       water: true,
