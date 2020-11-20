@@ -8,6 +8,7 @@ import {
   getPlayerDir,
   isAbleToFire,
   isAffectedByLasers,
+  isAlive,
   isDestroyedByDamage,
   RoborallyPlayer,
 } from "./model/RoborallyPlayer"
@@ -18,6 +19,20 @@ export type Laser = {
   dir: Direction
   pos: Position
   startExcluded?: boolean
+}
+
+export async function checkDamage(ctx: RoborallyContext) {
+  const updateCount = ctx.updatePlayers(player => {
+    if (isAlive(player) && isDestroyedByDamage(player)) {
+      return destroyPlayer(player)
+    }
+
+    return false
+  })
+
+  if (updateCount > 0) {
+    await ctx.post()
+  }
 }
 
 function getBoardLasers(ctx: RoborallyContext): Laser[] {
@@ -73,9 +88,9 @@ export async function resolveLasers(ctx: RoborallyContext, lasers: Laser[]) {
     ctx.updatePlayers((player, playerId) => {
       if (playerId in laserDamage) {
         return damagePlayer(player, laserDamage[playerId])
-      } else {
-        return false
       }
+
+      return false
     })
     await ctx.post()
   }
@@ -87,18 +102,4 @@ export async function resolveBoardLasers(ctx: RoborallyContext) {
 
 export async function resolvePlayerLasers(ctx: RoborallyContext) {
   await resolveLasers(ctx, getPlayerLasers(ctx))
-}
-
-export async function checkDamage(ctx: RoborallyContext) {
-  const updateCount = ctx.updatePlayers(player => {
-    if (isDestroyedByDamage(player)) {
-      return destroyPlayer(player)
-    } else {
-      return false
-    }
-  })
-
-  if (updateCount > 0) {
-    await ctx.post()
-  }
 }

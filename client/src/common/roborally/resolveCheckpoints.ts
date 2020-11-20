@@ -20,14 +20,13 @@ export async function checkWinCondition(ctx: RoborallyContext) {
 export async function resolveCheckpoints(ctx: RoborallyContext) {
   const updateCount = ctx.updatePlayers(player => {
     const checkpoint = ctx.getCheckpointAtPosition(player.pos)
-    if (
-      checkpoint !== undefined &&
-      isAffectedByCheckpoint(player, checkpoint)
-    ) {
-      return triggerPlayerCheckpoint(player, checkpoint)
-    } else {
-      return false
+    if (checkpoint !== undefined) {
+      if (isAffectedByCheckpoint(player, checkpoint)) {
+        return triggerPlayerCheckpoint(player, checkpoint)
+      }
     }
+
+    return false
   })
 
   if (updateCount > 0) {

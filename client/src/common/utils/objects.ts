@@ -73,6 +73,14 @@ export function pick<T extends ObjectRecord, K extends keyof T>(
   }, {} as Pick<T, K>)
 }
 
+export function reduce<T extends ObjectRecord, R>(
+  obj: T,
+  reduceFn: (result: R, value: Value<T>, key: Key<T>) => R,
+  initial: R
+): R {
+  return keys(obj).reduce((res, key) => reduceFn(res, obj[key], key), initial)
+}
+
 export function size(obj: ObjectRecord): number {
   return Object.keys(obj).length
 }

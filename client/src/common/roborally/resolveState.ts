@@ -1,7 +1,7 @@
-import { CellType } from "./model/CellData"
 import { GamePhase } from "./model/RoborallyState"
-import { resolveBoardMoves } from "./resolveBoardMoves"
 import { resolveCheckpoints } from "./resolveCheckpoints"
+import { resolveConveyors } from "./resolveConveyors"
+import { resolveGears } from "./resolveGears"
 // import { resolveCrushers } from "./resolveCrushers"
 import {
   checkDamage,
@@ -28,13 +28,13 @@ async function resolveTurnSequence(ctx: RoborallyContext, sequence: number) {
 
   // TODO Enable when corresponding board is implemented
   // await setGamePhase(ctx, GamePhase.RESOLVE_CONVEYORS_FAST)
-  // await resolveBoardMoves(ctx, [CellType.CONVEYOR_FAST])
+  // await resolveConveyors(ctx, true)
 
   await setGamePhase(ctx, GamePhase.RESOLVE_CONVEYORS)
-  await resolveBoardMoves(ctx, [CellType.CONVEYOR_FAST, CellType.CONVEYOR])
+  await resolveConveyors(ctx)
 
   await setGamePhase(ctx, GamePhase.RESOLVE_GEARS)
-  await resolveBoardMoves(ctx, [CellType.GEAR])
+  await resolveGears(ctx)
 
   // TODO Enable when corresponding board is implemented
   // await setGamePhase(ctx, GamePhase.RESOLVE_CRUSHERS)

@@ -18,9 +18,9 @@ export async function resolveVirtualPlayers(ctx: RoborallyContext) {
       }
 
       return materializePlayer(player)
-    } else {
-      return false
     }
+
+    return false
   })
 
   if (updateCount > 0) {

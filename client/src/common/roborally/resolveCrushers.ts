@@ -5,11 +5,11 @@ import { RoborallyContext } from "./RoborallyContext"
 export async function resolveCrushers(ctx: RoborallyContext, sequence: number) {
   const updateCount = ctx.updatePlayers(player => {
     const cell = ctx.getCell(player.pos)
-    if (isAffectedByCells(player) && isCrusher(cell, sequence)) {
+    if (isCrusher(cell, sequence) && isAffectedByCells(player)) {
       return destroyPlayer(player)
-    } else {
-      return false
     }
+
+    return false
   })
 
   if (updateCount > 0) {

@@ -5,9 +5,9 @@ export async function resolveRespawn(ctx: RoborallyContext) {
   const updateCount = ctx.updatePlayers(player => {
     if (isAbleToRespawn(player)) {
       return respawnPlayer(player, ctx.getCheckpoints())
-    } else {
-      return false
     }
+
+    return false
   })
 
   if (updateCount > 0) {

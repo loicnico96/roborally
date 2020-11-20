@@ -14,6 +14,7 @@ export type CellData = {
   crush?: number[]
   dir?: Direction
   rot?: Rotation
+  turn?: boolean
   water?: boolean
 }
 
@@ -27,14 +28,14 @@ export function getHole(): CellData {
   return { type }
 }
 
-export function getConveyor(dir: Direction, rot = Rotation.NONE): CellData {
+export function getConveyor(dir: Direction, turn = false): CellData {
   const type = CellType.CONVEYOR
-  return rot === Rotation.NONE ? { type, dir } : { type, dir, rot }
+  return { type, dir, turn }
 }
 
-export function getFastConveyor(dir: Direction, rot = Rotation.NONE): CellData {
+export function getFastConveyor(dir: Direction, turn = false): CellData {
   const type = CellType.CONVEYOR_FAST
-  return rot === Rotation.NONE ? { type, dir } : { type, dir, rot }
+  return { type, dir, turn }
 }
 
 export function getGear(rot: Rotation): CellData {
@@ -47,16 +48,32 @@ export function getRepair(): CellData {
   return { type }
 }
 
-export function isCellType(cell: CellData, types: CellType[]): boolean {
-  return types.includes(cell.type)
+export function isConveyor(cell: CellData): boolean {
+  return cell.type === CellType.CONVEYOR_FAST || cell.type === CellType.CONVEYOR
 }
 
 export function isCrusher(cell: CellData, sequence: number): boolean {
   return cell.crush?.includes(sequence) ?? false
 }
 
+export function isFastConveyor(cell: CellData): boolean {
+  return cell.type === CellType.CONVEYOR_FAST
+}
+
+export function isGear(cell: CellData): boolean {
+  return cell.type === CellType.GEAR
+}
+
 export function isHole(cell: CellData): boolean {
   return cell.type === CellType.HOLE
+}
+
+export function isRepair(cell: CellData): boolean {
+  return cell.type === CellType.REPAIR
+}
+
+export function isTurnConveyor(cell: CellData): boolean {
+  return isConveyor(cell) && cell.turn === true
 }
 
 export function isWater(cell: CellData): boolean {

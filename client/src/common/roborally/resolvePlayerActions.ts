@@ -3,15 +3,13 @@ import { sortBy, SortDirection } from "common/utils/arrays"
 import { forEachAsync } from "common/utils/forEachAsync"
 import { Card, CardAction, getCardAction, getCardPriority } from "./model/Card"
 import { isWater } from "./model/CellData"
-import { Direction, Rotation } from "./model/Position"
-import { getPlayerDir, isAbleToMove } from "./model/RoborallyPlayer"
+import { Rotation } from "./model/Position"
 import {
-  applyMove,
-  isColliding,
-  isPossibleMove,
-  Move,
-  resolveMoves,
-} from "./resolveMoves"
+  getPlayerDir,
+  isAbleToMove,
+  rotatePlayer,
+} from "./model/RoborallyPlayer"
+import { resolveMovement } from "./resolveMovement"
 import { RoborallyContext } from "./RoborallyContext"
 
 export type PlayerAction = {
@@ -42,32 +40,6 @@ function getOrderedPlayerActions(
   )
 }
 
-function getPlayerActionMoves(
-  ctx: RoborallyContext,
-  playerId: PlayerId,
-  dir: Direction
-): Record<PlayerId, Move> {
-  const moves: Record<PlayerId, Move> = {}
-  const move: Move = { dir }
-
-  let movingPlayerId: PlayerId | undefined = playerId
-  while (movingPlayerId !== undefined) {
-    if (!isPossibleMove(ctx, movingPlayerId, move)) {
-      return {}
-    }
-
-    moves[movingPlayerId] = move
-
-    const movingPlayer = ctx.getPlayer(movingPlayerId)
-    const movingPlayerUpdated = applyMove(movingPlayer, move)
-    movingPlayerId = ctx.findPlayer(otherPlayer =>
-      isColliding(otherPlayer, movingPlayerUpdated)
-    )
-  }
-
-  return moves
-}
-
 async function setCurrentPlayer(ctx: RoborallyContext, playerId: PlayerId) {
   ctx.mergeState({ currentPlayer: playerId })
   await ctx.post()
@@ -89,7 +61,7 @@ async function resolvePlayerMove(
     }
 
     const dir = getPlayerDir(player, rot)
-    await resolveMoves(ctx, getPlayerActionMoves(ctx, playerId, dir))
+    await resolveMovement(ctx, { [playerId]: { dir, push: true } })
   }
 }
 
@@ -98,7 +70,8 @@ async function resolvePlayerRotate(
   playerId: PlayerId,
   rot: Rotation
 ) {
-  await resolveMoves(ctx, { [playerId]: { rot } })
+  ctx.updatePlayer(playerId, player => rotatePlayer(player, rot))
+  await ctx.post()
 }
 
 async function resolvePlayerAction(
