@@ -63,11 +63,13 @@ export class BoardBuilder {
   }
 
   addFeature(feature: FeatureType) {
-    this.update({
-      features: {
-        $push: [feature],
-      },
-    })
+    if (!this.board.features.includes(feature)) {
+      this.update({
+        features: {
+          $push: [feature],
+        },
+      })
+    }
   }
 
   addLaser(laser: LaserData) {

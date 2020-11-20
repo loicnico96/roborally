@@ -23,7 +23,7 @@ export class CellBuilder {
       $merge: {
         type: CellType.CONVEYOR,
         dir,
-        turn,
+        ...(turn === true && { turn }),
       },
     })
     return this
@@ -51,7 +51,7 @@ export class CellBuilder {
       $merge: {
         type: CellType.CONVEYOR_FAST,
         dir,
-        turn,
+        ...(turn === true && { turn }),
       },
     })
     return this
