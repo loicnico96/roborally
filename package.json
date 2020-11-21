@@ -11,6 +11,7 @@
     "app:lint:fix": "cd client && yarn lint:fix",
     "app:start": "cd client && yarn start",
     "app:typecheck": "cd client && yarn typecheck",
+    "db:reset": "firebase firestore:delete --all-collections",
     "deploy:all": "firebase deploy && yarn deploy:db",
     "deploy:db": "ts-node -r tsconfig-paths/register scripts/setupDB.ts",
     "deploy:functions": "firebase deploy --only functions",
