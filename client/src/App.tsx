@@ -2,6 +2,7 @@ import React from "react"
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 import { ROUTES } from "./utils/navigation"
 import RoomPage from "./components/RoomPage"
+import RoomListRoute from "./components/rooms/RoomListRoute"
 
 const ROOM_TEST_ID = "id_test"
 
@@ -9,13 +10,16 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <Route path={ROUTES.home()} exact>
+        <Route exact path={ROUTES.home()}>
           <Redirect to={ROUTES.room(ROOM_TEST_ID)} />
+        </Route>
+        <Route exact path={ROUTES.roomList()}>
+          <RoomListRoute />
         </Route>
         <Route path={ROUTES.room(":roomId")}>
           <RoomPage />
         </Route>
-        <Redirect to={ROUTES.home()} />
+        <Redirect to={ROUTES.roomList()} />
       </Switch>
     </BrowserRouter>
   )

@@ -2,9 +2,11 @@ const separator = "/"
 const route = (...paths: string[]): string =>
   `${separator}${paths.join(separator)}`
 
-const ROOM_PREFIX = "room"
+const PREFIX_ROOM = "room"
+const PREFIX_ROOM_LIST = "rooms"
 
 export const ROUTES = {
   home: () => route(),
-  room: (roomId: string) => route(ROOM_PREFIX, roomId),
+  room: (roomId: string) => route(PREFIX_ROOM, roomId),
+  roomList: () => route(PREFIX_ROOM_LIST),
 }
