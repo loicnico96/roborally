@@ -7,7 +7,12 @@ import {
   getPos,
   Direction,
 } from "../../client/src/common/roborally/model/Position"
-import { RoomId, RoomData } from "common/model/RoomData"
+import {
+  RoomId,
+  RoomData,
+  getInitialRoomData,
+  GameType,
+} from "common/model/RoomData"
 import { BOARDS } from "./boards"
 
 export const TEST_ROOM_ID = "id_test"
@@ -27,7 +32,5 @@ export const GAMES: Record<RoomId, RoborallyState> = {
 }
 
 export const ROOMS: Record<RoomId, RoomData> = {
-  [TEST_ROOM_ID]: {
-    // TODO
-  },
+  [TEST_ROOM_ID]: getInitialRoomData(GameType.ROBORALLY, TEST_PLAYER_IDS[0]),
 }
