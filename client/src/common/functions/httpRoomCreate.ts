@@ -1,5 +1,6 @@
-import { RoomId, GameType } from "common/model/RoomData"
+import { RoomId } from "common/model/RoomData"
 import { PlayerId } from "common/model/GameStateBasic"
+import { GameType } from "common/GameSettings"
 
 export type HttpRoomCreateParams = {
   game: GameType

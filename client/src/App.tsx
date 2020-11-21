@@ -1,7 +1,7 @@
 import React from "react"
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 import { ROUTES } from "./utils/navigation"
-import RoomPage from "./components/RoomPage"
+import RoomRoute from "./components/RoomRoute"
 import RoomListRoute from "./components/rooms/RoomListRoute"
 
 const ROOM_TEST_ID = "id_test"
@@ -17,7 +17,7 @@ function App() {
           <RoomListRoute />
         </Route>
         <Route path={ROUTES.room(":roomId")}>
-          <RoomPage />
+          <RoomRoute />
         </Route>
         <Redirect to={ROUTES.roomList()} />
       </Switch>

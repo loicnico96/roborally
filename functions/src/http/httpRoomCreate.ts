@@ -4,7 +4,8 @@ import { httpsCallable } from "../utils/httpsCallable"
 import { Collection } from "common/firestore/collections"
 import { required, validateString, validateEnum } from "common/utils/validation"
 import { HttpTrigger } from "common/functions"
-import { getInitialRoomData, GameType } from "common/model/RoomData"
+import { getInitialRoomData } from "common/model/RoomData"
+import { GameType } from "common/GameSettings"
 
 const validationSchema = {
   game: required(validateEnum(GameType)),

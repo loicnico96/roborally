@@ -7,13 +7,9 @@ import {
   getPos,
   Direction,
 } from "../../client/src/common/roborally/model/Position"
-import {
-  RoomId,
-  RoomData,
-  getInitialRoomData,
-  GameType,
-} from "common/model/RoomData"
+import { RoomId, RoomData, getInitialRoomData } from "common/model/RoomData"
 import { BOARDS } from "./boards"
+import { GameType } from "common/GameSettings"
 
 export const TEST_ROOM_ID = "id_test"
 export const TEST_PLAYER_IDS = ["id_player_1", "id_player_2"]

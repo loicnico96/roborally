@@ -38,3 +38,10 @@ export async function triggerRoomCreate(
   const response = await httpTrigger(HttpTrigger.ROOM_CREATE, params)
   return response.roomId
 }
+
+export async function triggerRoomStart(
+  params: HttpParams<HttpTrigger.ROOM_START>
+): Promise<boolean> {
+  const response = await httpTrigger(HttpTrigger.ROOM_START, params)
+  return response.success
+}

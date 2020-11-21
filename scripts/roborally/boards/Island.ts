@@ -118,4 +118,8 @@ board = setWall(board, getPos(11, 4), Direction.EAST)
 board = setWall(board, getPos(11, 7), Direction.EAST)
 board = setWall(board, getPos(11, 9), Direction.EAST)
 
+board.checkpoints.push(getPos(0, 0))
+board.checkpoints.push(getPos(5, 6))
+board.checkpoints.push(getPos(11, 11))
+
 export default board

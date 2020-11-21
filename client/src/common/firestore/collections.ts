@@ -15,3 +15,8 @@ export type CollectionData<T extends Collection = Collection> = {
   [Collection.ROOM]: RoomData
   [Collection.SERVER]: RoborallyState
 }[T]
+
+export type DataFetcher = <T extends Collection>(
+  collection: T,
+  documentId: string
+) => Promise<CollectionData<T>>
