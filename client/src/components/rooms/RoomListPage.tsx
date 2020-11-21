@@ -1,4 +1,6 @@
-import { RoomData, RoomId } from "common/model/RoomData"
+import { GameType, RoomData, RoomId } from "common/model/RoomData"
+import { triggerRoomCreate } from "functions/triggers"
+import { useCurrentUserId } from "hooks/useCurrentUserId"
 import React, { useCallback } from "react"
 import { useHistory } from "react-router-dom"
 import { ROUTES } from "utils/navigation"
@@ -8,11 +10,14 @@ export type RoomListPageProps = {
   rooms: Record<RoomId, RoomData>
 }
 
-const useCreateRoom = () =>
-  useCallback(() => {
-    // TODO: Cloud Function
-    console.log("Create room")
-  }, [])
+const useCreateRoom = () => {
+  const history = useHistory()
+  const userId = useCurrentUserId()
+  return useCallback(async () => {
+    const roomId = await triggerRoomCreate({ game: GameType.ROBORALLY, userId })
+    history.push(ROUTES.room(roomId))
+  }, [history, userId])
+}
 
 const useOpenRoom = () => {
   const history = useHistory()

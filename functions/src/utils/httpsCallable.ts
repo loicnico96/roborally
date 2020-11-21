@@ -30,6 +30,7 @@ function validatePayload<T extends HttpTrigger>(
 }
 
 export function httpsCallable<T extends HttpTrigger>(
+  trigger: T,
   validators: SchemaValidators<HttpParams<T>>,
   handler: (data: HttpParams<T>, userId: string) => Promise<HttpResponse<T>>
 ): CallableFunction {

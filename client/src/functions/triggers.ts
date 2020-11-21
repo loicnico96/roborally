@@ -6,6 +6,7 @@ import {
   DEPLOYMENT_REGION,
 } from "common/functions"
 import { getVar, isEnv, toInt } from "utils/environment"
+import { RoomId } from "common/model/RoomData"
 
 const functions = firebase.app().functions(DEPLOYMENT_REGION)
 
@@ -29,4 +30,11 @@ export async function triggerReady(
 ): Promise<boolean> {
   const response = await httpTrigger(HttpTrigger.READY, params)
   return response.success
+}
+
+export async function triggerRoomCreate(
+  params: HttpParams<HttpTrigger.ROOM_CREATE>
+): Promise<RoomId> {
+  const response = await httpTrigger(HttpTrigger.ROOM_CREATE, params)
+  return response.roomId
 }

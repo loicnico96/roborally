@@ -21,6 +21,7 @@ import {
   validateNumber,
   validateString,
 } from "common/utils/validation"
+import { HttpTrigger } from "common/functions"
 
 function validateProgram(value: unknown): Program {
   if (!Array.isArray(value)) {
@@ -53,83 +54,87 @@ function allPlayersReady(gameData: RoborallyState): boolean {
   return Object.values(gameData.players).every(player => player.ready)
 }
 
-export const httpReady = httpsCallable(validationSchema, async data => {
-  const success = await firestore.runTransaction(async transaction => {
-    const clientRef = getCollection(Collection.CLIENT).doc(data.gameId)
-    const serverRef = getCollection(Collection.SERVER).doc(data.gameId)
-    const serverDoc = await transaction.get(serverRef)
-    const initialState = serverDoc.data()
-    if (initialState === undefined) {
-      throw preconditionError("Invalid game ID")
-    }
-
-    if (initialState.phase !== data.phase) {
-      throw preconditionError("Inconsistent state - Wrong phase")
-    }
-
-    if (initialState.turn !== data.turn) {
-      throw preconditionError("Inconsistent state - Wrong turn")
-    }
-
-    const { playerId } = data
-    const player = initialState.players[playerId]
-    if (player === undefined) {
-      throw preconditionError("Not a player")
-    }
-
-    if (player.ready) {
-      return false
-    }
-
-    let gameState = initialState
-
-    switch (gameState.phase) {
-      case GamePhase.STANDBY: {
-        gameState = readyPlayerForTurn(gameState, playerId)
-
-        if (allPlayersReady(gameState)) {
-          gameState = startTurn(gameState)
-        }
-
-        transaction.set(clientRef, gameState)
-        transaction.set(serverRef, gameState)
-
-        return true
+export const httpReady = httpsCallable(
+  HttpTrigger.READY,
+  validationSchema,
+  async data => {
+    const success = await firestore.runTransaction(async transaction => {
+      const clientRef = getCollection(Collection.CLIENT).doc(data.gameId)
+      const serverRef = getCollection(Collection.SERVER).doc(data.gameId)
+      const serverDoc = await transaction.get(serverRef)
+      const initialState = serverDoc.data()
+      if (initialState === undefined) {
+        throw preconditionError("Invalid game ID")
       }
 
-      case GamePhase.PROGRAM: {
-        if (data.poweredDown === undefined) {
-          throw validationError('Missing field "poweredDown"')
-        }
-
-        if (data.program === undefined) {
-          throw validationError('Missing field "program"')
-        }
-
-        if (!isValidProgram(data.program, player)) {
-          throw preconditionError("Invalid program")
-        }
-
-        gameState = confirmPlayerProgram(
-          gameState,
-          playerId,
-          data.program,
-          data.poweredDown
-        )
-
-        transaction.set(clientRef, gameState)
-
-        gameState = await resolveTurn(gameState)
-
-        transaction.set(serverRef, gameState)
-
-        return true
+      if (initialState.phase !== data.phase) {
+        throw preconditionError("Inconsistent state - Wrong phase")
       }
 
-      default:
-        throw preconditionError("Invalid game state")
-    }
-  })
+      if (initialState.turn !== data.turn) {
+        throw preconditionError("Inconsistent state - Wrong turn")
+      }
 
-  return { success }
-})
+      const { playerId } = data
+      const player = initialState.players[playerId]
+      if (player === undefined) {
+        throw preconditionError("Not a player")
+      }
+
+      if (player.ready) {
+        return false
+      }
+
+      let gameState = initialState
+
+      switch (gameState.phase) {
+        case GamePhase.STANDBY: {
+          gameState = readyPlayerForTurn(gameState, playerId)
+
+          if (allPlayersReady(gameState)) {
+            gameState = startTurn(gameState)
+          }
+
+          transaction.set(clientRef, gameState)
+          transaction.set(serverRef, gameState)
+
+          return true
+        }
+
+        case GamePhase.PROGRAM: {
+          if (data.poweredDown === undefined) {
+            throw validationError('Missing field "poweredDown"')
+          }
+
+          if (data.program === undefined) {
+            throw validationError('Missing field "program"')
+          }
+
+          if (!isValidProgram(data.program, player)) {
+            throw preconditionError("Invalid program")
+          }
+
+          gameState = confirmPlayerProgram(
+            gameState,
+            playerId,
+            data.program,
+            data.poweredDown
+          )
+
+          transaction.set(clientRef, gameState)
+
+          gameState = await resolveTurn(gameState)
+
+          transaction.set(serverRef, gameState)
+
+          return true
+        }
+
+        default:
+          throw preconditionError("Invalid game state")
+      }
+    })
+
+    return { success }
+  }
+)
