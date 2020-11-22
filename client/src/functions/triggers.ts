@@ -39,6 +39,20 @@ export async function triggerRoomCreate(
   return response.roomId
 }
 
+export async function triggerRoomEnter(
+  params: HttpParams<HttpTrigger.ROOM_ENTER>
+): Promise<boolean> {
+  const response = await httpTrigger(HttpTrigger.ROOM_ENTER, params)
+  return response.success
+}
+
+export async function triggerRoomLeave(
+  params: HttpParams<HttpTrigger.ROOM_LEAVE>
+): Promise<boolean> {
+  const response = await httpTrigger(HttpTrigger.ROOM_LEAVE, params)
+  return response.success
+}
+
 export async function triggerRoomStart(
   params: HttpParams<HttpTrigger.ROOM_START>
 ): Promise<boolean> {
