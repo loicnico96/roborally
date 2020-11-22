@@ -1,7 +1,7 @@
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignOut } from "firestore/auth/useSignOut"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
-import React, { useMemo } from "react"
+import React, { useCallback, useMemo } from "react"
 import { Link, useLocation } from "react-router-dom"
 import styled from "styled-components"
 import { ROUTES, withSearchParams } from "utils/navigation"
@@ -23,6 +23,7 @@ const PageHeaderTitle = styled.div`
 `
 
 const PageHeaderUserName = styled.div`
+  cursor: pointer;
   padding: 0px 8px;
 `
 
@@ -43,12 +44,28 @@ const PageHeader = ({ title }: PageHeaderProps) => {
     [pathname]
   )
 
+  const changeName = useCallback(async () => {
+    if (userInfo !== null) {
+      const oldName = userInfo.name
+      // eslint-disable-next-line no-alert
+      const newName = window.prompt("Choose your user name", oldName)
+      if (newName !== null && newName !== "" && newName !== oldName) {
+        await userInfo.updateName(newName)
+      }
+    }
+  }, [userInfo])
+
   return (
     <PageHeaderContainer>
       <PageHeaderTitle>{title}</PageHeaderTitle>
       {isAuthenticated && userInfo !== null ? (
         <>
-          <PageHeaderUserName>{userInfo.name}</PageHeaderUserName>
+          <PageHeaderUserName
+            onClick={changeName}
+            title="Click to change user name"
+          >
+            {userInfo.name}
+          </PageHeaderUserName>
           <PageHeaderButton onClick={signOut} disabled={isLoading}>
             Sign out
           </PageHeaderButton>
