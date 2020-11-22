@@ -10,8 +10,8 @@ import { Direction, Position, Rotation } from "common/roborally/model/Position"
 import React, { useCallback, useState } from "react"
 import styled from "styled-components"
 
-import BoardFloodZone from "../assets/boards/FloodZone.png"
-import BoardIsland from "../assets/boards/Island.png"
+import BoardFloodZone from "assets/boards/FloodZone.png"
+import BoardIsland from "assets/boards/Island.png"
 
 const BOARD_IMAGES: Record<BoardId, string> = {
   [BoardId.FLOOD_ZONE]: BoardFloodZone,

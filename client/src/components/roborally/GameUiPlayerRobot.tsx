@@ -1,8 +1,8 @@
 import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
 import styled from "styled-components"
 
-import Robot0 from "../assets/robots/Robot0.png"
-import Robot1 from "../assets/robots/Robot1.png"
+import Robot0 from "assets/robots/Robot0.png"
+import Robot1 from "assets/robots/Robot1.png"
 
 const CELL_SIZE = 100
 const ROBOT_SIZE = 60
