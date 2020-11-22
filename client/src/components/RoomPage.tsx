@@ -3,6 +3,7 @@ import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
 import { triggerRoomStart } from "functions/triggers"
 import { PlayerId } from "common/model/GameStateBasic"
 import { useAuthContext } from "firestore/auth/AuthContext"
+import PageHeader from "./PageHeader"
 
 type RoomPageProps = {
   roomId: RoomId
@@ -33,9 +34,7 @@ const RoomPage = ({ roomId, room }: RoomPageProps) => {
 
   return (
     <div>
-      <div>
-        Room {roomId} - {room.status}
-      </div>
+      <PageHeader title={`Room ${roomId} - ${room.status}`} />
       <div>Owner: {room.owner}</div>
       <div>Players: {room.playerOrder.join(", ")}</div>
       <div>Options: {JSON.stringify(room.options)}</div>

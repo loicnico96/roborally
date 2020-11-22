@@ -1,5 +1,6 @@
 import { GameType } from "common/GameSettings"
 import { RoomData, RoomId } from "common/model/RoomData"
+import PageHeader from "components/PageHeader"
 import { triggerRoomCreate } from "functions/triggers"
 import React, { useCallback } from "react"
 import { useHistory } from "react-router-dom"
@@ -35,6 +36,7 @@ const RoomListPage = ({ rooms }: RoomListPageProps) => {
 
   return (
     <div id="RoomsPageContainer">
+      <PageHeader title="Rooms" />
       <div id="RoomsPageHeader">
         <button id="CreateRoomButton" onClick={createRoom}>
           Create room

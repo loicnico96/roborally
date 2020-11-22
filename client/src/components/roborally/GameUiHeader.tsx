@@ -1,5 +1,6 @@
 import React from "react"
 import { RoomId } from "common/model/RoomData"
+import PageHeader from "components/PageHeader"
 
 type GameUiHeaderProps = {
   currentTurn: number
@@ -7,11 +8,7 @@ type GameUiHeaderProps = {
 }
 
 const GameUiHeader = ({ currentTurn, roomId }: GameUiHeaderProps) => (
-  <div id="GameUiHeader">
-    <p>
-      ROOM {roomId} - TURN {currentTurn}
-    </p>
-  </div>
+  <PageHeader title={`ROOM ${roomId} - TURN ${currentTurn}`} />
 )
 
 export default GameUiHeader

@@ -4,18 +4,15 @@ import { useSignInAnonymous } from "firestore/auth/useSignInAnonymous"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { Link } from "react-router-dom"
 import { ROUTES } from "utils/navigation"
+import PageHeader from "./PageHeader"
 
 const HomeRoute = () => {
   const { isAuthenticated, userId, userInfo } = useAuthContext()
   const [signInAnonymous, isLoading] = useAsyncHandler(useSignInAnonymous())
 
-  // const history = useHistory()
-  // const openRoomList = useCallback(() => {
-  //   history.push(ROUTES.roomList())
-  // }, [history])
-
   return (
     <div>
+      <PageHeader title="HOME" />
       <div>
         <Link to={ROUTES.roomList()}>Open rooms</Link>
       </div>
