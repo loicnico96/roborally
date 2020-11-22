@@ -44,7 +44,6 @@ function validateProgram(value: unknown): Program {
 const validationSchema = {
   gameId: required(validateString()),
   phase: required(validateEnum(GamePhase)),
-  playerId: required(validateString()),
   poweredDown: optional(validateBoolean()),
   program: optional(validateProgram),
   turn: required(validateNumber({ integer: true })),
@@ -57,7 +56,7 @@ function allPlayersReady(gameData: RoborallyState): boolean {
 export const httpReady = httpsCallable(
   HttpTrigger.READY,
   validationSchema,
-  async data => {
+  async (data, playerId) => {
     const success = await firestore.runTransaction(async transaction => {
       const clientRef = getCollection(Collection.CLIENT).doc(data.gameId)
       const serverRef = getCollection(Collection.SERVER).doc(data.gameId)
@@ -75,7 +74,6 @@ export const httpReady = httpsCallable(
         throw preconditionError("Inconsistent state - Wrong turn")
       }
 
-      const { playerId } = data
       const player = initialState.players[playerId]
       if (player === undefined) {
         throw preconditionError("Not a player")

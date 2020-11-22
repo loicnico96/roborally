@@ -1,7 +1,6 @@
-// import { authenticationError } from "./errors"
 import { HttpTrigger, HttpParams, HttpResponse } from "common/functions"
 import { validateObject, SchemaValidators } from "common/utils/validation"
-import { validationError } from "./errors"
+import { authenticationError, validationError } from "./errors"
 import { functions } from "./functions"
 
 type FirebaseAuth = {
@@ -10,9 +9,7 @@ type FirebaseAuth = {
 
 function validateAuth(auth: FirebaseAuth | undefined): string {
   if (auth === undefined) {
-    // TODO: Remove default UID and enforce authentication
-    // throw authenticationError("Not unauthenticated")
-    return ""
+    throw authenticationError("Not unauthenticated")
   }
 
   return auth.uid

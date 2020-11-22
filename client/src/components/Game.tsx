@@ -5,7 +5,6 @@ import {
   RoborallyState,
 } from "common/roborally/model/RoborallyState"
 import { RoomId } from "common/model/RoomData"
-import { useCurrentUserId } from "hooks/useCurrentUserId"
 import GameUiHeader from "./GameUiHeader"
 import GameUiTurnPhase from "./GameUiTurnPhase"
 import GameUiPlayerCard from "./GameUiPlayerCard"
@@ -15,6 +14,7 @@ import GameUiPlayerRobot from "./GameUiPlayerRobot"
 import GameUiBoard from "./GameUiBoard"
 import GameUiViewport from "./GameUiViewport"
 import GameUiCheckpoint from "./GameUiCheckpoint"
+import { useAuthContext } from "firestore/auth/AuthContext"
 
 type GameProps = {
   gameState: RoborallyState
@@ -53,9 +53,7 @@ const TURN_PHASES = [
 ]
 
 const Game = ({ gameState, roomId }: GameProps) => {
-  const userId = useCurrentUserId()
-
-  const isPlayer = userId in gameState.players
+  const { userId } = useAuthContext()
 
   const isResolving = ![GamePhase.PROGRAM, GamePhase.STANDBY].includes(
     gameState.phase
@@ -100,7 +98,7 @@ const Game = ({ gameState, roomId }: GameProps) => {
           ))}
         </div>
       </GameUiContentMain>
-      {isPlayer && (
+      {userId !== null && userId in gameState.players && (
         <GameUiProgram
           gameState={gameState}
           playerId={userId}

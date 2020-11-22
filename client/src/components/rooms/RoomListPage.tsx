@@ -1,7 +1,6 @@
 import { GameType } from "common/GameSettings"
 import { RoomData, RoomId } from "common/model/RoomData"
 import { triggerRoomCreate } from "functions/triggers"
-import { useCurrentUserId } from "hooks/useCurrentUserId"
 import React, { useCallback } from "react"
 import { useHistory } from "react-router-dom"
 import { ROUTES } from "utils/navigation"
@@ -13,12 +12,11 @@ export type RoomListPageProps = {
 
 const useCreateRoom = () => {
   const history = useHistory()
-  const userId = useCurrentUserId()
   return useCallback(async () => {
     const game = GameType.ROBORALLY
-    const roomId = await triggerRoomCreate({ game, userId })
+    const roomId = await triggerRoomCreate({ game })
     history.push(ROUTES.room(roomId))
-  }, [history, userId])
+  }, [history])
 }
 
 const useOpenRoom = () => {

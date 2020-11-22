@@ -63,13 +63,12 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
   const onReadyUnsafe = useCallback(async () => {
     await triggerReady({
       gameId: roomId,
-      playerId,
       program,
       poweredDown,
       phase,
       turn,
     })
-  }, [roomId, playerId, program, poweredDown, phase, turn])
+  }, [roomId, program, poweredDown, phase, turn])
 
   const [onReady, onReadyLoading] = useAsyncHandler(onReadyUnsafe)
 

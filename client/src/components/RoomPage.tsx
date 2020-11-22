@@ -1,15 +1,15 @@
 import React, { useCallback } from "react"
 import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
-import { useCurrentUserId } from "hooks/useCurrentUserId"
 import { triggerRoomStart } from "functions/triggers"
 import { PlayerId } from "common/model/GameStateBasic"
+import { useAuthContext } from "firestore/auth/AuthContext"
 
 type RoomPageProps = {
   roomId: RoomId
   room: RoomData
 }
 
-function isAbleToStartGame(userId: PlayerId, room: RoomData): boolean {
+function isAbleToStartGame(room: RoomData, userId: PlayerId | null): boolean {
   return room.status === RoomStatus.OPENED && room.owner === userId
 }
 
@@ -17,13 +17,13 @@ const useStartGame = (
   roomId: RoomId,
   room: RoomData | null
 ): [() => void, boolean] => {
-  const userId = useCurrentUserId()
-  const isEnabled = room !== null && isAbleToStartGame(userId, room)
+  const { userId } = useAuthContext()
+  const isEnabled = room !== null && isAbleToStartGame(room, userId)
   const startGame = useCallback(async () => {
     if (isEnabled) {
-      await triggerRoomStart({ roomId, userId })
+      await triggerRoomStart({ roomId })
     }
-  }, [roomId, userId, isEnabled])
+  }, [roomId, isEnabled])
 
   return [startGame, isEnabled]
 }

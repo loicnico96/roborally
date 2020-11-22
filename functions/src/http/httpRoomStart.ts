@@ -10,13 +10,12 @@ import { getGameSettings } from "common/GameSettings"
 
 const validationSchema = {
   roomId: required(validateString()),
-  userId: required(validateString()),
 }
 
 export const httpRoomStart = httpsCallable(
   HttpTrigger.ROOM_START,
   validationSchema,
-  async data => {
+  async (data, userId) => {
     const success = await firestore.runTransaction(async transaction => {
       const roomRef = getCollection(Collection.ROOM).doc(data.roomId)
       const roomDoc = await transaction.get(roomRef)
@@ -29,7 +28,7 @@ export const httpRoomStart = httpsCallable(
         throw preconditionError("Inconsistent status")
       }
 
-      if (roomData.owner !== data.userId) {
+      if (roomData.owner !== userId) {
         throw permissionError("Not allowed")
       }
 
