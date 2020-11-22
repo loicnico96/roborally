@@ -5,6 +5,7 @@ import RoomRoute from "./components/RoomRoute"
 import RoomListRoute from "./components/rooms/RoomListRoute"
 import AuthProvider from "./firestore/auth/AuthProvider"
 import HomeRoute from "components/HomeRoute"
+import LoginRoute from "components/LoginRoute"
 
 function App() {
   return (
@@ -13,6 +14,9 @@ function App() {
         <Switch>
           <Route exact path={ROUTES.home()}>
             <HomeRoute />
+          </Route>
+          <Route exact path={ROUTES.login()}>
+            <LoginRoute />
           </Route>
           <Route exact path={ROUTES.roomList()}>
             <RoomListRoute />

@@ -1,10 +1,10 @@
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignOut } from "firestore/auth/useSignOut"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
-import React from "react"
-import { Link } from "react-router-dom"
+import React, { useMemo } from "react"
+import { Link, useLocation } from "react-router-dom"
 import styled from "styled-components"
-import { ROUTES } from "utils/navigation"
+import { ROUTES, withSearchParams } from "utils/navigation"
 
 type PageHeaderProps = {
   title: string
@@ -32,8 +32,16 @@ const PageHeaderButton = styled.button`
 
 const PageHeader = ({ title }: PageHeaderProps) => {
   const { isAuthenticated, userId } = useAuthContext()
-
   const [signOut, isLoading] = useAsyncHandler(useSignOut())
+  const { pathname } = useLocation()
+
+  const loginUrl = useMemo(
+    () =>
+      withSearchParams(ROUTES.login(), {
+        callback: pathname,
+      }),
+    [pathname]
+  )
 
   return (
     <PageHeaderContainer>
@@ -47,7 +55,7 @@ const PageHeader = ({ title }: PageHeaderProps) => {
         </>
       ) : (
         <PageHeaderButton>
-          <Link to={ROUTES.home()}>Sign in</Link>
+          <Link to={loginUrl}>Sign in</Link>
         </PageHeaderButton>
       )}
     </PageHeaderContainer>
