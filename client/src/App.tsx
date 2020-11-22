@@ -3,25 +3,27 @@ import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 import { ROUTES } from "./utils/navigation"
 import RoomRoute from "./components/RoomRoute"
 import RoomListRoute from "./components/rooms/RoomListRoute"
-
-const ROOM_TEST_ID = "id_test"
+import AuthProvider from "./firestore/auth/AuthProvider"
+import HomeRoute from "components/HomeRoute"
 
 function App() {
   return (
-    <BrowserRouter>
-      <Switch>
-        <Route exact path={ROUTES.home()}>
-          <Redirect to={ROUTES.room(ROOM_TEST_ID)} />
-        </Route>
-        <Route exact path={ROUTES.roomList()}>
-          <RoomListRoute />
-        </Route>
-        <Route path={ROUTES.room(":roomId")}>
-          <RoomRoute />
-        </Route>
-        <Redirect to={ROUTES.roomList()} />
-      </Switch>
-    </BrowserRouter>
+    <AuthProvider>
+      <BrowserRouter>
+        <Switch>
+          <Route exact path={ROUTES.home()}>
+            <HomeRoute />
+          </Route>
+          <Route exact path={ROUTES.roomList()}>
+            <RoomListRoute />
+          </Route>
+          <Route path={ROUTES.room(":roomId")}>
+            <RoomRoute />
+          </Route>
+          <Redirect to={ROUTES.home()} />
+        </Switch>
+      </BrowserRouter>
+    </AuthProvider>
   )
 }
 
