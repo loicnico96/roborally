@@ -31,7 +31,7 @@ const PageHeaderButton = styled.button`
 `
 
 const PageHeader = ({ title }: PageHeaderProps) => {
-  const { isAuthenticated, userId } = useAuthContext()
+  const { isAuthenticated, userInfo } = useAuthContext()
   const [signOut, isLoading] = useAsyncHandler(useSignOut())
   const { pathname } = useLocation()
 
@@ -46,9 +46,9 @@ const PageHeader = ({ title }: PageHeaderProps) => {
   return (
     <PageHeaderContainer>
       <PageHeaderTitle>{title}</PageHeaderTitle>
-      {isAuthenticated && userId !== null ? (
+      {isAuthenticated && userInfo !== null ? (
         <>
-          <PageHeaderUserName>{userId}</PageHeaderUserName>
+          <PageHeaderUserName>{userInfo.name}</PageHeaderUserName>
           <PageHeaderButton onClick={signOut} disabled={isLoading}>
             Sign out
           </PageHeaderButton>

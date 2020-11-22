@@ -1,8 +1,8 @@
 import { FirebaseUser } from "./useAuth"
 
 export type UserInfo = {
-  icon: string | null
-  name: string | null
+  image: string | null
+  name: string
 }
 
 export type AuthData = {
@@ -25,8 +25,8 @@ export function getAuthData(user: FirebaseUser): AuthData {
     isAuthenticated: true,
     userId: user.uid,
     userInfo: {
-      icon: user.photoURL,
-      name: user.displayName,
+      image: user.photoURL,
+      name: user.displayName ?? "Anonymous",
     },
   }
 }
