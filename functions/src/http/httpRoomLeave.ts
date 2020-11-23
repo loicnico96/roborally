@@ -1,3 +1,4 @@
+import update from "immutability-helper"
 import { getCollection } from "../utils/collections"
 import { firestore } from "../utils/firestore"
 import { httpsCallable } from "../utils/httpsCallable"
@@ -27,7 +28,7 @@ export const httpRoomLeave = httpsCallable(
         throw preconditionError("Inconsistent status")
       }
 
-      if (roomData.owner === userId) {
+      if (roomData.ownerId === userId) {
         throw permissionError("Not allowed")
       }
 
@@ -35,9 +36,15 @@ export const httpRoomLeave = httpsCallable(
         return false
       }
 
-      const playerOrder = roomData.playerOrder.filter(id => id !== userId)
-
-      transaction.update(roomRef, { playerOrder })
+      transaction.update(
+        roomRef,
+        update(roomData, {
+          playerOrder: playerOrder => playerOrder.filter(id => id !== userId),
+          players: {
+            $unset: [userId],
+          },
+        })
+      )
 
       return true
     })

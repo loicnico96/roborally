@@ -41,7 +41,7 @@ function isAbleToLeaveRoom(room: RoomData, userId: PlayerId | null): boolean {
   return (
     room.status === RoomStatus.OPENED &&
     userId !== null &&
-    userId !== room.owner &&
+    userId !== room.ownerId &&
     room.playerOrder.includes(userId)
   )
 }
@@ -62,7 +62,7 @@ const useLeaveRoom = (
 }
 
 function isAbleToStartGame(room: RoomData, userId: PlayerId | null): boolean {
-  return room.status === RoomStatus.OPENED && room.owner === userId
+  return room.status === RoomStatus.OPENED && room.ownerId === userId
 }
 
 const useStartGame = (
@@ -85,11 +85,14 @@ const RoomPage = ({ roomId, room }: RoomPageProps) => {
   const [enterRoom, isEnterRoomEnabled] = useEnterRoom(roomId, room)
   const [leaveRoom, isLeaveRoomEnabled] = useLeaveRoom(roomId, room)
 
+  const ownerName = room.players[room.ownerId].name
+  const playerNames = room.playerOrder.map(userId => room.players[userId].name)
+
   return (
     <div>
       <PageHeader title={`Room ${roomId} - ${room.status}`} />
-      <div>Owner: {room.owner}</div>
-      <div>Players: {room.playerOrder.join(", ")}</div>
+      <div>Owner: {ownerName}</div>
+      <div>Players: {playerNames.join(", ")}</div>
       <div>Options: {JSON.stringify(room.options)}</div>
       {isStartGameEnabled && <button onClick={startGame}>Start game</button>}
       {isEnterRoomEnabled && <button onClick={enterRoom}>Enter room</button>}

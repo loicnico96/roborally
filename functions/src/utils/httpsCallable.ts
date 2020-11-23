@@ -2,12 +2,14 @@ import { HttpTrigger, HttpParams, HttpResponse } from "common/functions"
 import { validateObject, SchemaValidators } from "common/utils/validation"
 import { authenticationError, validationError } from "./errors"
 import { functions } from "./functions"
+import { UserId, UserInfo } from "common/model/UserInfo"
+import { getUserInfo } from "./getUserInfo"
 
 type FirebaseAuth = {
   uid: string
 }
 
-function validateAuth(auth: FirebaseAuth | undefined): string {
+function validateAuth(auth: FirebaseAuth | undefined): UserId {
   if (auth === undefined) {
     throw authenticationError("Not unauthenticated")
   }
@@ -29,13 +31,18 @@ function validatePayload<T extends HttpTrigger>(
 export function httpsCallable<T extends HttpTrigger>(
   trigger: T,
   validators: SchemaValidators<HttpParams<T>>,
-  handler: (data: HttpParams<T>, userId: string) => Promise<HttpResponse<T>>
+  handler: (
+    data: HttpParams<T>,
+    userId: UserId,
+    userInfo: UserInfo
+  ) => Promise<HttpResponse<T>>
 ): CallableFunction {
   return functions.https.onCall(async (payload: unknown, { auth }) => {
     try {
       const userId = validateAuth(auth)
       const data = validatePayload(payload, validators)
-      const response = await handler(data, userId)
+      const userInfo = await getUserInfo(userId)
+      const response = await handler(data, userId, userInfo)
       return response
     } catch (error) {
       console.error(error)

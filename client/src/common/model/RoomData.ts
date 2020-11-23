@@ -1,5 +1,5 @@
 import { GameOptions, GameType, getGameSettings } from "common/GameSettings"
-import { PlayerId } from "./GameStateBasic"
+import { UserId, UserInfo } from "./UserInfo"
 
 export type RoomId = string
 
@@ -12,17 +12,23 @@ export enum RoomStatus {
 export type RoomData<T extends GameType = GameType> = {
   game: T
   options: GameOptions<T>
-  owner: PlayerId
-  playerOrder: PlayerId[]
+  ownerId: UserId
+  playerOrder: UserId[]
+  players: Record<UserId, UserInfo>
   status: RoomStatus
 }
 
-export function getInitialRoomData(game: GameType, owner: PlayerId): RoomData {
+export function getInitialRoomData(
+  game: GameType,
+  ownerId: UserId,
+  ownerInfo: UserInfo
+): RoomData {
   return {
     game,
     options: getGameSettings(game).getDefaultOptions(),
-    owner,
-    playerOrder: [owner],
+    ownerId,
+    playerOrder: [ownerId],
+    players: { [ownerId]: ownerInfo },
     status: RoomStatus.OPENED,
   }
 }

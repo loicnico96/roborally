@@ -1,3 +1,4 @@
+import update from "immutability-helper"
 import { getCollection } from "../utils/collections"
 import { firestore } from "../utils/firestore"
 import { httpsCallable } from "../utils/httpsCallable"
@@ -14,7 +15,7 @@ const validationSchema = {
 export const httpRoomEnter = httpsCallable(
   HttpTrigger.ROOM_ENTER,
   validationSchema,
-  async (data, userId) => {
+  async (data, userId, userInfo) => {
     const success = await firestore.runTransaction(async transaction => {
       const roomRef = getCollection(Collection.ROOM).doc(data.roomId)
       const roomDoc = await transaction.get(roomRef)
@@ -35,9 +36,19 @@ export const httpRoomEnter = httpsCallable(
         return false
       }
 
-      const playerOrder = [...roomData.playerOrder, userId]
-
-      transaction.update(roomRef, { playerOrder })
+      transaction.update(
+        roomRef,
+        update(roomData, {
+          playerOrder: {
+            $push: [userId],
+          },
+          players: {
+            $merge: {
+              [userId]: userInfo,
+            },
+          },
+        })
+      )
 
       return true
     })
