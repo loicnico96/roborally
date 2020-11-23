@@ -1,27 +1,23 @@
 import update from "immutability-helper"
 import React, { useEffect, useState } from "react"
-import { UNAUTHENTICATED } from "./AuthData"
-import { AuthContextProvider } from "./AuthContext"
-import { useAuth } from "./useAuth"
+import { AuthContextProvider, UNAUTHENTICATED } from "./AuthContext"
+import Auth from "./Auth"
 
-export type AuthProviderProps = React.PropsWithChildren<{
-  // TODO
-}>
+export type AuthProviderProps = {
+  children: React.ReactChildren
+}
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const auth = useAuth()
-
   const [authData, setAuthData] = useState(UNAUTHENTICATED)
 
   useEffect(() => {
-    const subscription = auth.onAuthStateChanged(user => {
+    const subscription = Auth.onAuthStateChanged(user => {
       if (user !== null) {
         setAuthData({
           isAnonymous: user.isAnonymous,
           isAuthenticated: true,
           userId: user.uid,
           userInfo: {
-            image: user.photoURL,
             name: user.displayName ?? "Anonymous",
             updateName: async (name: string) => {
               await user.updateProfile({ displayName: name })
@@ -43,7 +39,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
     })
 
     return subscription
-  }, [auth, setAuthData])
+  }, [setAuthData])
 
   return <AuthContextProvider value={authData}>{children}</AuthContextProvider>
 }

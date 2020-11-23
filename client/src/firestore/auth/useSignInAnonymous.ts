@@ -1,11 +1,11 @@
 import { useCallback } from "react"
-import { AuthPersistence, FirebaseUserCredential, useAuth } from "./useAuth"
+import { getDefaultAuthPersistence } from "./AuthPersistence"
+import Auth, { FirebaseUserCredential } from "./Auth"
 
 export function useSignInAnonymous(): () => Promise<FirebaseUserCredential> {
-  const auth = useAuth()
   return useCallback(async () => {
-    await auth.setPersistence(AuthPersistence.SESSION)
-    const userCredential = await auth.signInAnonymously()
+    await Auth.setPersistence(getDefaultAuthPersistence())
+    const userCredential = await Auth.signInAnonymously()
     return userCredential
-  }, [auth])
+  }, [])
 }

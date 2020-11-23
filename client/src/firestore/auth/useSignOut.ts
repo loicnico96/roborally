@@ -1,9 +1,8 @@
 import { useCallback } from "react"
-import { useAuth } from "./useAuth"
+import Auth from "./Auth"
 
 export function useSignOut(): () => Promise<void> {
-  const auth = useAuth()
   return useCallback(async () => {
-    await auth.signOut()
-  }, [auth])
+    await Auth.signOut()
+  }, [])
 }
