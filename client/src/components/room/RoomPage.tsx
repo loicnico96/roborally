@@ -7,8 +7,8 @@ import {
 } from "functions/triggers"
 import { PlayerId } from "common/model/GameStateBasic"
 import { useAuthContext } from "firestore/auth/AuthContext"
-import PageHeader from "./PageHeader"
-import AsyncButton from "./primitives/AsyncButton"
+import PageHeader from "../PageHeader"
+import AsyncButton from "../primitives/AsyncButton"
 
 type RoomPageProps = {
   roomId: RoomId

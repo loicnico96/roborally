@@ -12,7 +12,7 @@ import { RoomData, RoomId } from "common/model/RoomData"
 import { RoborallyState } from "common/roborally/model/RoborallyState"
 import { Collection } from "common/firestore/collections"
 import { useFirestoreLoader } from "firestore/useFirestoreLoader"
-import GamePage from "./roborally/GamePage"
+import GamePage from "../roborally/GamePage"
 import { resolveTurn } from "common/roborally/resolveTurn"
 import RoomPage from "./RoomPage"
 

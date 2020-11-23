@@ -4,7 +4,7 @@ import { AuthContextProvider, UNAUTHENTICATED } from "./AuthContext"
 import Auth from "./Auth"
 
 export type AuthProviderProps = {
-  children: React.ReactChildren
+  children: React.ReactNode
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
