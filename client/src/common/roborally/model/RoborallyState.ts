@@ -25,6 +25,8 @@ export type RoborallyState = GameStateBasic<RoborallyPlayer> & {
   turn: number
 }
 
+export type B = RoborallyState
+
 export function getInitialGameState(
   boardId: BoardId,
   boardData: BoardData,

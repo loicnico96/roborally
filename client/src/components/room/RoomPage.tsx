@@ -9,11 +9,7 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import PageHeader from "../PageHeader"
 import AsyncButton from "../primitives/AsyncButton"
-
-type RoomPageProps = {
-  roomId: RoomId
-  room: RoomData
-}
+import { useRoomData, useRoomId } from "./RoomContext"
 
 function isAbleToEnterRoom(room: RoomData, userId: PlayerId | null): boolean {
   return (
@@ -81,20 +77,24 @@ const useStartGame = (
   return [startGame, isEnabled]
 }
 
-const RoomPage = ({ roomId, room }: RoomPageProps) => {
-  const [startGame, isStartGameEnabled] = useStartGame(roomId, room)
-  const [enterRoom, isEnterRoomEnabled] = useEnterRoom(roomId, room)
-  const [leaveRoom, isLeaveRoomEnabled] = useLeaveRoom(roomId, room)
+const RoomPage = () => {
+  const roomId = useRoomId()
+  const roomData = useRoomData()
+  const [startGame, isStartGameEnabled] = useStartGame(roomId, roomData)
+  const [enterRoom, isEnterRoomEnabled] = useEnterRoom(roomId, roomData)
+  const [leaveRoom, isLeaveRoomEnabled] = useLeaveRoom(roomId, roomData)
 
-  const ownerName = room.players[room.ownerId].name
-  const playerNames = room.playerOrder.map(userId => room.players[userId].name)
+  const ownerName = roomData.players[roomData.ownerId].name
+  const playerNames = roomData.playerOrder.map(
+    playerId => roomData.players[playerId].name
+  )
 
   return (
     <div>
-      <PageHeader title={`Room ${roomId} - ${room.status}`} />
+      <PageHeader title={`Room ${roomId} - ${roomData.status}`} />
       <div>Owner: {ownerName}</div>
       <div>Players: {playerNames.join(", ")}</div>
-      <div>Options: {JSON.stringify(room.options)}</div>
+      <div>Options: {JSON.stringify(roomData.options)}</div>
       {isStartGameEnabled && (
         <AsyncButton onClick={startGame}>Start game</AsyncButton>
       )}

@@ -4,7 +4,7 @@ import React from "react"
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 
 export type AsyncButtonProps = Omit<ButtonProps, "onClick" | "onError"> & {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => Promise<void>
+  onClick: (event: React.MouseEvent<HTMLButtonElement>) => Promise<any>
   onError?: (error: Error) => void
 }
 

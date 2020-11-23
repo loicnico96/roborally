@@ -31,6 +31,10 @@ const PageHeaderButton = styled(AsyncButton)`
   padding: 0px 8px;
 `
 
+const PageHeaderLink = styled(Link)`
+  padding: 0px 8px;
+`
+
 const PageHeader = ({ title }: PageHeaderProps) => {
   const { isAuthenticated, userInfo } = useAuthContext()
   const { pathname } = useLocation()
@@ -69,9 +73,7 @@ const PageHeader = ({ title }: PageHeaderProps) => {
           <PageHeaderButton onClick={signOut}>Sign out</PageHeaderButton>
         </>
       ) : (
-        <PageHeaderButton>
-          <Link to={loginUrl}>Sign in</Link>
-        </PageHeaderButton>
+        <PageHeaderLink to={loginUrl}>Sign in</PageHeaderLink>
       )}
     </PageHeaderContainer>
   )

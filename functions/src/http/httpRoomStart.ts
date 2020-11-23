@@ -28,7 +28,7 @@ export const httpRoomStart = httpsCallable(
         throw preconditionError("Inconsistent status")
       }
 
-      if (roomData.owner !== userId) {
+      if (roomData.ownerId !== userId) {
         throw permissionError("Not allowed")
       }
 

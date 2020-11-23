@@ -1,15 +1,12 @@
 import React from "react"
-import { RoborallyState } from "common/roborally/model/RoborallyState"
-import { RoomId } from "common/model/RoomData"
 import Game from "./Game"
+import { useGameState } from "components/room/GameContext"
+import { useRoomId } from "components/room/RoomContext"
 
-type GamePageProps = {
-  roomId: RoomId
-  gameState: RoborallyState
+const GamePage = () => {
+  const roomId = useRoomId()
+  const gameState = useGameState()
+  return <Game gameState={gameState} roomId={roomId} />
 }
-
-const GamePage = ({ roomId, gameState }: GamePageProps) => (
-  <Game gameState={gameState} roomId={roomId} />
-)
 
 export default GamePage

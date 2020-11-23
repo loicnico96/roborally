@@ -14,10 +14,10 @@ const validationSchema = {
 export const httpRoomCreate = httpsCallable(
   HttpTrigger.ROOM_CREATE,
   validationSchema,
-  async (data, userId) => {
+  async (data, userId, userInfo) => {
     const roomId = await firestore.runTransaction(async transaction => {
       const roomRef = getCollection(Collection.ROOM).doc()
-      const roomData = getInitialRoomData(data.game, userId)
+      const roomData = getInitialRoomData(data.game, userId, userInfo)
       transaction.create(roomRef, roomData)
       return roomRef.id
     })
