@@ -1,16 +1,16 @@
 import React, { useEffect } from "react"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignInAnonymous } from "firestore/auth/useSignInAnonymous"
-import { useAsyncHandler } from "hooks/useAsyncHandler"
 import PageHeader from "./PageHeader"
 import { useHistory } from "react-router-dom"
 import { ROUTES } from "utils/navigation"
 import { useSearchParams } from "hooks/useSearchParams"
+import AsyncButton from "./primitives/AsyncButton"
 
 const LoginRoute = () => {
   const callbackRoute = useSearchParams().get("callback")
   const { isAuthenticated, userId, userInfo } = useAuthContext()
-  const [signInAnonymous, isLoading] = useAsyncHandler(useSignInAnonymous())
+  const signInAnonymous = useSignInAnonymous()
   const history = useHistory()
 
   useEffect(() => {
@@ -27,9 +27,7 @@ const LoginRoute = () => {
           Signed in as {userId} : {JSON.stringify(userInfo)}
         </div>
       ) : (
-        <button onClick={signInAnonymous} disabled={isLoading}>
-          Sign in as guest
-        </button>
+        <AsyncButton onClick={signInAnonymous}>Sign in as guest</AsyncButton>
       )}
     </div>
   )

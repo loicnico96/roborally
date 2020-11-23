@@ -8,6 +8,7 @@ import {
 import { PlayerId } from "common/model/GameStateBasic"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import PageHeader from "./PageHeader"
+import AsyncButton from "./primitives/AsyncButton"
 
 type RoomPageProps = {
   roomId: RoomId
@@ -25,7 +26,7 @@ function isAbleToEnterRoom(room: RoomData, userId: PlayerId | null): boolean {
 const useEnterRoom = (
   roomId: RoomId,
   room: RoomData | null
-): [() => void, boolean] => {
+): [() => Promise<void>, boolean] => {
   const { userId } = useAuthContext()
   const isEnabled = room !== null && isAbleToEnterRoom(room, userId)
   const enterRoom = useCallback(async () => {
@@ -49,7 +50,7 @@ function isAbleToLeaveRoom(room: RoomData, userId: PlayerId | null): boolean {
 const useLeaveRoom = (
   roomId: RoomId,
   room: RoomData | null
-): [() => void, boolean] => {
+): [() => Promise<void>, boolean] => {
   const { userId } = useAuthContext()
   const isEnabled = room !== null && isAbleToLeaveRoom(room, userId)
   const leaveRoom = useCallback(async () => {
@@ -68,7 +69,7 @@ function isAbleToStartGame(room: RoomData, userId: PlayerId | null): boolean {
 const useStartGame = (
   roomId: RoomId,
   room: RoomData | null
-): [() => void, boolean] => {
+): [() => Promise<void>, boolean] => {
   const { userId } = useAuthContext()
   const isEnabled = room !== null && isAbleToStartGame(room, userId)
   const startGame = useCallback(async () => {
@@ -94,9 +95,15 @@ const RoomPage = ({ roomId, room }: RoomPageProps) => {
       <div>Owner: {ownerName}</div>
       <div>Players: {playerNames.join(", ")}</div>
       <div>Options: {JSON.stringify(room.options)}</div>
-      {isStartGameEnabled && <button onClick={startGame}>Start game</button>}
-      {isEnterRoomEnabled && <button onClick={enterRoom}>Enter room</button>}
-      {isLeaveRoomEnabled && <button onClick={leaveRoom}>Leave room</button>}
+      {isStartGameEnabled && (
+        <AsyncButton onClick={startGame}>Start game</AsyncButton>
+      )}
+      {isEnterRoomEnabled && (
+        <AsyncButton onClick={enterRoom}>Enter room</AsyncButton>
+      )}
+      {isLeaveRoomEnabled && (
+        <AsyncButton onClick={leaveRoom}>Leave room</AsyncButton>
+      )}
     </div>
   )
 }

@@ -1,10 +1,10 @@
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignOut } from "firestore/auth/useSignOut"
-import { useAsyncHandler } from "hooks/useAsyncHandler"
 import React, { useCallback, useMemo } from "react"
 import { Link, useLocation } from "react-router-dom"
 import styled from "styled-components"
 import { ROUTES, withSearchParams } from "utils/navigation"
+import AsyncButton from "./primitives/AsyncButton"
 
 type PageHeaderProps = {
   title: string
@@ -27,14 +27,14 @@ const PageHeaderUserName = styled.div`
   padding: 0px 8px;
 `
 
-const PageHeaderButton = styled.button`
+const PageHeaderButton = styled(AsyncButton)`
   padding: 0px 8px;
 `
 
 const PageHeader = ({ title }: PageHeaderProps) => {
   const { isAuthenticated, userInfo } = useAuthContext()
-  const [signOut, isLoading] = useAsyncHandler(useSignOut())
   const { pathname } = useLocation()
+  const signOut = useSignOut()
 
   const loginUrl = useMemo(
     () =>
@@ -66,9 +66,7 @@ const PageHeader = ({ title }: PageHeaderProps) => {
           >
             {userInfo.name}
           </PageHeaderUserName>
-          <PageHeaderButton onClick={signOut} disabled={isLoading}>
-            Sign out
-          </PageHeaderButton>
+          <PageHeaderButton onClick={signOut}>Sign out</PageHeaderButton>
         </>
       ) : (
         <PageHeaderButton>

@@ -6,11 +6,11 @@ import {
 import { getLockedProgram } from "common/roborally/model/RoborallyPlayer"
 import { RoomId } from "common/model/RoomData"
 import { triggerReady } from "functions/triggers"
-import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { getEmptyProgram, Program } from "common/roborally/model/Program"
 import { Card } from "common/roborally/model/Card"
 import GameUiCard from "./GameUiCard"
 import { PlayerId } from "common/model/GameStateBasic"
+import AsyncButton from "components/primitives/AsyncButton"
 
 type GameUiProgramProps = {
   gameState: RoborallyState
@@ -60,7 +60,7 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
     setPoweredDown(!poweredDown)
   }, [poweredDown])
 
-  const onReadyUnsafe = useCallback(async () => {
+  const onReady = useCallback(async () => {
     await triggerReady({
       gameId: roomId,
       program,
@@ -69,8 +69,6 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
       turn,
     })
   }, [roomId, program, poweredDown, phase, turn])
-
-  const [onReady, onReadyLoading] = useAsyncHandler(onReadyUnsafe)
 
   const shownProgram = phase === GamePhase.PROGRAM ? program : player.program
 
@@ -111,9 +109,9 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
       >
         Initiate {poweredDown ? "ON" : "OFF"}
       </button>
-      <button onClick={onReady} disabled={player.ready || onReadyLoading}>
-        {player.ready || onReadyLoading ? "Waiting..." : "Ready"}
-      </button>
+      <AsyncButton onClick={onReady} disabled={player.ready}>
+        {player.ready ? "Waiting..." : "Ready"}
+      </AsyncButton>
     </div>
   )
 }
