@@ -12,9 +12,9 @@ type PageHeaderProps = {
 
 const PageHeaderContainer = styled.div`
   align-items: center;
-  background-color: lightskyblue;
+  background-color: #ccc;
   display: flex;
-  padding: 8px 16px;
+  padding: 16px 48px;
 `
 
 const PageHeaderTitle = styled.div`

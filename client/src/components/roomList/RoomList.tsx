@@ -3,19 +3,13 @@ import React from "react"
 import RoomListItem from "./RoomListItem"
 
 export type RoomListProps = {
-  onItemClick: (roomId: RoomId) => void
   rooms: Record<RoomId, RoomData>
 }
 
-const RoomList = ({ onItemClick, rooms }: RoomListProps) => (
-  <div id="RoomsList">
+const RoomList = ({ rooms }: RoomListProps) => (
+  <div>
     {Object.keys(rooms).map(roomId => (
-      <RoomListItem
-        key={roomId}
-        onClick={onItemClick}
-        roomId={roomId}
-        room={rooms[roomId]}
-      />
+      <RoomListItem key={roomId} roomId={roomId} room={rooms[roomId]} />
     ))}
   </div>
 )

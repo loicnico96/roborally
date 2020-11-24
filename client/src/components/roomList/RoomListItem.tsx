@@ -1,20 +1,28 @@
 import { RoomData, RoomId } from "common/model/RoomData"
-import React, { useCallback } from "react"
+import React from "react"
+import { Link } from "react-router-dom"
+import styled from "styled-components"
+import { ROUTES } from "utils/navigation"
 
 export type RoomListItemProps = {
-  onClick: (roomId: RoomId) => void
   roomId: RoomId
   room: RoomData
 }
 
-const RoomListItem = ({ onClick, roomId, room }: RoomListItemProps) => {
-  const openRoom = useCallback(() => onClick(roomId), [onClick, roomId])
+const RoomListItemContainer = styled.div`
+  background-color: #ccc;
+  border: 8px solid #aaa;
+  border-radius: 16px;
+  margin: 24px;
+  padding: 16px 24px;
+`
 
-  return (
-    <div onClick={openRoom}>
+const RoomListItem = ({ roomId, room }: RoomListItemProps) => (
+  <Link to={ROUTES.room(roomId)}>
+    <RoomListItemContainer>
       {roomId} : {JSON.stringify(room)}
-    </div>
-  )
-}
+    </RoomListItemContainer>
+  </Link>
+)
 
 export default RoomListItem
