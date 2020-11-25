@@ -8,7 +8,10 @@ import { httpRoomEnter } from "./http/httpRoomEnter"
 import { httpRoomLeave } from "./http/httpRoomLeave"
 import { httpRoomStart } from "./http/httpRoomStart"
 
+import api from "./api"
+
 export {
+  api,
   httpReady,
   httpRoomCreate,
   httpRoomEnter,
