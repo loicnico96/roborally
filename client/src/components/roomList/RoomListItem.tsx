@@ -42,7 +42,7 @@ const RoomListItemContainer = styled.div`
   background-color: #ccc;
   border: 8px solid #aaa;
   border-radius: 16px;
-  margin: 24px;
+  margin: 24px 0px;
   padding: 16px 24px;
   white-space: pre-line;
 `
