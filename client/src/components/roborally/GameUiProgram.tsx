@@ -88,22 +88,30 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
               card === null ||
               phase !== GamePhase.PROGRAM
             }
-            isHighlighted={isResolving && gameState.sequence === index}
+            isHighlighted={
+              isResolving &&
+              gameState.sequence === index &&
+              card !== null &&
+              !player.down &&
+              !player.destroyed
+            }
             isLocked={lockedProgram[index] !== null}
             onClick={() => onRemoveCard(index)}
           />
         ))}
       </div>
-      <div id="GameUiPlayerHand">
-        {hand.map(card => (
-          <GameUiCard
-            key={card}
-            card={card}
-            disabled={!program.includes(null) || phase !== GamePhase.PROGRAM}
-            onClick={() => onPlayCard(card)}
-          />
-        ))}
-      </div>
+      {phase === GamePhase.PROGRAM && (
+        <div id="GameUiPlayerHand">
+          {hand.map(card => (
+            <GameUiCard
+              key={card}
+              card={card}
+              disabled={!program.includes(null)}
+              onClick={() => onPlayCard(card)}
+            />
+          ))}
+        </div>
+      )}
       <button disabled>Powered {player.down ? "down" : "up"}</button>
       <button
         onClick={onTogglePoweredDown}
