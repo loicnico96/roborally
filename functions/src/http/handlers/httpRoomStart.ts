@@ -1,19 +1,18 @@
-import { getCollection, getDataFetcher } from "../utils/collections"
-import { firestore } from "../utils/firestore"
-import { httpsCallable } from "../utils/httpsCallable"
+import { getCollection, getDataFetcher } from "../../utils/collections"
+import { firestore } from "../../utils/firestore"
 import { Collection } from "common/firestore/collections"
 import { required, validateString } from "common/utils/validation"
-import { HttpTrigger } from "common/functions"
 import { RoomStatus } from "common/model/RoomData"
-import { preconditionError, permissionError } from "../utils/errors"
+import { preconditionError, permissionError } from "../../utils/errors"
 import { getGameSettings } from "common/GameSettings"
+import { handleTrigger } from "./handleTrigger"
+import { HttpTrigger } from "common/functions"
 
 const validationSchema = {
   roomId: required(validateString()),
 }
 
-export const httpRoomStart = httpsCallable(
-  HttpTrigger.ROOM_START,
+export default handleTrigger<HttpTrigger.ROOM_START>(
   validationSchema,
   async (data, userId) => {
     const success = await firestore.runTransaction(async transaction => {

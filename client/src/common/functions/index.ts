@@ -33,3 +33,8 @@ export type HttpResponse<T extends HttpTrigger = HttpTrigger> = {
   [HttpTrigger.ROOM_LEAVE]: HttpRoomLeaveResponse
   [HttpTrigger.ROOM_START]: HttpRoomStartResponse
 }[T]
+
+export type HttpPayload<T extends HttpTrigger = HttpTrigger> = {
+  trigger: T
+  data: HttpParams<T>
+}

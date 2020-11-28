@@ -1,7 +1,6 @@
-import { getCollection } from "../utils/collections"
-import { preconditionError, validationError } from "../utils/errors"
-import { firestore } from "../utils/firestore"
-import { httpsCallable } from "../utils/httpsCallable"
+import { getCollection } from "../../utils/collections"
+import { preconditionError, validationError } from "../../utils/errors"
+import { firestore } from "../../utils/firestore"
 import { Collection } from "common/firestore/collections"
 import {
   RoborallyState,
@@ -21,6 +20,7 @@ import {
   validateNumber,
   validateString,
 } from "common/utils/validation"
+import { handleTrigger } from "./handleTrigger"
 import { HttpTrigger } from "common/functions"
 
 function validateProgram(value: unknown): Program {
@@ -41,6 +41,10 @@ function validateProgram(value: unknown): Program {
   return value as Program
 }
 
+function allPlayersReady(gameData: RoborallyState): boolean {
+  return Object.values(gameData.players).every(player => player.ready)
+}
+
 const validationSchema = {
   gameId: required(validateString()),
   phase: required(validateEnum(GamePhase)),
@@ -49,12 +53,7 @@ const validationSchema = {
   turn: required(validateNumber({ integer: true })),
 }
 
-function allPlayersReady(gameData: RoborallyState): boolean {
-  return Object.values(gameData.players).every(player => player.ready)
-}
-
-export const httpReady = httpsCallable(
-  HttpTrigger.READY,
+export default handleTrigger<HttpTrigger.READY>(
   validationSchema,
   async (data, playerId) => {
     const success = await firestore.runTransaction(async transaction => {

@@ -2,16 +2,6 @@ import * as firebase from "firebase-admin"
 
 firebase.initializeApp()
 
-import { httpReady } from "./http/httpReady"
-import { httpRoomCreate } from "./http/httpRoomCreate"
-import { httpRoomEnter } from "./http/httpRoomEnter"
-import { httpRoomLeave } from "./http/httpRoomLeave"
-import { httpRoomStart } from "./http/httpRoomStart"
+import httpTrigger from "./http/httpTrigger"
 
-export {
-  httpReady,
-  httpRoomCreate,
-  httpRoomEnter,
-  httpRoomLeave,
-  httpRoomStart,
-}
+export { httpTrigger }
