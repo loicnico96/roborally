@@ -87,7 +87,12 @@ import RotateRight_380 from "assets/cards/RotateRight_380.png"
 import RotateRight_400 from "assets/cards/RotateRight_400.png"
 import RotateRight_420 from "assets/cards/RotateRight_420.png"
 import RotateRight_80 from "assets/cards/RotateRight_80.png"
-import { Card } from "common/roborally/model/Card"
+import {
+  Card,
+  CardAction,
+  getCardAction,
+  getCardPriority,
+} from "common/roborally/model/Card"
 
 const CARD_IMAGES = [
   RotateBack_10,
@@ -184,6 +189,20 @@ type GameUiCardButtonProps = {
   isHighlighted: boolean
 }
 
+function getCardTooltip(card: Card): string {
+  const action = {
+    [CardAction.MOVE_1]: "Speed 1",
+    [CardAction.MOVE_2]: "Speed 2",
+    [CardAction.MOVE_3]: "Speed 3",
+    [CardAction.MOVE_BACK]: "Back Up",
+    [CardAction.ROTATE_LEFT]: "Rotate Left",
+    [CardAction.ROTATE_RIGHT]: "Rotate Right",
+    [CardAction.ROTATE_BACK]: "U-Turn",
+  }[getCardAction(card)]
+
+  return `${action} (${getCardPriority(card)})`
+}
+
 function getImageUrl({ imageUrl }: GameUiCardButtonProps): string {
   return imageUrl
 }
@@ -223,6 +242,7 @@ const GameUiCard = ({
     imageUrl={card === null ? CardBack : CARD_IMAGES[card]}
     isHighlighted={isHighlighted}
     onClick={onClick}
+    title={card === null ? "" : getCardTooltip(card)}
   />
 )
 
