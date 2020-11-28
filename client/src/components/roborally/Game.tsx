@@ -89,12 +89,13 @@ const Game = ({ gameState, roomId }: GameProps) => {
           </GameUiBoard>
         </GameUiViewport>
         <div id="GameUiContentMainRight">
-          {gameState.playerOrder.map(playerId => (
+          {gameState.playerOrder.map((playerId, index) => (
             <GameUiPlayerCard
               key={playerId}
               isCurrentUser={playerId === userId}
-              player={gameState.players[playerId]}
               playerId={playerId}
+              playerIndex={index}
+              player={gameState.players[playerId]}
             />
           ))}
         </div>

@@ -14,7 +14,7 @@ type PageHeaderProps = {
 
 const PageHeaderContainer = styled.div`
   align-items: center;
-  background-color: #ccc;
+  background-color: #aaa;
   display: flex;
   padding: 16px 48px;
 `
