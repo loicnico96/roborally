@@ -5,6 +5,7 @@ import {
   HttpPayload,
 } from "common/functions"
 import { HttpReadyParams } from "common/functions/httpReady"
+import { HttpRoomCloseParams } from "common/functions/httpRoomClose"
 import { HttpRoomCreateParams } from "common/functions/httpRoomCreate"
 import { HttpRoomEnterParams } from "common/functions/httpRoomEnter"
 import { HttpRoomLeaveParams } from "common/functions/httpRoomLeave"
@@ -62,5 +63,12 @@ export async function triggerRoomStart(
   params: HttpRoomStartParams
 ): Promise<boolean> {
   const response = await httpTrigger(HttpTrigger.ROOM_START, params)
+  return response.success
+}
+
+export async function triggerRoomClose(
+  params: HttpRoomCloseParams
+): Promise<boolean> {
+  const response = await httpTrigger(HttpTrigger.ROOM_CLOSE, params)
   return response.success
 }

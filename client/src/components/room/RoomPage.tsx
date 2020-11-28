@@ -4,6 +4,7 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import {
+  triggerRoomClose,
   triggerRoomEnter,
   triggerRoomLeave,
   triggerRoomStart,
@@ -61,6 +62,25 @@ const useLeaveRoom = (
   return [leaveRoom, isEnabled]
 }
 
+function isAbleToCloseRoom(room: RoomData, userId: PlayerId | null): boolean {
+  return room.status !== RoomStatus.ONGOING && room.ownerId === userId
+}
+
+const useCloseRoom = (
+  roomId: RoomId,
+  room: RoomData | null
+): [() => Promise<void>, boolean] => {
+  const { userId } = useAuthContext()
+  const isEnabled = room !== null && isAbleToCloseRoom(room, userId)
+  const closeRoom = useCallback(async () => {
+    if (isEnabled) {
+      await triggerRoomClose({ roomId })
+    }
+  }, [roomId, isEnabled])
+
+  return [closeRoom, isEnabled]
+}
+
 function isAbleToStartGame(room: RoomData, userId: PlayerId | null): boolean {
   return room.status === RoomStatus.OPENED && room.ownerId === userId
 }
@@ -86,6 +106,7 @@ const RoomPage = () => {
   const [startGame, isStartGameEnabled] = useStartGame(roomId, roomData)
   const [enterRoom, isEnterRoomEnabled] = useEnterRoom(roomId, roomData)
   const [leaveRoom, isLeaveRoomEnabled] = useLeaveRoom(roomId, roomData)
+  const [closeRoom, isCloseRoomEnabled] = useCloseRoom(roomId, roomData)
 
   const ownerName = roomData.players[roomData.ownerId].name
   const playerNames = roomData.playerOrder.map(
@@ -106,6 +127,9 @@ const RoomPage = () => {
       )}
       {isLeaveRoomEnabled && (
         <AsyncButton onClick={leaveRoom}>Leave room</AsyncButton>
+      )}
+      {isCloseRoomEnabled && (
+        <AsyncButton onClick={closeRoom}>Close room</AsyncButton>
       )}
     </div>
   )
