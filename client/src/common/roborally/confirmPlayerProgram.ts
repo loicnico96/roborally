@@ -1,6 +1,7 @@
 import update from "immutability-helper"
-import { RoborallyState } from "./model/RoborallyState"
+
 import { Program } from "./model/Program"
+import { RoborallyState } from "./model/RoborallyState"
 
 export function confirmPlayerProgram(
   gameState: RoborallyState,

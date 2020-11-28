@@ -1,3 +1,8 @@
+import React, { useCallback, useState } from "react"
+import styled from "styled-components"
+
+import BoardFloodZone from "assets/boards/FloodZone.png"
+import BoardIsland from "assets/boards/Island.png"
 import {
   BoardData,
   BoardId,
@@ -7,11 +12,6 @@ import {
 } from "common/roborally/model/BoardData"
 import { CellType } from "common/roborally/model/CellData"
 import { Direction, Position, Rotation } from "common/roborally/model/Position"
-import React, { useCallback, useState } from "react"
-import styled from "styled-components"
-
-import BoardFloodZone from "assets/boards/FloodZone.png"
-import BoardIsland from "assets/boards/Island.png"
 
 const BOARD_IMAGES: Record<BoardId, string> = {
   [BoardId.FLOOD_ZONE]: BoardFloodZone,

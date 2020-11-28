@@ -10,6 +10,7 @@ import { HttpRoomEnterParams } from "common/functions/httpRoomEnter"
 import { HttpRoomLeaveParams } from "common/functions/httpRoomLeave"
 import { HttpRoomStartParams } from "common/functions/httpRoomStart"
 import { RoomId } from "common/model/RoomData"
+
 import { httpsCallable } from "./httpsCallable"
 
 export function getPayload<T extends HttpTrigger>(

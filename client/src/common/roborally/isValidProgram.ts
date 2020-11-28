@@ -1,5 +1,5 @@
-import { getLockedProgram, RoborallyPlayer } from "./model/RoborallyPlayer"
 import { Program } from "./model/Program"
+import { getLockedProgram, RoborallyPlayer } from "./model/RoborallyPlayer"
 
 export function isValidProgram(
   program: Program,

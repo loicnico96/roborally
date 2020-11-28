@@ -1,4 +1,5 @@
 import update, { Spec } from "immutability-helper"
+
 import { CellData, getEmptyCell, getHole } from "./CellData"
 import { Position, Direction, movePos, getDir } from "./Position"
 

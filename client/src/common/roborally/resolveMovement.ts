@@ -1,5 +1,6 @@
 import { PlayerId } from "common/model/GameStateBasic"
 import { filter, reduce, size } from "common/utils/objects"
+
 import { WallType } from "./model/BoardData"
 import { isHole } from "./model/CellData"
 import { Direction, isSamePos, Position, Rotation } from "./model/Position"

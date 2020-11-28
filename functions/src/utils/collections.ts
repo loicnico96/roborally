@@ -1,10 +1,11 @@
-import { firestore } from "./firestore"
 import {
   Collection,
   CollectionData,
   DataFetcher,
 } from "common/firestore/collections"
+
 import { notFoundError } from "./errors"
+import { firestore } from "./firestore"
 
 type CollectionRef<
   T extends Collection

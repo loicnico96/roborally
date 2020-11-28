@@ -1,13 +1,15 @@
 import React, { useState } from "react"
+
+import { Collection } from "common/firestore/collections"
+import { RoomData, RoomId } from "common/model/RoomData"
+import { useCollectionLoader } from "firestore/useCollectionLoader"
 import {
   Resource,
   isLoading,
   isError,
   getLoadingResource,
 } from "utils/resources"
-import { RoomData, RoomId } from "common/model/RoomData"
-import { Collection } from "common/firestore/collections"
-import { useCollectionLoader } from "firestore/useCollectionLoader"
+
 import RoomListPage from "./RoomListPage"
 
 const RoomListRoute = () => {

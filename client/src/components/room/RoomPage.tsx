@@ -1,14 +1,17 @@
 import React, { useCallback } from "react"
+
+import { PlayerId } from "common/model/GameStateBasic"
 import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
+import { useAuthContext } from "firestore/auth/AuthContext"
 import {
   triggerRoomEnter,
   triggerRoomLeave,
   triggerRoomStart,
 } from "functions/triggers"
-import { PlayerId } from "common/model/GameStateBasic"
-import { useAuthContext } from "firestore/auth/AuthContext"
+
 import PageHeader from "../PageHeader"
 import AsyncButton from "../primitives/AsyncButton"
+
 import { useRoomData, useRoomId } from "./RoomContext"
 
 function isAbleToEnterRoom(room: RoomData, userId: PlayerId | null): boolean {

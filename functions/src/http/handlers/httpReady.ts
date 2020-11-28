@@ -1,14 +1,12 @@
-import { getCollection } from "../../utils/collections"
-import { preconditionError, validationError } from "../../utils/errors"
-import { firestore } from "../../utils/firestore"
 import { Collection } from "common/firestore/collections"
+import { HttpTrigger } from "common/functions"
+import { confirmPlayerProgram } from "common/roborally/confirmPlayerProgram"
+import { isValidProgram } from "common/roborally/isValidProgram"
+import { Program } from "common/roborally/model/Program"
 import {
   RoborallyState,
   GamePhase,
 } from "common/roborally/model/RoborallyState"
-import { Program } from "common/roborally/model/Program"
-import { confirmPlayerProgram } from "common/roborally/confirmPlayerProgram"
-import { isValidProgram } from "common/roborally/isValidProgram"
 import { readyPlayerForTurn } from "common/roborally/readyPlayerForTurn"
 import { resolveTurn } from "common/roborally/resolveTurn"
 import { startTurn } from "common/roborally/startTurn"
@@ -20,8 +18,12 @@ import {
   validateNumber,
   validateString,
 } from "common/utils/validation"
+
+import { getCollection } from "../../utils/collections"
+import { preconditionError, validationError } from "../../utils/errors"
+import { firestore } from "../../utils/firestore"
+
 import { handleTrigger } from "./handleTrigger"
-import { HttpTrigger } from "common/functions"
 
 function validateProgram(value: unknown): Program {
   if (!Array.isArray(value)) {

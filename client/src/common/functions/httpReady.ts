@@ -1,5 +1,5 @@
-import { GamePhase } from "../roborally/model/RoborallyState"
 import { Program } from "../roborally/model/Program"
+import { GamePhase } from "../roborally/model/RoborallyState"
 
 export type HttpReadyParams = {
   gameId: string

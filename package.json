@@ -24,7 +24,7 @@
     "functions:lint:fix": "yarn functions:lint --fix",
     "functions:start": "cd functions && yarn serve",
     "lint:all": "yarn app:lint && yarn functions:lint && yarn scripts:lint",
-    "lint:fix": "yarn app:lint:fix && yarn functions:lint:fix && yarn scripts:lint:fix",
+    "lint:all:fix": "yarn app:lint:fix && yarn functions:lint:fix && yarn scripts:lint:fix",
     "scripts:lint": "eslint scripts --ext .js,.ts",
     "scripts:lint:fix": "yarn scripts:lint --fix",
     "scripts:typecheck": "tsc --noEmit"
@@ -55,6 +55,7 @@
     "@typescript-eslint/parser": "^4.6.0",
     "eslint": "^7.12.1",
     "eslint-config-prettier": "^6.15.0",
+    "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-import": "^2.22.1",
     "firebase-admin": "^9.3.0",
     "husky": "^4.3.0",

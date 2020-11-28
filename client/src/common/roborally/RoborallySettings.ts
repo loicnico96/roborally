@@ -1,6 +1,7 @@
 import { Collection, DataFetcher } from "common/firestore/collections"
 import { BaseSettings } from "common/GameSettings"
 import { PlayerId } from "common/model/GameStateBasic"
+
 import { BoardId } from "./model/BoardData"
 import { Direction } from "./model/Position"
 import { getInitialGameState, RoborallyState } from "./model/RoborallyState"

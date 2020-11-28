@@ -1,5 +1,5 @@
-import { FeatureType, WallType } from "./BoardData"
 import { BoardBuilder } from "./BoardBuilder"
+import { FeatureType, WallType } from "./BoardData"
 import { CellType } from "./CellData"
 import { Direction, getReverseDir, Position, Rotation } from "./Position"
 

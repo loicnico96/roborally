@@ -1,5 +1,6 @@
 import { PlayerId } from "common/model/GameStateBasic"
 import { isEmpty } from "common/utils/objects"
+
 import { inBounds, WallType } from "./model/BoardData"
 import { Direction, isSamePos, movePos, Position } from "./model/Position"
 import {

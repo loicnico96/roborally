@@ -1,7 +1,8 @@
 import React from "react"
+
 import { PlayerId } from "common/model/GameStateBasic"
-import { useRoomData } from "components/room/RoomContext"
 import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
+import { useRoomData } from "components/room/RoomContext"
 
 type GameUiPlayerCardProps = {
   isCurrentUser: boolean

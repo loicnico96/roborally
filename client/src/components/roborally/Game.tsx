@@ -1,20 +1,21 @@
 import React from "react"
 import styled from "styled-components"
+
+import { RoomId } from "common/model/RoomData"
 import {
   GamePhase,
   RoborallyState,
 } from "common/roborally/model/RoborallyState"
-import { RoomId } from "common/model/RoomData"
-import GameUiHeader from "./GameUiHeader"
-import GameUiTurnPhase from "./GameUiTurnPhase"
-import GameUiPlayerCard from "./GameUiPlayerCard"
-import GameUiProgram from "./GameUiProgram"
-
-import GameUiPlayerRobot from "./GameUiPlayerRobot"
-import GameUiBoard from "./GameUiBoard"
-import GameUiViewport from "./GameUiViewport"
-import GameUiCheckpoint from "./GameUiCheckpoint"
 import { useAuthContext } from "firestore/auth/AuthContext"
+
+import GameUiBoard from "./GameUiBoard"
+import GameUiCheckpoint from "./GameUiCheckpoint"
+import GameUiHeader from "./GameUiHeader"
+import GameUiPlayerCard from "./GameUiPlayerCard"
+import GameUiPlayerRobot from "./GameUiPlayerRobot"
+import GameUiProgram from "./GameUiProgram"
+import GameUiTurnPhase from "./GameUiTurnPhase"
+import GameUiViewport from "./GameUiViewport"
 
 type GameProps = {
   gameState: RoborallyState

@@ -1,7 +1,8 @@
+import { GameStateBasic, PlayerId } from "common/model/GameStateBasic"
+
 import { BoardData, BoardId } from "./BoardData"
 import { Direction, Position } from "./Position"
 import { RoborallyPlayer, getInitialPlayerState } from "./RoborallyPlayer"
-import { GameStateBasic, PlayerId } from "common/model/GameStateBasic"
 
 export enum GamePhase {
   STANDBY = "standby",

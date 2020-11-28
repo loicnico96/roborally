@@ -1,5 +1,6 @@
-import { RoomData, RoomId } from "common/model/RoomData"
 import { createContext, useContext } from "react"
+
+import { RoomData, RoomId } from "common/model/RoomData"
 import { LoadedResource } from "utils/resources"
 
 const RoomContext = createContext<LoadedResource<RoomData> | null>(null)

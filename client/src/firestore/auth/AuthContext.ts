@@ -1,5 +1,6 @@
-import { UserId, UserInfo } from "common/model/UserInfo"
 import { createContext, useContext } from "react"
+
+import { UserId, UserInfo } from "common/model/UserInfo"
 
 export type AuthUser = UserInfo & {
   updateName: (name: string) => Promise<void>

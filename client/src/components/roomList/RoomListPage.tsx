@@ -1,13 +1,15 @@
+import React, { useCallback } from "react"
+import { useHistory } from "react-router-dom"
+import styled from "styled-components"
+
 import { GameType } from "common/GameSettings"
 import { RoomData, RoomId } from "common/model/RoomData"
 import PageHeader from "components/PageHeader"
 import AsyncButton from "components/primitives/AsyncButton"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { triggerRoomCreate } from "functions/triggers"
-import React, { useCallback } from "react"
-import { useHistory } from "react-router-dom"
-import styled from "styled-components"
 import { ROUTES } from "utils/navigation"
+
 import RoomList from "./RoomList"
 
 export type RoomListPageProps = {

@@ -1,10 +1,12 @@
 import update from "immutability-helper"
-import { mapValues } from "common/utils/objects"
-import { RoborallyState, GamePhase } from "./model/RoborallyState"
-import { Card, getAllCards } from "./model/Card"
-import { shuffle } from "common/utils/arrays"
-import { getLockedProgram, getPlayerHandSize } from "./model/RoborallyPlayer"
+
 import { PlayerId } from "common/model/GameStateBasic"
+import { shuffle } from "common/utils/arrays"
+import { mapValues } from "common/utils/objects"
+
+import { Card, getAllCards } from "./model/Card"
+import { getLockedProgram, getPlayerHandSize } from "./model/RoborallyPlayer"
+import { RoborallyState, GamePhase } from "./model/RoborallyState"
 
 function getDeck(gameState: RoborallyState): Card[] {
   const unavailableCards: Set<Card> = new Set()

@@ -1,9 +1,11 @@
-import { useAuthContext } from "firestore/auth/AuthContext"
-import { useSignOut } from "firestore/auth/useSignOut"
 import React, { useCallback, useMemo } from "react"
 import { Link, useLocation } from "react-router-dom"
 import styled from "styled-components"
+
+import { useAuthContext } from "firestore/auth/AuthContext"
+import { useSignOut } from "firestore/auth/useSignOut"
 import { ROUTES, withSearchParams } from "utils/navigation"
+
 import AsyncButton from "./primitives/AsyncButton"
 
 type PageHeaderProps = {

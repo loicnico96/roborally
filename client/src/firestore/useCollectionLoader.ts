@@ -1,4 +1,5 @@
 import { useCallback, useEffect } from "react"
+
 import { Collection, CollectionData } from "common/firestore/collections"
 import {
   Resource,
@@ -6,6 +7,7 @@ import {
   getErrorResource,
   getLoadedResource,
 } from "utils/resources"
+
 import { useFirestore } from "./useFirestore"
 
 export function useCollectionLoader<T extends Collection>(

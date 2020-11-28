@@ -1,5 +1,7 @@
-import { RoomData, RoomId } from "common/model/RoomData"
 import React from "react"
+
+import { RoomData, RoomId } from "common/model/RoomData"
+
 import RoomListItem from "./RoomListItem"
 
 export type RoomListProps = {

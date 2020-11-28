@@ -1,10 +1,12 @@
 import React, { useEffect } from "react"
+import { useHistory } from "react-router-dom"
+
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignInAnonymous } from "firestore/auth/useSignInAnonymous"
-import PageHeader from "./PageHeader"
-import { useHistory } from "react-router-dom"
-import { ROUTES } from "utils/navigation"
 import { useSearchParams } from "hooks/useSearchParams"
+import { ROUTES } from "utils/navigation"
+
+import PageHeader from "./PageHeader"
 import AsyncButton from "./primitives/AsyncButton"
 
 const LoginRoute = () => {

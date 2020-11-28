@@ -1,5 +1,7 @@
 import * as firebase from "firebase-admin"
+
 import { UserId, UserInfo } from "common/model/UserInfo"
+
 import { authenticationError } from "./errors"
 
 const Auth = firebase.auth()

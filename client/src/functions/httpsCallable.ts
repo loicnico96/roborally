@@ -1,6 +1,7 @@
-import firebase from "../firebase"
 import { DEPLOYMENT_REGION } from "common/functions"
 import { getVar, isEnv, toInt } from "utils/environment"
+
+import firebase from "../firebase"
 
 const functions = firebase.app().functions(DEPLOYMENT_REGION)
 

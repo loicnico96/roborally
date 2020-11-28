@@ -1,5 +1,6 @@
-import { RoborallyState } from "common/roborally/model/RoborallyState"
 import { createContext, useContext } from "react"
+
+import { RoborallyState } from "common/roborally/model/RoborallyState"
 
 const GameContext = createContext<RoborallyState | null>(null)
 

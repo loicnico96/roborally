@@ -1,12 +1,14 @@
-import { getCollection, getDataFetcher } from "../../utils/collections"
-import { firestore } from "../../utils/firestore"
 import { Collection } from "common/firestore/collections"
-import { required, validateString } from "common/utils/validation"
-import { RoomStatus } from "common/model/RoomData"
-import { preconditionError, permissionError } from "../../utils/errors"
-import { getGameSettings } from "common/GameSettings"
-import { handleTrigger } from "./handleTrigger"
 import { HttpTrigger } from "common/functions"
+import { getGameSettings } from "common/GameSettings"
+import { RoomStatus } from "common/model/RoomData"
+import { required, validateString } from "common/utils/validation"
+
+import { getCollection, getDataFetcher } from "../../utils/collections"
+import { preconditionError, permissionError } from "../../utils/errors"
+import { firestore } from "../../utils/firestore"
+
+import { handleTrigger } from "./handleTrigger"
 
 const validationSchema = {
   roomId: required(validateString()),

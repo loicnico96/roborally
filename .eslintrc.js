@@ -25,7 +25,26 @@ module.exports = {
     "@typescript-eslint",
     "import",
   ],
+  settings: {
+    "import/resolver": {
+      "typescript": {},
+    }
+  },
   rules: {
+    "import/order": ["warn", {
+      "groups": [
+        ["builtin", "external"],
+        ["internal"],
+        ["parent"],
+        ["sibling", "index"]
+      ],
+      "newlines-between": "always",
+      "alphabetize": {
+        "order": "asc",
+        "caseInsensitive": true,
+      }
+    }],
+
     // TypeScript
     "@typescript-eslint/explicit-module-boundary-types": ["warn"],
     "@typescript-eslint/method-signature-style": ["error", "property"],

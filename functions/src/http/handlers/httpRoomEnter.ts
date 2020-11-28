@@ -1,12 +1,15 @@
 import update from "immutability-helper"
-import { getCollection } from "../../utils/collections"
-import { firestore } from "../../utils/firestore"
+
 import { Collection } from "common/firestore/collections"
-import { required, validateString } from "common/utils/validation"
-import { RoomStatus } from "common/model/RoomData"
-import { preconditionError } from "../../utils/errors"
-import { handleTrigger } from "./handleTrigger"
 import { HttpTrigger } from "common/functions"
+import { RoomStatus } from "common/model/RoomData"
+import { required, validateString } from "common/utils/validation"
+
+import { getCollection } from "../../utils/collections"
+import { preconditionError } from "../../utils/errors"
+import { firestore } from "../../utils/firestore"
+
+import { handleTrigger } from "./handleTrigger"
 
 const validationSchema = {
   roomId: required(validateString()),

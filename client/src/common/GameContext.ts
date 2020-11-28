@@ -1,7 +1,9 @@
 import update, { Spec } from "immutability-helper"
+
+import { merge, size } from "common/utils/objects"
+
 import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
 import { PlayerStateBasic } from "./model/PlayerStateBasic"
-import { merge, size } from "common/utils/objects"
 
 export type StateChangeHandler<T> = (newState: T) => Promise<void>
 

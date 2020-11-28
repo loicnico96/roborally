@@ -1,11 +1,13 @@
 import React from "react"
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
-import { ROUTES } from "./utils/navigation"
+
+import HomeRoute from "components/HomeRoute"
+import LoginRoute from "components/LoginRoute"
+
 import RoomRoute from "./components/room/RoomRoute"
 import RoomListRoute from "./components/roomList/RoomListRoute"
 import AuthProvider from "./firestore/auth/AuthProvider"
-import HomeRoute from "components/HomeRoute"
-import LoginRoute from "components/LoginRoute"
+import { ROUTES } from "./utils/navigation"
 
 function App() {
   return (

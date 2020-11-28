@@ -1,7 +1,8 @@
 import update from "immutability-helper"
 import React, { useEffect, useState } from "react"
-import { AuthContextProvider, UNAUTHENTICATED } from "./AuthContext"
+
 import Auth from "./Auth"
+import { AuthContextProvider, UNAUTHENTICATED } from "./AuthContext"
 
 export type AuthProviderProps = {
   children: React.ReactNode

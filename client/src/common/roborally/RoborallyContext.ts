@@ -1,4 +1,5 @@
 import { GameContext } from "common/GameContext"
+
 import { BoardData, getCell, getWall, WallType } from "./model/BoardData"
 import { CellData } from "./model/CellData"
 import { Direction, isSamePos, Position } from "./model/Position"

@@ -1,6 +1,7 @@
 import React from "react"
-import { Position } from "common/roborally/model/Position"
 import styled from "styled-components"
+
+import { Position } from "common/roborally/model/Position"
 
 const CELL_SIZE = 100
 const CHECKPOINT_SIZE = 80

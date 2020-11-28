@@ -1,16 +1,18 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
+
+import { PlayerId } from "common/model/GameStateBasic"
+import { RoomId } from "common/model/RoomData"
+import { Card } from "common/roborally/model/Card"
+import { getEmptyProgram, Program } from "common/roborally/model/Program"
+import { getLockedProgram } from "common/roborally/model/RoborallyPlayer"
 import {
   GamePhase,
   RoborallyState,
 } from "common/roborally/model/RoborallyState"
-import { getLockedProgram } from "common/roborally/model/RoborallyPlayer"
-import { RoomId } from "common/model/RoomData"
-import { triggerReady } from "functions/triggers"
-import { getEmptyProgram, Program } from "common/roborally/model/Program"
-import { Card } from "common/roborally/model/Card"
-import GameUiCard from "./GameUiCard"
-import { PlayerId } from "common/model/GameStateBasic"
 import AsyncButton from "components/primitives/AsyncButton"
+import { triggerReady } from "functions/triggers"
+
+import GameUiCard from "./GameUiCard"
 
 type GameUiProgramProps = {
   gameState: RoborallyState

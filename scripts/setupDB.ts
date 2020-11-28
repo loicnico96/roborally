@@ -1,4 +1,5 @@
 import { Collection } from "../client/src/common/firestore/collections"
+
 import { firestoreAdmin } from "./firestore/admin"
 import { BOARDS } from "./roborally/boards"
 

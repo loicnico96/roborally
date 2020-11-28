@@ -1,12 +1,14 @@
-import { httpsCallable } from "../utils/httpsCallable"
+import { HttpTrigger } from "common/functions"
 import {
   required,
   validateUnknown,
   validateEnum,
 } from "common/utils/validation"
-import { HttpTrigger } from "common/functions"
-import HANDLERS from "./handlers"
+
+import { httpsCallable } from "../utils/httpsCallable"
 import { validatePayload } from "../utils/validation"
+
+import HANDLERS from "./handlers"
 
 export type HttpPayload<T extends HttpTrigger = HttpTrigger> = {
   trigger: T

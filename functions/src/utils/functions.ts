@@ -1,4 +1,5 @@
 import { region } from "firebase-functions"
+
 import { DEPLOYMENT_REGION } from "common/functions"
 
 const FUNCTION_TIMEOUT_SECONDS = 60

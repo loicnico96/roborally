@@ -1,11 +1,13 @@
+import { Collection } from "common/firestore/collections"
+import { HttpTrigger } from "common/functions"
+import { GameType } from "common/GameSettings"
+import { getInitialRoomData } from "common/model/RoomData"
+import { required, validateEnum } from "common/utils/validation"
+
 import { getCollection } from "../../utils/collections"
 import { firestore } from "../../utils/firestore"
-import { Collection } from "common/firestore/collections"
-import { required, validateEnum } from "common/utils/validation"
-import { getInitialRoomData } from "common/model/RoomData"
-import { GameType } from "common/GameSettings"
+
 import { handleTrigger } from "./handleTrigger"
-import { HttpTrigger } from "common/functions"
 
 const validationSchema = {
   game: required(validateEnum(GameType)),

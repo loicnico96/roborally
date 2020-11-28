@@ -1,6 +1,6 @@
+import { RoomData } from "../model/RoomData"
 import { BoardData } from "../roborally/model/BoardData"
 import { RoborallyState } from "../roborally/model/RoborallyState"
-import { RoomData } from "../model/RoomData"
 
 export enum Collection {
   BOARD = "board",
