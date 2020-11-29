@@ -33,8 +33,7 @@ export function getInitialGameState(
   boardData: BoardData,
   checkpoints: Position[],
   playerIds: PlayerId[],
-  initialPos: Position,
-  initialDir: Direction
+  initialDir: Direction = Direction.NORTH
 ): RoborallyState {
   return {
     boardId,
@@ -44,7 +43,7 @@ export function getInitialGameState(
     phase: GamePhase.STANDBY,
     playerOrder: playerIds,
     players: playerIds.reduce((players, playerId) => {
-      players[playerId] = getInitialPlayerState(initialPos, initialDir)
+      players[playerId] = getInitialPlayerState(checkpoints[0], initialDir)
       return players
     }, {} as Record<PlayerId, RoborallyPlayer>),
     sequence: 0,

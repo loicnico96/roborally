@@ -9,7 +9,9 @@ import { HttpRoomCloseParams } from "common/functions/httpRoomClose"
 import { HttpRoomCreateParams } from "common/functions/httpRoomCreate"
 import { HttpRoomEnterParams } from "common/functions/httpRoomEnter"
 import { HttpRoomLeaveParams } from "common/functions/httpRoomLeave"
+import { HttpRoomOptionsParams } from "common/functions/httpRoomOptions"
 import { HttpRoomStartParams } from "common/functions/httpRoomStart"
+import { GameOptions } from "common/GameSettings"
 import { RoomId } from "common/model/RoomData"
 
 import { httpsCallable } from "./httpsCallable"
@@ -38,6 +40,13 @@ export async function triggerReady(params: HttpReadyParams): Promise<boolean> {
   return response.success
 }
 
+export async function triggerRoomClose(
+  params: HttpRoomCloseParams
+): Promise<boolean> {
+  const response = await httpTrigger(HttpTrigger.ROOM_CLOSE, params)
+  return response.success
+}
+
 export async function triggerRoomCreate(
   params: HttpRoomCreateParams
 ): Promise<RoomId> {
@@ -59,16 +68,16 @@ export async function triggerRoomLeave(
   return response.success
 }
 
+export async function triggerRoomOptions<T extends GameOptions>(
+  params: HttpRoomOptionsParams<T>
+): Promise<boolean> {
+  const response = await httpTrigger(HttpTrigger.ROOM_OPTIONS, params)
+  return response.success
+}
+
 export async function triggerRoomStart(
   params: HttpRoomStartParams
 ): Promise<boolean> {
   const response = await httpTrigger(HttpTrigger.ROOM_START, params)
-  return response.success
-}
-
-export async function triggerRoomClose(
-  params: HttpRoomCloseParams
-): Promise<boolean> {
-  const response = await httpTrigger(HttpTrigger.ROOM_CLOSE, params)
   return response.success
 }

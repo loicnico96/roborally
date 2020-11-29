@@ -1,13 +1,16 @@
 import { DataFetcher } from "./firestore/collections"
 import { PlayerId } from "./model/GameStateBasic"
 import { RoborallySettings } from "./roborally/RoborallySettings"
+import { ObjectRecord } from "./utils/objects"
+import { SchemaValidators } from "./utils/validation"
 
 export enum GameType {
   ROBORALLY = "roborally",
 }
 
-export type BaseSettings<State, Options> = {
-  getDefaultOptions: () => Options
+export type BaseSettings<State, Options extends ObjectRecord> = {
+  defaultOptions: Options
+  optionsValidator: SchemaValidators<Partial<Options>>
   getInitialGameState: (
     playerIds: PlayerId[],
     options: Options,

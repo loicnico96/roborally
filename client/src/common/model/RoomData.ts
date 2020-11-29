@@ -24,9 +24,11 @@ export function getInitialRoomData(
   ownerId: UserId,
   ownerInfo: UserInfo
 ): RoomData {
+  const { defaultOptions } = getGameSettings(game)
+
   return {
     game,
-    options: getGameSettings(game).getDefaultOptions(),
+    options: defaultOptions,
     ownerId,
     playerOrder: [ownerId],
     players: { [ownerId]: ownerInfo },

@@ -1,9 +1,13 @@
 import React, { useCallback } from "react"
 import styled from "styled-components"
 
+import { GameOptions } from "common/GameSettings"
 import { BoardId } from "common/roborally/model/BoardData"
+import { validateEnum } from "common/utils/validation"
+import { triggerRoomOptions } from "functions/triggers"
 
-import { useRoomData } from "./RoomContext"
+import { useRoomData, useRoomId } from "./RoomContext"
+
 
 function getBoardName(boardId: BoardId): string {
   return {
@@ -38,19 +42,40 @@ const RoomOptionsRowLabel = styled.div`
   margin-right: 4px;
 `
 
+type SelectEvent = React.ChangeEvent<HTMLSelectElement>
+
 const RoomOptions = () => {
+  const roomId = useRoomId()
+
+  const changeOptions = useCallback(
+    async (options: Partial<GameOptions>) => {
+      try {
+        await triggerRoomOptions({ options, roomId })
+      } catch (error) {
+        console.error(error)
+      }
+    },
+    [roomId]
+  )
+
   const { options } = useRoomData()
 
-  const onSelectBoardId = useCallback(() => {
-    console.log("Not implemented")
-  }, [])
+  const onSelectBoardId = useCallback(
+    (event: SelectEvent) => {
+      const boardId = validateEnum(BoardId)(event.target.value)
+      if (boardId !== options.boardId) {
+        changeOptions({ boardId })
+      }
+    },
+    [changeOptions, options]
+  )
 
   return (
     <RoomOptionsContainer>
       <RoomOptionsTitle>Options</RoomOptionsTitle>
       <RoomOptionsRow>
         <RoomOptionsRowLabel>Board:</RoomOptionsRowLabel>
-        <select onChange={onSelectBoardId} value={options.boardId}>
+        <select defaultValue={options.boardId} onChange={onSelectBoardId}>
           {Object.values(BoardId).map(boardId => (
             <option key={boardId} value={boardId}>
               {getBoardName(boardId)}
