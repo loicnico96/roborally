@@ -10,8 +10,19 @@ import {
   getWall,
   WallType,
 } from "common/roborally/model/BoardData"
-import { CellType } from "common/roborally/model/CellData"
-import { Direction, Position, Rotation } from "common/roborally/model/Position"
+import {
+  CellData,
+  CellType,
+  isFastConveyor,
+  isTurnConveyor,
+  isWater,
+} from "common/roborally/model/CellData"
+import {
+  Direction,
+  isSamePos,
+  Position,
+  Rotation,
+} from "common/roborally/model/Position"
 
 const BOARD_IMAGES: Record<BoardId, string> = {
   [BoardId.FLOOD_ZONE]: BoardFloodZone,
@@ -36,6 +47,8 @@ function getBackgroundSizeX({ board }: GameUiBoardBackgroundProps): number {
 function getBackgroundSizeY({ board }: GameUiBoardBackgroundProps): number {
   return board.dimensions.y * CELL_SIZE
 }
+
+const DIRS = [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST]
 
 function getDir(dir: Direction): string {
   switch (dir) {
@@ -65,40 +78,74 @@ function getRot(rot: Rotation): string {
   }
 }
 
+function getConveyorTooltip(cell: CellData): string {
+  const cellType = isWater(cell)
+    ? "Water current"
+    : isFastConveyor(cell)
+    ? "Fast conveyor"
+    : "Conveyor"
+
+  if (cell.dir !== undefined) {
+    if (isTurnConveyor(cell)) {
+      return `${cellType} (turning, ${getDir(cell.dir)})`
+    }
+    return `${cellType} (${getDir(cell.dir)})`
+  }
+  return cellType
+}
+
+function getGearTooltip(cell: CellData): string {
+  const cellType = "Gear"
+  if (cell.rot !== undefined) {
+    return `${cellType} (${getRot(cell.rot)})`
+  }
+  return cellType
+}
+
+function getHoleTooltip(cell: CellData): string {
+  return isWater(cell) ? "Water drain" : "Hole"
+}
+
+function getRepairTooltip(cell: CellData): string {
+  const cellType = "Repair site"
+  return isWater(cell) ? `${cellType} (water)` : cellType
+}
+
 function getCellTooltip(board: BoardData, pos: Position): string {
   const cell = getCell(board, pos)
   switch (cell.type) {
     case CellType.HOLE:
-      return "Hole"
+      return getHoleTooltip(cell)
     case CellType.CONVEYOR:
-      if (cell.dir !== undefined) {
-        if (cell.turn === true) {
-          return `Conveyor (turning, ${getDir(cell.dir)})`
-        }
-        return `Conveyor (${getDir(cell.dir)})`
-      }
-      return "Conveyor"
+      return getConveyorTooltip(cell)
     case CellType.CONVEYOR_FAST:
-      if (cell.dir !== undefined) {
-        if (cell.turn === true) {
-          return `Conveyor (fast, turning, ${getDir(cell.dir)})`
-        }
-        return `Conveyor (fast, ${getDir(cell.dir)})`
-      }
-      return "Conveyor (fast)"
+      return getConveyorTooltip(cell)
     case CellType.GEAR:
-      if (cell.rot !== undefined) {
-        return `Gear (${getRot(cell.rot)})`
-      }
-      return "Gear"
+      return getGearTooltip(cell)
     case CellType.REPAIR:
-      return "Repair site"
+      return getRepairTooltip(cell)
     default:
-      return cell.water === true ? "Water" : ""
+      return isWater(cell) ? "Water" : ""
   }
 }
 
-const DIRS = [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST]
+function getCheckpointTooltip(board: BoardData, pos: Position): string {
+  const checkpoint = board.checkpoints.findIndex(checkpointPos =>
+    isSamePos(pos, checkpointPos)
+  )
+  if (checkpoint >= 0) {
+    return `Checkpoint ${checkpoint}`
+  }
+  return ""
+}
+
+function getCrusherTooltip(board: BoardData, pos: Position): string {
+  const cell = getCell(board, pos)
+  if (cell.crush) {
+    return `Crusher (${cell.crush.join(", ")})`
+  }
+  return ""
+}
 
 function getWallTooltip(board: BoardData, pos: Position): string {
   const dirs = DIRS.filter(dir => getWall(board, pos, dir) !== WallType.NONE)
@@ -109,7 +156,12 @@ function getWallTooltip(board: BoardData, pos: Position): string {
 }
 
 function getTooltip(board: BoardData, pos: Position): string {
-  return [getCellTooltip(board, pos), getWallTooltip(board, pos)]
+  return [
+    getCellTooltip(board, pos),
+    getCheckpointTooltip(board, pos),
+    getCrusherTooltip(board, pos),
+    getWallTooltip(board, pos),
+  ]
     .filter(tooltip => tooltip)
     .join("\n")
 }
