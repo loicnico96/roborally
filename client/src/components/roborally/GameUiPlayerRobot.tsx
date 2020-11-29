@@ -1,5 +1,5 @@
-import React from "react"
-import styled from "styled-components"
+import React, { useCallback, useEffect, useRef, useState } from "react"
+import styled, { css, keyframes } from "styled-components"
 
 import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
 
@@ -33,7 +33,7 @@ function getTransform({ player }: GameUiPlayerRobotProps): string {
   return `translate(${translateX}px, ${translateY}px) rotate(${rotateDeg}deg)`
 }
 
-const GameUiPlayerRobotImage = styled.img`
+const PlayerRobotContainer = styled.div`
   display: ${getDisplay};
   height: ${ROBOT_SIZE}px;
   position: absolute;
@@ -43,9 +43,60 @@ const GameUiPlayerRobotImage = styled.img`
   width: ${ROBOT_SIZE}px;
 `
 
+const PlayerRobotDamageAnimation = keyframes`
+  0% { opacity: 0.0 }
+  50% { opacity: 0.7 }
+  100% { opacity: 0.0 }
+`
+
+const PlayerRobotDamage = styled.img`
+  animation: ${({ damage }: { damage: number }) =>
+    damage > 0
+      ? css`
+          ${PlayerRobotDamageAnimation} ${TRANSITION_DURATION}s forwards
+        `
+      : "paused"};
+  background-color: red;
+  height: 100%;
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  width: 100%;
+`
+
+const PlayerRobotImage = styled.img`
+  height: 100%;
+  width: 100%;
+`
+
 const GameUiPlayerRobot = (props: GameUiPlayerRobotProps) => {
+  const [damageAnimation, setDamageAnimation] = useState(0)
+
+  const { player } = props
+  const lastPlayerRef = useRef(player)
   const robotUrl = getRobotUrl(props)
-  return <GameUiPlayerRobotImage src={robotUrl} {...props} />
+
+  useEffect(() => {
+    if (player.damage > lastPlayerRef.current.damage) {
+      setDamageAnimation(player.damage - lastPlayerRef.current.damage)
+    }
+    lastPlayerRef.current = player
+  }, [lastPlayerRef, player, setDamageAnimation])
+
+  const onDamageAnimationEnd = useCallback(() => {
+    setDamageAnimation(0)
+  }, [setDamageAnimation])
+
+  return (
+    <PlayerRobotContainer {...props}>
+      <PlayerRobotImage src={robotUrl} />
+      <PlayerRobotDamage
+        damage={damageAnimation}
+        onAnimationEnd={onDamageAnimationEnd}
+      />
+    </PlayerRobotContainer>
+  )
 }
 
 export default GameUiPlayerRobot
