@@ -3,6 +3,10 @@ import styled from "styled-components"
 
 import { GameType } from "common/GameSettings"
 import { RoomData, RoomStatus } from "common/model/RoomData"
+import { useCloseRoom } from "hooks/room/useCloseRoom"
+import { useEnterRoom } from "hooks/room/useEnterRoom"
+import { useLeaveRoom } from "hooks/room/useLeaveRoom"
+import { useStartGame } from "hooks/room/useStartGame"
 
 import PageHeader from "../PageHeader"
 import AsyncButton from "../primitives/AsyncButton"
@@ -10,10 +14,6 @@ import AsyncButton from "../primitives/AsyncButton"
 import { useRoomData, useRoomId } from "./RoomContext"
 import RoomOptions from "./RoomOptions"
 import RoomPlayerItem from "./RoomPlayerItem"
-import { useCloseRoom } from "./useCloseRoom"
-import { useEnterRoom } from "./useEnterRoom"
-import { useLeaveRoom } from "./useLeaveRoom"
-import { useStartGame } from "./useStartGame"
 
 function getRoomTitle(room: RoomData): string {
   const gameName = {
