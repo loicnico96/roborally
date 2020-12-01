@@ -4,6 +4,7 @@ import styled from "styled-components"
 
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignOut } from "firestore/auth/useSignOut"
+import { useTrans } from "hooks/useTrans"
 import { ROUTES, withSearchParams } from "utils/navigation"
 
 import AsyncButton from "./primitives/AsyncButton"
@@ -38,6 +39,7 @@ const PageHeaderLink = styled(Link)`
 `
 
 const PageHeader = ({ title }: PageHeaderProps) => {
+  const t = useTrans("PageHeader")
   const { isAuthenticated, userInfo } = useAuthContext()
   const { pathname } = useLocation()
   const signOut = useSignOut()
@@ -54,28 +56,25 @@ const PageHeader = ({ title }: PageHeaderProps) => {
     if (userInfo !== null) {
       const oldName = userInfo.name
       // eslint-disable-next-line no-alert
-      const newName = window.prompt("Choose your user name", oldName)
+      const newName = window.prompt(t("userNamePrompt"), oldName)
       if (newName !== null && newName !== "" && newName !== oldName) {
         await userInfo.updateName(newName)
       }
     }
-  }, [userInfo])
+  }, [t, userInfo])
 
   return (
     <PageHeaderContainer>
       <PageHeaderTitle>{title}</PageHeaderTitle>
       {isAuthenticated && userInfo !== null ? (
         <>
-          <PageHeaderUserName
-            onClick={changeName}
-            title="Click to change user name"
-          >
+          <PageHeaderUserName onClick={changeName} title={t("userNameTooltip")}>
             {userInfo.name}
           </PageHeaderUserName>
-          <PageHeaderButton onClick={signOut}>Sign out</PageHeaderButton>
+          <PageHeaderButton onClick={signOut}>{t("signOut")}</PageHeaderButton>
         </>
       ) : (
-        <PageHeaderLink to={loginUrl}>Sign in</PageHeaderLink>
+        <PageHeaderLink to={loginUrl}>{t("signIn")}</PageHeaderLink>
       )}
     </PageHeaderContainer>
   )

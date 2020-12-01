@@ -2,9 +2,8 @@ import React from "react"
 import { Link } from "react-router-dom"
 import styled from "styled-components"
 
-import { GameType } from "common/GameSettings"
-import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
-import { BoardId } from "common/roborally/model/BoardData"
+import { RoomData, RoomId } from "common/model/RoomData"
+import { useTrans } from "hooks/useTrans"
 import { ROUTES } from "utils/navigation"
 
 export type RoomListItemProps = {
@@ -12,30 +11,17 @@ export type RoomListItemProps = {
   room: RoomData
 }
 
-function formatRoomInfo(room: RoomData): string {
-  const gameName = {
-    [GameType.ROBORALLY]: "Roborally",
-  }[room.game]
-
-  const statusName = {
-    [RoomStatus.OPENED]: "Open",
-    [RoomStatus.ONGOING]: "Ongoing",
-    [RoomStatus.FINISHED]: "Finished",
-  }[room.status]
-
-  const boardName = {
-    [BoardId.FLOOD_ZONE]: "Flood Zone",
-    [BoardId.ISLAND]: "Island",
-  }[room.options.boardId]
+function useRoomInfoFormat(room: RoomData): string {
+  const t = useTrans("RoomListPage")
 
   const playerNames = room.playerOrder.map(
     playerId => room.players[playerId].name
   )
 
   return [
-    `${gameName.toUpperCase()} - ${statusName.toUpperCase()}`,
-    `Board: ${boardName}`,
-    `Players: ${playerNames.join(", ")}`,
+    t("roomTitle", room),
+    t("roomOptions", room.options),
+    t("roomPlayers", playerNames),
   ].join("\n")
 }
 
@@ -48,10 +34,13 @@ const RoomListItemContainer = styled.div`
   white-space: pre-line;
 `
 
-const RoomListItem = ({ roomId, room }: RoomListItemProps) => (
-  <Link to={ROUTES.room(roomId)}>
-    <RoomListItemContainer>{formatRoomInfo(room)}</RoomListItemContainer>
-  </Link>
-)
+const RoomListItem = ({ roomId, room }: RoomListItemProps) => {
+  const roomInfoFormatted = useRoomInfoFormat(room)
+  return (
+    <Link to={ROUTES.room(roomId)}>
+      <RoomListItemContainer>{roomInfoFormatted}</RoomListItemContainer>
+    </Link>
+  )
+}
 
 export default RoomListItem

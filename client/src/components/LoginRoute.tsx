@@ -4,12 +4,14 @@ import { useHistory } from "react-router-dom"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignInAnonymous } from "firestore/auth/useSignInAnonymous"
 import { useSearchParams } from "hooks/useSearchParams"
+import { useTrans } from "hooks/useTrans"
 import { ROUTES } from "utils/navigation"
 
 import PageHeader from "./PageHeader"
 import AsyncButton from "./primitives/AsyncButton"
 
 const LoginRoute = () => {
+  const t = useTrans("LoginPage")
   const callbackRoute = useSearchParams().get("callback")
   const { isAuthenticated, userId, userInfo } = useAuthContext()
   const signInAnonymous = useSignInAnonymous()
@@ -23,13 +25,13 @@ const LoginRoute = () => {
 
   return (
     <div>
-      <PageHeader title="Sign-in" />
+      <PageHeader title={t("pageTitle")} />
       {isAuthenticated && userId !== null && userInfo !== null ? (
-        <div>
-          Signed in as {userId} : {JSON.stringify(userInfo)}
-        </div>
+        <div>{t("signedIn", { username: userInfo.name })}</div>
       ) : (
-        <AsyncButton onClick={signInAnonymous}>Sign in as guest</AsyncButton>
+        <AsyncButton onClick={signInAnonymous}>
+          {t("signInAnonymous")}
+        </AsyncButton>
       )}
     </div>
   )

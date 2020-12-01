@@ -8,6 +8,7 @@ import PageHeader from "components/PageHeader"
 import AsyncButton from "components/primitives/AsyncButton"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { triggerRoomCreate } from "functions/triggers"
+import { useTrans } from "hooks/useTrans"
 import { ROUTES } from "utils/navigation"
 
 import RoomList from "./RoomList"
@@ -35,14 +36,15 @@ const RoomListPageContentContainer = styled.div`
 
 const RoomListPage = ({ rooms }: RoomListPageProps) => {
   const [createRoom, isCreateRoomEnabled] = useCreateRoom()
+  const t = useTrans("RoomListPage")
 
   return (
     <div id="RoomListPageContainer">
-      <PageHeader title="Rooms" />
+      <PageHeader title={t("pageTitle")} />
       <RoomListPageContentContainer id="RoomListPageContentContainer">
         <div id="RoomListPageHeader">
           <AsyncButton onClick={createRoom} disabled={!isCreateRoomEnabled}>
-            Create room
+            {t("createRoomButton")}
           </AsyncButton>
         </div>
         <RoomList rooms={rooms} />

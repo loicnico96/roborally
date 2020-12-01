@@ -1,12 +1,11 @@
 import React from "react"
 import styled from "styled-components"
 
-import { GameType } from "common/GameSettings"
-import { RoomData, RoomStatus } from "common/model/RoomData"
 import { useCloseRoom } from "hooks/room/useCloseRoom"
 import { useEnterRoom } from "hooks/room/useEnterRoom"
 import { useLeaveRoom } from "hooks/room/useLeaveRoom"
 import { useStartGame } from "hooks/room/useStartGame"
+import { useTrans } from "hooks/useTrans"
 
 import PageHeader from "../PageHeader"
 import AsyncButton from "../primitives/AsyncButton"
@@ -14,20 +13,6 @@ import AsyncButton from "../primitives/AsyncButton"
 import { useRoomData, useRoomId } from "./RoomContext"
 import RoomOptions from "./RoomOptions"
 import RoomPlayerItem from "./RoomPlayerItem"
-
-function getRoomTitle(room: RoomData): string {
-  const gameName = {
-    [GameType.ROBORALLY]: "Roborally",
-  }[room.game]
-
-  const statusName = {
-    [RoomStatus.OPENED]: "Open",
-    [RoomStatus.ONGOING]: "Ongoing",
-    [RoomStatus.FINISHED]: "Finished",
-  }[room.status]
-
-  return `${gameName} - ${statusName}`.toUpperCase()
-}
 
 const PageContainer = styled.div`
   display: flex;
@@ -52,6 +37,7 @@ const RoomPageColumn = styled.div`
 `
 
 const RoomPage = () => {
+  const t = useTrans("RoomPage")
   const roomId = useRoomId()
   const roomData = useRoomData()
   const [startGame, isStartGameEnabled] = useStartGame(roomId, roomData)
@@ -61,7 +47,7 @@ const RoomPage = () => {
 
   return (
     <PageContainer>
-      <PageHeader title={getRoomTitle(roomData)} />
+      <PageHeader title={t("pageTitle", roomData)} />
       <RoomPageContainer>
         <RoomPageColumn>
           {roomData.playerOrder.map(playerId => (
@@ -72,16 +58,24 @@ const RoomPage = () => {
             />
           ))}
           {isStartGameEnabled && (
-            <AsyncButton onClick={startGame}>Start game</AsyncButton>
+            <AsyncButton onClick={startGame}>
+              {t("startGameButton")}
+            </AsyncButton>
           )}
           {isEnterRoomEnabled && (
-            <AsyncButton onClick={enterRoom}>Enter room</AsyncButton>
+            <AsyncButton onClick={enterRoom}>
+              {t("enterRoomButton")}
+            </AsyncButton>
           )}
           {isLeaveRoomEnabled && (
-            <AsyncButton onClick={leaveRoom}>Leave room</AsyncButton>
+            <AsyncButton onClick={leaveRoom}>
+              {t("leaveRoomButton")}
+            </AsyncButton>
           )}
           {isCloseRoomEnabled && (
-            <AsyncButton onClick={closeRoom}>Close room</AsyncButton>
+            <AsyncButton onClick={closeRoom}>
+              {t("closeRoomButton")}
+            </AsyncButton>
           )}
         </RoomPageColumn>
         <RoomPageColumn>

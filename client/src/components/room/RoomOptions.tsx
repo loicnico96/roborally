@@ -5,16 +5,9 @@ import { GameOptions } from "common/GameSettings"
 import { BoardId } from "common/roborally/model/BoardData"
 import { validateEnum } from "common/utils/validation"
 import { triggerRoomOptions } from "functions/triggers"
+import { useTrans } from "hooks/useTrans"
 
 import { useRoomData, useRoomId } from "./RoomContext"
-
-
-function getBoardName(boardId: BoardId): string {
-  return {
-    [BoardId.FLOOD_ZONE]: "Flood Zone",
-    [BoardId.ISLAND]: "Island",
-  }[boardId]
-}
 
 const RoomOptionsContainer = styled.div`
   background-color: #ccc;
@@ -46,6 +39,7 @@ type SelectEvent = React.ChangeEvent<HTMLSelectElement>
 
 const RoomOptions = () => {
   const roomId = useRoomId()
+  const t = useTrans("RoomOptions")
 
   const changeOptions = useCallback(
     async (options: Partial<GameOptions>) => {
@@ -72,13 +66,13 @@ const RoomOptions = () => {
 
   return (
     <RoomOptionsContainer>
-      <RoomOptionsTitle>Options</RoomOptionsTitle>
+      <RoomOptionsTitle>{t("title")}</RoomOptionsTitle>
       <RoomOptionsRow>
-        <RoomOptionsRowLabel>Board:</RoomOptionsRowLabel>
+        <RoomOptionsRowLabel>{t("boardLabel")}</RoomOptionsRowLabel>
         <select defaultValue={options.boardId} onChange={onSelectBoardId}>
           {Object.values(BoardId).map(boardId => (
             <option key={boardId} value={boardId}>
-              {getBoardName(boardId)}
+              {t.BoardName(boardId)}
             </option>
           ))}
         </select>
