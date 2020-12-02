@@ -1,9 +1,10 @@
-import React, { useCallback, useMemo } from "react"
+import React from "react"
 import { Link, useLocation } from "react-router-dom"
 import styled from "styled-components"
 
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignOut } from "firestore/auth/useSignOut"
+import { useChangeName } from "hooks/useChangeName"
 import { ROUTES, withSearchParams } from "utils/navigation"
 
 import AsyncButton from "./primitives/AsyncButton"
@@ -42,24 +43,9 @@ const PageHeader = ({ title }: PageHeaderProps) => {
   const { pathname } = useLocation()
   const signOut = useSignOut()
 
-  const loginUrl = useMemo(
-    () =>
-      withSearchParams(ROUTES.login(), {
-        callback: pathname,
-      }),
-    [pathname]
-  )
+  const loginUrl = withSearchParams(ROUTES.login(), { callback: pathname })
 
-  const changeName = useCallback(async () => {
-    if (userInfo !== null) {
-      const oldName = userInfo.name
-      // eslint-disable-next-line no-alert
-      const newName = window.prompt("Choose your user name", oldName)
-      if (newName !== null && newName !== "" && newName !== oldName) {
-        await userInfo.updateName(newName)
-      }
-    }
-  }, [userInfo])
+  const [changeName] = useChangeName()
 
   return (
     <PageHeaderContainer>
