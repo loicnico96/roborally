@@ -33,6 +33,12 @@ export default handleTrigger<HttpTrigger.ROOM_START>(
         throw permissionError("Not allowed")
       }
 
+      const { minPlayers } = getGameSettings(roomData.game)
+
+      if (roomData.playerOrder.length < minPlayers) {
+        throw preconditionError("Not enough players")
+      }
+
       const fetchData = getDataFetcher(transaction)
       const gameSettings = getGameSettings(roomData.game)
       const initialState = await gameSettings.getInitialGameState(

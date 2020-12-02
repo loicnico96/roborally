@@ -10,6 +10,8 @@ export enum GameType {
 
 export type BaseSettings<State, Options extends ObjectRecord> = {
   defaultOptions: Options
+  maxPlayers: number
+  minPlayers: number
   optionsValidator: SchemaValidators<Partial<Options>>
   getInitialGameState: (
     playerIds: PlayerId[],

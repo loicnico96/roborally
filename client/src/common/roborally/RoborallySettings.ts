@@ -19,6 +19,9 @@ export const RoborallySettings: BaseSettings<
     boardId: BoardId.ISLAND,
   },
 
+  maxPlayers: 8,
+  minPlayers: 1,
+
   optionsValidator: {
     boardId: optional(validateEnum(BoardId)),
   },

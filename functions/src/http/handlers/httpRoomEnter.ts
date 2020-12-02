@@ -2,6 +2,7 @@ import update from "immutability-helper"
 
 import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
+import { getGameSettings } from "common/GameSettings"
 import { RoomStatus } from "common/model/RoomData"
 import { required, validateString } from "common/utils/validation"
 
@@ -30,7 +31,9 @@ export default handleTrigger<HttpTrigger.ROOM_ENTER>(
         throw preconditionError("Inconsistent status")
       }
 
-      if (roomData.playerOrder.length >= 8) {
+      const { maxPlayers } = getGameSettings(roomData.game)
+
+      if (roomData.playerOrder.length >= maxPlayers) {
         throw preconditionError("Full")
       }
 
