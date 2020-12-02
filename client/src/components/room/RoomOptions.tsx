@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { GameOptions } from "common/GameSettings"
 import { BoardId } from "common/roborally/model/BoardData"
 import { validateEnum } from "common/utils/validation"
+import { getBoardImage } from "components/roborally/BoardImage"
 import { triggerRoomOptions } from "functions/triggers"
 
 import { useRoomData, useRoomId } from "./RoomContext"
@@ -35,10 +36,26 @@ const RoomOptionsRow = styled.div`
   align-items: center;
   display: flex;
   flex-direction: row;
+  margin-bottom: 8px;
 `
 
 const RoomOptionsRowLabel = styled.div`
   margin-right: 4px;
+`
+
+type RoomOptionsBoardImageProps = {
+  boardId: BoardId
+}
+
+function getBackgroundUrl({ boardId }: RoomOptionsBoardImageProps): string {
+  return getBoardImage(boardId)
+}
+
+const RoomOptionsBoardImage = styled.div`
+  background-image: url("${getBackgroundUrl}");
+  background-repeat: no-repeat;
+  background-size: contain;
+  flex: 1 1 auto;
 `
 
 type SelectEvent = React.ChangeEvent<HTMLSelectElement>
@@ -82,6 +99,7 @@ const RoomOptions = () => {
           ))}
         </select>
       </RoomOptionsRow>
+      <RoomOptionsBoardImage boardId={options.boardId} title="Preview" />
     </RoomOptionsContainer>
   )
 }

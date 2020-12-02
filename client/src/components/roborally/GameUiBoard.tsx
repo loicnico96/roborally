@@ -1,8 +1,6 @@
 import React, { useCallback, useState } from "react"
 import styled from "styled-components"
 
-import BoardFloodZone from "assets/boards/FloodZone.png"
-import BoardIsland from "assets/boards/Island.png"
 import {
   BoardData,
   BoardId,
@@ -24,10 +22,7 @@ import {
   Rotation,
 } from "common/roborally/model/Position"
 
-const BOARD_IMAGES: Record<BoardId, string> = {
-  [BoardId.FLOOD_ZONE]: BoardFloodZone,
-  [BoardId.ISLAND]: BoardIsland,
-}
+import { getBoardImage } from "./BoardImage"
 
 const CELL_SIZE = 100
 
@@ -205,7 +200,7 @@ const GameUiBoard = ({ board, boardId, children }: GameUiBoardProps) => {
   return (
     <GameUiBoardBackground
       board={board}
-      imageUrl={BOARD_IMAGES[boardId]}
+      imageUrl={getBoardImage(boardId)}
       onMouseMove={onMouseMove}
       title={tooltip}
     >
