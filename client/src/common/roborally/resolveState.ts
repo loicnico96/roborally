@@ -1,6 +1,8 @@
+import { FeatureType } from "./model/BoardData"
 import { GamePhase } from "./model/RoborallyState"
 import { resolveCheckpoints } from "./resolveCheckpoints"
 import { resolveConveyors } from "./resolveConveyors"
+import { resolveCrushers } from "./resolveCrushers"
 import { resolveGears } from "./resolveGears"
 // import { resolveCrushers } from "./resolveCrushers"
 import {
@@ -23,22 +25,30 @@ async function setGamePhase(ctx: RoborallyContext, phase: GamePhase) {
 }
 
 async function resolveTurnSequence(ctx: RoborallyContext, sequence: number) {
+  const { features } = ctx.getBoard()
+
   await setGamePhase(ctx, GamePhase.RESOLVE_PLAYERS)
   await resolvePlayerActions(ctx, sequence)
 
-  // TODO Enable when corresponding board is implemented
-  // await setGamePhase(ctx, GamePhase.RESOLVE_CONVEYORS_FAST)
-  // await resolveConveyors(ctx, true)
+  if (features.includes(FeatureType.CONVEYOR_FAST)) {
+    await setGamePhase(ctx, GamePhase.RESOLVE_CONVEYORS_FAST)
+    await resolveConveyors(ctx, true)
+  }
 
-  await setGamePhase(ctx, GamePhase.RESOLVE_CONVEYORS)
-  await resolveConveyors(ctx)
+  if (features.includes(FeatureType.CONVEYOR)) {
+    await setGamePhase(ctx, GamePhase.RESOLVE_CONVEYORS)
+    await resolveConveyors(ctx)
+  }
 
-  await setGamePhase(ctx, GamePhase.RESOLVE_GEARS)
-  await resolveGears(ctx)
+  if (features.includes(FeatureType.GEAR)) {
+    await setGamePhase(ctx, GamePhase.RESOLVE_GEARS)
+    await resolveGears(ctx)
+  }
 
-  // TODO Enable when corresponding board is implemented
-  // await setGamePhase(ctx, GamePhase.RESOLVE_CRUSHERS)
-  // await resolveCrushers(ctx, sequence)
+  if (features.includes(FeatureType.CRUSHER)) {
+    await setGamePhase(ctx, GamePhase.RESOLVE_CRUSHERS)
+    await resolveCrushers(ctx, sequence)
+  }
 
   await setGamePhase(ctx, GamePhase.RESOLVE_LASERS)
   await resolveBoardLasers(ctx)
