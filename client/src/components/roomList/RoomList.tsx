@@ -1,17 +1,18 @@
 import React from "react"
 
-import { RoomData, RoomId } from "common/model/RoomData"
+import { RoomData } from "common/model/RoomData"
+import { LoadedResource } from "utils/resources"
 
 import RoomListItem from "./RoomListItem"
 
 export type RoomListProps = {
-  rooms: Record<RoomId, RoomData>
+  rooms: LoadedResource<RoomData>[]
 }
 
 const RoomList = ({ rooms }: RoomListProps) => (
   <div>
-    {Object.keys(rooms).map(roomId => (
-      <RoomListItem key={roomId} roomId={roomId} room={rooms[roomId]} />
+    {rooms.map(room => (
+      <RoomListItem key={room.id} roomId={room.id} room={room.data} />
     ))}
   </div>
 )

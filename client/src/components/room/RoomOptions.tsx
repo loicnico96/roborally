@@ -8,7 +8,6 @@ import { triggerRoomOptions } from "functions/triggers"
 
 import { useRoomData, useRoomId } from "./RoomContext"
 
-
 function getBoardName(boardId: BoardId): string {
   return {
     [BoardId.FLOOD_ZONE]: "Flood Zone",

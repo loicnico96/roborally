@@ -11,6 +11,7 @@ export enum RoomStatus {
 }
 
 export type RoomData<T extends GameType = GameType> = {
+  createdAt: number
   game: T
   options: GameOptions<T>
   ownerId: UserId
@@ -27,6 +28,7 @@ export function getInitialRoomData(
   const { defaultOptions } = getGameSettings(game)
 
   return {
+    createdAt: Date.now(),
     game,
     options: defaultOptions,
     ownerId,

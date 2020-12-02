@@ -6,35 +6,40 @@ import {
   getLoadingResource,
   getErrorResource,
   getLoadedResource,
+  LoadedResource,
 } from "utils/resources"
 
-import { useFirestore } from "./useFirestore"
+import { QueryOptions, useQuery } from "./useQuery"
+
+export type CollectionResult<T extends Collection> = LoadedResource<
+  CollectionData<T>
+>[]
 
 export function useCollectionLoader<T extends Collection>(
   collectionId: T,
-  handler: (state: Resource<Record<string, CollectionData<T>>>) => any
+  handler: (state: Resource<CollectionResult<T>>) => any,
+  options: QueryOptions
 ): () => Promise<void> {
-  const firestore = useFirestore()
+  const query = useQuery(collectionId, options)
 
-  const reload = useCallback(async () => {
+  const refresh = useCallback(async () => {
     handler(getLoadingResource(collectionId))
 
     try {
-      const snapshot = await firestore.collection(collectionId).get()
-      const data = snapshot.docs.reduce((result, doc) => {
-        result[doc.id] = doc.data() as CollectionData<T>
-        return result
-      }, {} as Record<string, CollectionData<T>>)
+      const snapshot = await query.get()
+      const data = snapshot.docs.map(doc =>
+        getLoadedResource(doc.id, doc.data() as CollectionData<T>)
+      )
       handler(getLoadedResource(collectionId, data))
     } catch (error) {
       console.error(error.message)
       handler(getErrorResource(collectionId, error))
     }
-  }, [firestore, collectionId, handler])
+  }, [collectionId, handler, query])
 
   useEffect(() => {
-    reload()
-  }, [reload])
+    refresh()
+  }, [refresh])
 
-  return reload
+  return refresh
 }
