@@ -50,7 +50,7 @@ const PageHeader = ({ parents = [], title }: PageHeaderProps) => {
             <BreadcrumbSeparator />
           </React.Fragment>
         ))}
-        <Breadcrumb title={title} />
+        <Breadcrumb path="#" title={title} />
       </PageHeaderBreadcrumbs>
       {isAuthenticated && userInfo !== null ? (
         <>
