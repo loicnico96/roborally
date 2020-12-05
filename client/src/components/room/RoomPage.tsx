@@ -3,17 +3,20 @@ import styled from "styled-components"
 
 import { GameType } from "common/GameSettings"
 import { RoomData, RoomStatus } from "common/model/RoomData"
+import AsyncButton from "components/ui/AsyncButton"
+import PageContainer from "components/ui/PageContainer"
+import PageContent from "components/ui/PageContent"
+import PageHeader from "components/ui/PageHeader"
 import { useCloseRoom } from "hooks/room/useCloseRoom"
 import { useEnterRoom } from "hooks/room/useEnterRoom"
 import { useLeaveRoom } from "hooks/room/useLeaveRoom"
 import { useStartGame } from "hooks/room/useStartGame"
 
-import PageHeader from "../PageHeader"
-import AsyncButton from "../primitives/AsyncButton"
 
 import { useRoomData, useRoomId } from "./RoomContext"
 import RoomOptions from "./RoomOptions"
 import RoomPlayerItem from "./RoomPlayerItem"
+
 
 function getRoomTitle(room: RoomData): string {
   const gameName = {
@@ -29,26 +32,16 @@ function getRoomTitle(room: RoomData): string {
   return `${gameName} - ${statusName}`.toUpperCase()
 }
 
-const PageContainer = styled.div`
+const RoomPageContent = styled(PageContent)`
+  column-gap: 48px;
   display: flex;
-  flex-direction: column;
-  height: 100%;
-  width: 100%;
-`
-
-const RoomPageContainer = styled.div`
-  background-color: #eee;
-  display: flex;
-  flex: 1 1 auto;
   flex-direction: row;
-  padding: 24px;
 `
 
 const RoomPageColumn = styled.div`
   display: flex;
-  flex: 1 1 auto;
   flex-direction: column;
-  padding: 0px 24px;
+  flex: 1 1 0;
 `
 
 const RoomPage = () => {
@@ -62,7 +55,7 @@ const RoomPage = () => {
   return (
     <PageContainer>
       <PageHeader title={getRoomTitle(roomData)} />
-      <RoomPageContainer>
+      <RoomPageContent>
         <RoomPageColumn>
           {roomData.playerOrder.map(playerId => (
             <RoomPlayerItem
@@ -87,7 +80,7 @@ const RoomPage = () => {
         <RoomPageColumn>
           <RoomOptions />
         </RoomPageColumn>
-      </RoomPageContainer>
+      </RoomPageContent>
     </PageContainer>
   )
 }

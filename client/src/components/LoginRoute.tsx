@@ -1,13 +1,15 @@
 import React, { useEffect } from "react"
 import { useHistory } from "react-router-dom"
 
+import AsyncButton from "components/ui/AsyncButton"
+import PageContainer from "components/ui/PageContainer"
+import PageContent from "components/ui/PageContent"
+import PageHeader from "components/ui/PageHeader"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignInAnonymous } from "firestore/auth/useSignInAnonymous"
 import { useSearchParams } from "hooks/useSearchParams"
 import { ROUTES } from "utils/navigation"
 
-import PageHeader from "./PageHeader"
-import AsyncButton from "./primitives/AsyncButton"
 
 const LoginRoute = () => {
   const callbackRoute = useSearchParams().get("callback")
@@ -22,16 +24,18 @@ const LoginRoute = () => {
   }, [callbackRoute, history, isAuthenticated])
 
   return (
-    <div>
+    <PageContainer>
       <PageHeader title="Sign-in" />
-      {isAuthenticated && userId !== null && userInfo !== null ? (
-        <div>
-          Signed in as {userId} : {JSON.stringify(userInfo)}
-        </div>
-      ) : (
-        <AsyncButton onClick={signInAnonymous}>Sign in as guest</AsyncButton>
-      )}
-    </div>
+      <PageContent>
+        {isAuthenticated && userId !== null && userInfo !== null ? (
+          <div>
+            Signed in as {userId} : {JSON.stringify(userInfo)}
+          </div>
+        ) : (
+          <AsyncButton onClick={signInAnonymous}>Sign in as guest</AsyncButton>
+        )}
+      </PageContent>
+    </PageContainer>
   )
 }
 

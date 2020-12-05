@@ -7,7 +7,7 @@ import { useSignOut } from "firestore/auth/useSignOut"
 import { useChangeName } from "hooks/useChangeName"
 import { ROUTES, withSearchParams } from "utils/navigation"
 
-import AsyncButton from "./primitives/AsyncButton"
+import AsyncButton from "./AsyncButton"
 
 type PageHeaderProps = {
   title: string

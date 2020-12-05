@@ -1,7 +1,7 @@
 import React from "react"
 
 import { RoomId } from "common/model/RoomData"
-import PageHeader from "components/PageHeader"
+import PageHeader from "components/ui/PageHeader"
 
 type GameUiHeaderProps = {
   currentTurn: number

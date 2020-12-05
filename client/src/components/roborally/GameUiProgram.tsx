@@ -9,7 +9,7 @@ import {
   GamePhase,
   RoborallyState,
 } from "common/roborally/model/RoborallyState"
-import AsyncButton from "components/primitives/AsyncButton"
+import AsyncButton from "components/ui/AsyncButton"
 import { triggerReady } from "functions/triggers"
 
 import GameUiCard from "./GameUiCard"

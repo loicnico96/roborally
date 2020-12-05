@@ -21,9 +21,7 @@ const RoomOptionsContainer = styled.div`
   background-color: #ccc;
   border: 8px solid #aaa;
   border-radius: 16px;
-  display: flex;
   flex: 1 1 auto;
-  flex-direction: column;
   margin: 24px 0px;
   padding: 16px 24px;
   white-space: pre-line;
@@ -44,19 +42,8 @@ const RoomOptionsRowLabel = styled.div`
   margin-right: 4px;
 `
 
-type RoomOptionsBoardImageProps = {
-  boardId: BoardId
-}
-
-function getBackgroundUrl({ boardId }: RoomOptionsBoardImageProps): string {
-  return getBoardImage(boardId)
-}
-
-const RoomOptionsBoardImage = styled.div`
-  background-image: url("${getBackgroundUrl}");
-  background-repeat: no-repeat;
-  background-size: contain;
-  flex: 1 1 auto;
+const RoomOptionsBoardImage = styled.img`
+  width: 600px;
 `
 
 type SelectEvent = React.ChangeEvent<HTMLSelectElement>
@@ -100,7 +87,10 @@ const RoomOptions = () => {
           ))}
         </select>
       </RoomOptionsRow>
-      <RoomOptionsBoardImage boardId={options.boardId} title="Preview" />
+      <RoomOptionsBoardImage
+        src={getBoardImage(options.boardId)}
+        title="Preview"
+      />
     </RoomOptionsContainer>
   )
 }

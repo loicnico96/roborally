@@ -1,17 +1,19 @@
 import React from "react"
 import { Link } from "react-router-dom"
 
+
+import PageContainer from "components/ui/PageContainer"
+import PageContent from "components/ui/PageContent"
+import PageHeader from "components/ui/PageHeader"
 import { ROUTES } from "utils/navigation"
 
-import PageHeader from "./PageHeader"
-
 const HomeRoute = () => (
-  <div>
+  <PageContainer>
     <PageHeader title="Home" />
-    <div>
+    <PageContent>
       <Link to={ROUTES.roomList()}>Open rooms</Link>
-    </div>
-  </div>
+    </PageContent>
+  </PageContainer>
 )
 
 export default HomeRoute
