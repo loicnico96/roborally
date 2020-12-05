@@ -12,11 +12,6 @@ export class CellBuilder {
     this.pos = pos
   }
 
-  checkpoint(): this {
-    this.builder.addCheckpoint(this.pos)
-    return this
-  }
-
   conveyor(dir: Direction, turn: boolean = false): this {
     this.builder.addFeature(FeatureType.CONVEYOR)
     this.builder.updateCell(this.pos, {

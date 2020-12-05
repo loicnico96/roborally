@@ -55,10 +55,10 @@ export class BoardBuilder {
     }
   }
 
-  addCheckpoint(pos: Position) {
+  addCheckpoint(x: number, y: number) {
     this.update({
       checkpoints: {
-        $push: [pos],
+        $push: [getPos(x, y)],
       },
     })
   }

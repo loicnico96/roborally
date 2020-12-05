@@ -10,6 +10,8 @@ import { useRoomData, useRoomId } from "./RoomContext"
 
 function getBoardName(boardId: BoardId): string {
   return {
+    [BoardId.CROSS]: "Cross",
+    [BoardId.EXCHANGE]: "Exchange",
     [BoardId.FLOOD_ZONE]: "Flood Zone",
     [BoardId.ISLAND]: "Island",
   }[boardId]
@@ -89,6 +91,7 @@ const RoomOptions = () => {
           defaultValue={options.boardId}
           disabled={!isEnabled}
           onChange={onSelectBoardId}
+          value={isEnabled ? undefined : options.boardId}
         >
           {Object.values(BoardId).map(boardId => (
             <option key={boardId} value={boardId}>

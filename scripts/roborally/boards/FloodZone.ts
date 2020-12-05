@@ -3,6 +3,11 @@ import { Direction } from "common/roborally/model/Position"
 
 const builder = BoardBuilder.emptyBoard(12, 12)
 
+builder.addCheckpoint(2, 3)
+builder.addCheckpoint(7, 5)
+builder.addCheckpoint(9, 3)
+builder.addCheckpoint(4, 9)
+
 // Row 0
 
 // Pos (0, 0)

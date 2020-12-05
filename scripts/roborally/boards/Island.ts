@@ -3,10 +3,15 @@ import { Direction, Rotation } from "common/roborally/model/Position"
 
 const builder = BoardBuilder.emptyBoard(12, 12)
 
+builder.addCheckpoint(4, 4)
+builder.addCheckpoint(5, 10)
+builder.addCheckpoint(11, 4)
+builder.addCheckpoint(6, 1)
+
 // Row 0
 
 // Pos (0, 0)
-builder.pos(0, 0).checkpoint()
+builder.pos(0, 0)
 
 // Pos (1, 0)
 builder.pos(1, 0)
@@ -249,7 +254,7 @@ builder.pos(3, 6).conveyor(Direction.SOUTH)
 builder.pos(4, 6).hole()
 
 // Pos (5, 6)
-builder.pos(5, 6).checkpoint()
+builder.pos(5, 6)
 
 // Pos (6, 6)
 builder.pos(6, 6).conveyor(Direction.EAST)
@@ -457,7 +462,7 @@ builder.pos(9, 11).wall(Direction.SOUTH)
 builder.pos(10, 11)
 
 // Pos (11, 11)
-builder.pos(11, 11).checkpoint()
+builder.pos(11, 11)
 
 // Export
 
