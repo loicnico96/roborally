@@ -7,6 +7,7 @@ import { getBoardImage } from "components/roborally/BoardImage"
 import { useChangeRoomOptions } from "hooks/room/useChangeRoomOptions"
 
 import { useRoomData, useRoomId } from "./RoomContext"
+import { useToast } from "hooks/useToast"
 
 function getBoardName(boardId: BoardId): string {
   return {
@@ -63,6 +64,7 @@ const RoomOptions = () => {
   const roomId = useRoomId()
   const roomData = useRoomData()
   const [changeOptions, isEnabled] = useChangeRoomOptions(roomId, roomData)
+  const toast = useToast()
 
   const { options } = roomData
 
@@ -74,7 +76,7 @@ const RoomOptions = () => {
           await changeOptions({ boardId })
         }
       } catch (error) {
-        console.error(error)
+        toast.error(error)
       }
     },
     [changeOptions, options]

@@ -1,4 +1,5 @@
 import { useState, useCallback } from "react"
+import { toast } from "react-toastify"
 
 export type Params = any[]
 export type Fn<P extends Params, T = any> = (...args: P) => T
@@ -7,7 +8,7 @@ export type ErrorHandler = (error: Error) => any
 
 export function useAsyncHandler<P extends Params>(
   handler: AsyncFn<P>,
-  onError: ErrorHandler = console.error
+  onError: ErrorHandler = toast.error
 ): [AsyncFn<P, void>, boolean] {
   const [running, setRunning] = useState(false)
   const safeHandler = useCallback(

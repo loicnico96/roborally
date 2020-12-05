@@ -15,6 +15,7 @@ import {
 } from "utils/resources"
 
 import GameContext from "./GameContext"
+import { useToast } from "hooks/useToast"
 
 export type GameContextProviderProps = {
   renderError: (error: Error) => JSX.Element
@@ -32,6 +33,7 @@ const GameContextProvider = ({
   const isResolving = useRef(false)
   const stateQueue = useRef<RoborallyState[]>([])
   const currentState = useRef<RoborallyState | null>(null)
+  const toast = useToast()
 
   const [gameResource, setGameResource] = useState<Resource<RoborallyState>>(
     getLoadingResource(roomId)
@@ -69,7 +71,7 @@ const GameContextProvider = ({
                 try {
                   await resolveTurn(nextState, handleStateChanged)
                 } catch (error) {
-                  console.error(error)
+                  toast.error(error)
                 }
               } else {
                 await handleStateChanged(nextState, 0)
@@ -77,7 +79,7 @@ const GameContextProvider = ({
             }
           }
         } catch (error) {
-          console.error(error)
+          toast.error(error)
         } finally {
           isResolving.current = false
         }

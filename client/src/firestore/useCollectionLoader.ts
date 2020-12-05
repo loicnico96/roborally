@@ -10,6 +10,7 @@ import {
 } from "utils/resources"
 
 import { QueryOptions, useQuery } from "./useQuery"
+import { useToast } from "hooks/useToast"
 
 export type CollectionResult<T extends Collection> = LoadedResource<
   CollectionData<T>
@@ -21,6 +22,7 @@ export function useCollectionLoader<T extends Collection>(
   options: QueryOptions
 ): () => Promise<void> {
   const query = useQuery(collectionId, options)
+  const toast = useToast()
 
   const refresh = useCallback(async () => {
     handler(getLoadingResource(collectionId))
@@ -32,7 +34,7 @@ export function useCollectionLoader<T extends Collection>(
       )
       handler(getLoadedResource(collectionId, data))
     } catch (error) {
-      console.error(error.message)
+      toast.error(error.message)
       handler(getErrorResource(collectionId, error))
     }
   }, [collectionId, handler, query])
