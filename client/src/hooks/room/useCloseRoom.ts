@@ -14,10 +14,10 @@ export function isAbleToCloseRoom(
 
 export function useCloseRoom(
   roomId: RoomId,
-  room: RoomData | null
+  room: RoomData
 ): [() => Promise<void>, boolean] {
   const { userId } = useAuthContext()
-  const isEnabled = room !== null && isAbleToCloseRoom(room, userId)
+  const isEnabled = isAbleToCloseRoom(room, userId)
   const closeRoom = useCallback(async () => {
     if (isEnabled) {
       await triggerRoomClose({ roomId })

@@ -14,10 +14,10 @@ export function isAbleToStartGame(
 
 export function useStartGame(
   roomId: RoomId,
-  room: RoomData | null
+  room: RoomData
 ): [() => Promise<void>, boolean] {
   const { userId } = useAuthContext()
-  const isEnabled = room !== null && isAbleToStartGame(room, userId)
+  const isEnabled = isAbleToStartGame(room, userId)
   const startGame = useCallback(async () => {
     if (isEnabled) {
       await triggerRoomStart({ roomId })

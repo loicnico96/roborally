@@ -19,10 +19,10 @@ export function isAbleToLeaveRoom(
 
 export function useLeaveRoom(
   roomId: RoomId,
-  room: RoomData | null
+  room: RoomData
 ): [() => Promise<void>, boolean] {
   const { userId } = useAuthContext()
-  const isEnabled = room !== null && isAbleToLeaveRoom(room, userId)
+  const isEnabled = isAbleToLeaveRoom(room, userId)
   const leaveRoom = useCallback(async () => {
     if (isEnabled) {
       await triggerRoomLeave({ roomId })

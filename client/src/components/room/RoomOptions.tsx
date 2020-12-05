@@ -1,11 +1,10 @@
 import React, { useCallback } from "react"
 import styled from "styled-components"
 
-import { GameOptions } from "common/GameSettings"
 import { BoardId } from "common/roborally/model/BoardData"
 import { validateEnum } from "common/utils/validation"
 import { getBoardImage } from "components/roborally/BoardImage"
-import { triggerRoomOptions } from "functions/triggers"
+import { useChangeRoomOptions } from "hooks/room/useChangeRoomOptions"
 
 import { useRoomData, useRoomId } from "./RoomContext"
 
@@ -62,25 +61,20 @@ type SelectEvent = React.ChangeEvent<HTMLSelectElement>
 
 const RoomOptions = () => {
   const roomId = useRoomId()
+  const roomData = useRoomData()
+  const [changeOptions, isEnabled] = useChangeRoomOptions(roomId, roomData)
 
-  const changeOptions = useCallback(
-    async (options: Partial<GameOptions>) => {
-      try {
-        await triggerRoomOptions({ options, roomId })
-      } catch (error) {
-        console.error(error)
-      }
-    },
-    [roomId]
-  )
-
-  const { options } = useRoomData()
+  const { options } = roomData
 
   const onSelectBoardId = useCallback(
-    (event: SelectEvent) => {
-      const boardId = validateEnum(BoardId)(event.target.value)
-      if (boardId !== options.boardId) {
-        changeOptions({ boardId })
+    async (event: SelectEvent) => {
+      try {
+        const boardId = validateEnum(BoardId)(event.target.value)
+        if (boardId !== options.boardId) {
+          await changeOptions({ boardId })
+        }
+      } catch (error) {
+        console.error(error)
       }
     },
     [changeOptions, options]
@@ -91,7 +85,11 @@ const RoomOptions = () => {
       <RoomOptionsTitle>Options</RoomOptionsTitle>
       <RoomOptionsRow>
         <RoomOptionsRowLabel>Board:</RoomOptionsRowLabel>
-        <select defaultValue={options.boardId} onChange={onSelectBoardId}>
+        <select
+          defaultValue={options.boardId}
+          disabled={!isEnabled}
+          onChange={onSelectBoardId}
+        >
           {Object.values(BoardId).map(boardId => (
             <option key={boardId} value={boardId}>
               {getBoardName(boardId)}
