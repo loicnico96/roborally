@@ -1,5 +1,6 @@
 import React, { useCallback } from "react"
 import { useHistory } from "react-router-dom"
+import styled from "styled-components"
 
 import { GameType } from "common/GameSettings"
 import { RoomData } from "common/model/RoomData"
@@ -32,6 +33,10 @@ const useCreateRoom = (): [() => Promise<void>, boolean] => {
   return [createRoom, isAuthenticated]
 }
 
+const RoomListPageHeader = styled.div`
+  margin-bottom: 24px;
+`
+
 const RoomListPage = ({ rooms }: RoomListPageProps) => {
   const [createRoom, isCreateRoomEnabled] = useCreateRoom()
 
@@ -39,11 +44,11 @@ const RoomListPage = ({ rooms }: RoomListPageProps) => {
     <PageContainer>
       <PageHeader parents={NAVIGATION_PARENTS} title="ROOMS" />
       <PageContent>
-        <div id="RoomListPageHeader">
+        <RoomListPageHeader>
           <AsyncButton onClick={createRoom} disabled={!isCreateRoomEnabled}>
             Create room
           </AsyncButton>
-        </div>
+        </RoomListPageHeader>
         <RoomList rooms={rooms} />
       </PageContent>
     </PageContainer>

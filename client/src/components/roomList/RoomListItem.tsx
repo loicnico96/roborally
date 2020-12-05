@@ -5,6 +5,7 @@ import styled from "styled-components"
 import { GameType } from "common/GameSettings"
 import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
 import { BoardId } from "common/roborally/model/BoardData"
+import Box from "components/ui/Box"
 import { ROUTES } from "utils/navigation"
 
 export type RoomListItemProps = {
@@ -41,12 +42,8 @@ function formatRoomInfo(room: RoomData): string {
   ].join("\n")
 }
 
-const RoomListItemContainer = styled.div`
-  background-color: #ccc;
-  border: 8px solid #aaa;
-  border-radius: 16px;
-  margin: 24px 0px;
-  padding: 16px 24px;
+const RoomListItemContainer = styled(Box)`
+  margin-bottom: 24px;
   white-space: pre-line;
 `
 

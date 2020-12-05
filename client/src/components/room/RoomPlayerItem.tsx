@@ -2,20 +2,17 @@ import React from "react"
 import styled from "styled-components"
 
 import { UserInfo } from "common/model/UserInfo"
+import Box from "components/ui/Box"
 
 export type RoomListItemProps = {
   isRoomOwner: boolean
   userInfo: UserInfo
 }
 
-const RoomPlayerItemContainer = styled.div`
-  background-color: #ccc;
-  border: 8px solid #aaa;
-  border-radius: 16px;
+const RoomPlayerItemContainer = styled(Box)`
   display: flex;
   flex-direction: row;
-  margin: 24px 0px;
-  padding: 16px 24px;
+  margin-bottom: 24px;
   white-space: pre-line;
 `
 

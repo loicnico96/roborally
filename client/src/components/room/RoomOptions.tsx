@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { BoardId } from "common/roborally/model/BoardData"
 import { validateEnum } from "common/utils/validation"
 import { getBoardImage } from "components/roborally/BoardImage"
+import Box from "components/ui/Box"
 import { useChangeRoomOptions } from "hooks/room/useChangeRoomOptions"
 
 import { useRoomData, useRoomId } from "./RoomContext"
@@ -17,13 +18,8 @@ function getBoardName(boardId: BoardId): string {
   }[boardId]
 }
 
-const RoomOptionsContainer = styled.div`
-  background-color: #ccc;
-  border: 8px solid #aaa;
-  border-radius: 16px;
+const RoomOptionsContainer = styled(Box)`
   flex: 1 1 auto;
-  margin: 24px 0px;
-  padding: 16px 24px;
   white-space: pre-line;
 `
 
