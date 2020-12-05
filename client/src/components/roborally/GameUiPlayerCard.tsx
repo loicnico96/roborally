@@ -2,7 +2,17 @@ import React from "react"
 import styled from "styled-components"
 
 import { PlayerId } from "common/model/GameStateBasic"
+import {
+  CardAction,
+  getCardAction,
+  getCardPriority,
+} from "common/roborally/model/Card"
 import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
+import {
+  GamePhase,
+  RoborallyState,
+} from "common/roborally/model/RoborallyState"
+import { useGameState } from "components/room/GameContext"
 import { useRoomData } from "components/room/RoomContext"
 
 import { getRobotImage } from "./RobotImage"
@@ -11,7 +21,6 @@ type GameUiPlayerCardProps = {
   isCurrentUser: boolean
   playerId: PlayerId
   playerIndex: number
-  player: RoborallyPlayer
 }
 
 const PlayerCardContainer = styled.div`
@@ -66,15 +75,59 @@ const PlayerCardName = styled.div`
 
 const PlayerCardScore = styled.div``
 
+function getPlayerStatusText(
+  playerId: PlayerId,
+  player: RoborallyPlayer,
+  gameState: RoborallyState
+): string {
+  if (gameState.winners !== null) {
+    if (gameState.winners.includes(playerId)) {
+      return "Winner!"
+    }
+  }
+
+  const readyPhases = [GamePhase.STANDBY, GamePhase.PROGRAM]
+  if (readyPhases.includes(gameState.phase)) {
+    return player.ready ? "Ready" : "Waiting..."
+  }
+
+  if (player.down) {
+    return "Powered Down"
+  }
+
+  if (player.destroyed) {
+    return "Destroyed"
+  }
+
+  const card = player.program[gameState.sequence]
+  if (card !== null) {
+    const action = {
+      [CardAction.MOVE_1]: "Speed 1",
+      [CardAction.MOVE_2]: "Speed 2",
+      [CardAction.MOVE_3]: "Speed 3",
+      [CardAction.MOVE_BACK]: "Back Up",
+      [CardAction.ROTATE_LEFT]: "Rotate Left",
+      [CardAction.ROTATE_RIGHT]: "Rotate Right",
+      [CardAction.ROTATE_BACK]: "U-Turn",
+    }[getCardAction(card)]
+
+    return `${action} (${getCardPriority(card)})`
+  }
+
+  return "Waiting..."
+}
+
 const GameUiPlayerCard = ({
   isCurrentUser,
-  player,
   playerId,
   playerIndex,
 }: GameUiPlayerCardProps) => {
   const roomData = useRoomData()
+  const gameState = useGameState()
 
+  const player = gameState.players[playerId]
   const playerName = roomData.players[playerId].name
+  const totalCheckpoints = gameState.checkpoints.length - 1
 
   return (
     <PlayerCardContainer>
@@ -84,13 +137,13 @@ const GameUiPlayerCard = ({
           <PlayerCardName>
             {isCurrentUser ? `${playerName} (you)` : playerName}
           </PlayerCardName>
-          <PlayerCardScore>Checkpoint: {player.checkpoint}</PlayerCardScore>
+          <PlayerCardScore>
+            Checkpoint: {player.checkpoint} / {totalCheckpoints}
+          </PlayerCardScore>
         </PlayerCardContextRow>
+        <PlayerCardContextRow>Damage: {player.damage}</PlayerCardContextRow>
         <PlayerCardContextRow>
-          {player.destroyed ? "Destroyed" : `Damage: ${player.damage}`}
-        </PlayerCardContextRow>
-        <PlayerCardContextRow>
-          {player.ready ? "Ready" : "Waiting..."}
+          {getPlayerStatusText(playerId, player, gameState)}
         </PlayerCardContextRow>
       </PlayerCardContentContainer>
     </PlayerCardContainer>

@@ -5,6 +5,7 @@ import { CellData } from "./model/CellData"
 import { Direction, isSamePos, Position } from "./model/Position"
 import { RoborallyPlayer } from "./model/RoborallyPlayer"
 import { GamePhase, RoborallyState } from "./model/RoborallyState"
+import { resolveState } from "./resolveState"
 
 export class RoborallyContext extends GameContext<
   RoborallyPlayer,
@@ -47,5 +48,9 @@ export class RoborallyContext extends GameContext<
 
   getWall(pos: Position, dir: Direction): WallType {
     return getWall(this.getBoard(), pos, dir)
+  }
+
+  async resolveInternal(): Promise<void> {
+    await resolveState(this)
   }
 }

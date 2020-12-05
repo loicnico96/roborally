@@ -23,7 +23,6 @@ export type RoborallyState = GameStateBasic<RoborallyPlayer> & {
   currentPlayer: PlayerId | null
   phase: GamePhase
   sequence: number
-  turn: number
 }
 
 export type B = RoborallyState
@@ -48,5 +47,6 @@ export function getInitialGameState(
     }, {} as Record<PlayerId, RoborallyPlayer>),
     sequence: 0,
     turn: 0,
+    winners: null,
   }
 }

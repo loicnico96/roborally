@@ -5,6 +5,8 @@ import { merge, size } from "common/utils/objects"
 import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
 import { PlayerStateBasic } from "./model/PlayerStateBasic"
 
+const INTERRUPT_WIN = Object.assign(Error("interrupt"), { reason: "win" })
+
 export type StateChangeHandler<T> = (newState: T) => Promise<void>
 
 export class GameContext<
@@ -60,7 +62,7 @@ export class GameContext<
     this.state = merge(this.state, mergeSpec)
   }
 
-  updatePlayer(playerId: PlayerId, updateSpec: Spec<P>) {
+  updatePlayer(playerId: PlayerId, updateSpec: Spec<P>): void {
     this.updateState({
       players: {
         [playerId]: updateSpec,
@@ -96,13 +98,32 @@ export class GameContext<
     return updateCount
   }
 
-  updateState(updateSpec: Spec<T>) {
+  updateState(updateSpec: Spec<T>): void {
     this.state = update(this.state, updateSpec)
+  }
+
+  win(winners: PlayerId[]): never {
+    this.mergeState({ winners } as Partial<T>)
+    throw INTERRUPT_WIN
   }
 
   async post(): Promise<void> {
     if (this.onStateChanged) {
       await this.onStateChanged(this.state)
     }
+  }
+
+  async resolve(): Promise<void> {
+    try {
+      await this.resolveInternal()
+    } catch (error) {
+      if (error !== INTERRUPT_WIN) {
+        console.error(error)
+      }
+    }
+  }
+
+  async resolveInternal(): Promise<void> {
+    throw Object.assign(Error("Not implemented"), { object: this })
   }
 }

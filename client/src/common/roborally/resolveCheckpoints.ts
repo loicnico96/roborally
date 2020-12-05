@@ -12,8 +12,7 @@ export async function checkWinCondition(ctx: RoborallyContext) {
   })
 
   if (winners.length > 0) {
-    // TODO: Win
-    await ctx.post()
+    ctx.win(winners)
   }
 }
 

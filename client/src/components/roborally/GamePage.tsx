@@ -113,7 +113,6 @@ const GamePage = () => {
               isCurrentUser={playerId === userId}
               playerId={playerId}
               playerIndex={index}
-              player={gameState.players[playerId]}
             />
           ))}
         </div>

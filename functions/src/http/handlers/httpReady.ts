@@ -1,5 +1,6 @@
 import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
+import { RoomStatus } from "common/model/RoomData"
 import { confirmPlayerProgram } from "common/roborally/confirmPlayerProgram"
 import { isValidProgram } from "common/roborally/isValidProgram"
 import { Program } from "common/roborally/model/Program"
@@ -125,6 +126,11 @@ export default handleTrigger<HttpTrigger.READY>(
           gameState = await resolveTurn(gameState)
 
           transaction.set(serverRef, gameState)
+
+          if (gameState.winners !== null) {
+            const roomRef = getCollection(Collection.ROOM).doc(data.gameId)
+            transaction.update(roomRef, { status: RoomStatus.FINISHED })
+          }
 
           return true
         }

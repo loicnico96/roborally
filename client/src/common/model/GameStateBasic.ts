@@ -5,4 +5,6 @@ export type PlayerId = string
 export type GameStateBasic<P extends PlayerStateBasic = PlayerStateBasic> = {
   playerOrder: PlayerId[]
   players: Record<PlayerId, P>
+  turn: number
+  winners: PlayerId[] | null
 }
