@@ -63,17 +63,17 @@ const GameContextProvider = ({
         try {
           isResolving.current = true
           while (stateQueue.current.length > 0) {
-            const nextState = stateQueue.current.shift()
+            let nextState = stateQueue.current.shift()
             if (nextState) {
               if (nextState.phase === "program" && allPlayersReady(nextState)) {
                 try {
-                  await resolveTurn(nextState, handleStateChanged)
+                  nextState = await resolveTurn(nextState, handleStateChanged)
                 } catch (error) {
                   console.error(error)
                 }
-              } else {
-                await handleStateChanged(nextState, 0)
               }
+
+              await handleStateChanged(nextState, 0)
             }
           }
         } catch (error) {
