@@ -14,6 +14,7 @@ import { LoadedResource } from "utils/resources"
 
 import RoomList from "./RoomList"
 
+const NAVIGATION_PARENTS = [{ title: "HOME", path: ROUTES.home() }]
 
 export type RoomListPageProps = {
   rooms: LoadedResource<RoomData>[]
@@ -36,7 +37,7 @@ const RoomListPage = ({ rooms }: RoomListPageProps) => {
 
   return (
     <PageContainer>
-      <PageHeader title="Rooms" />
+      <PageHeader parents={NAVIGATION_PARENTS} title="ROOMS" />
       <PageContent>
         <div id="RoomListPageHeader">
           <AsyncButton onClick={createRoom} disabled={!isCreateRoomEnabled}>

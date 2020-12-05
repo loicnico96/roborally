@@ -10,6 +10,7 @@ import { useSignInAnonymous } from "firestore/auth/useSignInAnonymous"
 import { useSearchParams } from "hooks/useSearchParams"
 import { ROUTES } from "utils/navigation"
 
+const NAVIGATION_PARENTS = [{ title: "HOME", path: ROUTES.home() }]
 
 const LoginRoute = () => {
   const callbackRoute = useSearchParams().get("callback")
@@ -25,7 +26,7 @@ const LoginRoute = () => {
 
   return (
     <PageContainer>
-      <PageHeader title="Sign-in" />
+      <PageHeader parents={NAVIGATION_PARENTS} title="LOGIN" />
       <PageContent>
         {isAuthenticated && userId !== null && userInfo !== null ? (
           <div>

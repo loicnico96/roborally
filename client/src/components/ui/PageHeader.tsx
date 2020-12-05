@@ -8,37 +8,31 @@ import { useChangeName } from "hooks/useChangeName"
 import { ROUTES, withSearchParams } from "utils/navigation"
 
 import AsyncButton from "./AsyncButton"
+import Breadcrumb, { BreadcrumbProps } from "./Breadcrumb"
+import BreadcrumbSeparator from "./BreadcrumbSeparator"
 
-type PageHeaderProps = {
+export type PageHeaderProps = {
+  parents?: BreadcrumbProps[]
   title: string
 }
 
 const PageHeaderContainer = styled.div`
   align-items: center;
   background-color: #aaa;
+  column-gap: 8px;
   display: flex;
   padding: 16px 48px;
 `
 
-const PageHeaderTitle = styled.div`
+const PageHeaderBreadcrumbs = styled.div`
   flex: 1 1 auto;
-  padding: 0px 8px;
 `
 
 const PageHeaderUserName = styled.div`
   cursor: pointer;
-  padding: 0px 8px;
 `
 
-const PageHeaderButton = styled(AsyncButton)`
-  padding: 0px 8px;
-`
-
-const PageHeaderLink = styled(Link)`
-  padding: 0px 8px;
-`
-
-const PageHeader = ({ title }: PageHeaderProps) => {
+const PageHeader = ({ parents = [], title }: PageHeaderProps) => {
   const { isAuthenticated, userInfo } = useAuthContext()
   const { pathname } = useLocation()
   const signOut = useSignOut()
@@ -49,7 +43,15 @@ const PageHeader = ({ title }: PageHeaderProps) => {
 
   return (
     <PageHeaderContainer>
-      <PageHeaderTitle>{title}</PageHeaderTitle>
+      <PageHeaderBreadcrumbs>
+        {parents.map(parent => (
+          <React.Fragment key={parent.path}>
+            <Breadcrumb {...parent} />
+            <BreadcrumbSeparator />
+          </React.Fragment>
+        ))}
+        <Breadcrumb title={title} />
+      </PageHeaderBreadcrumbs>
       {isAuthenticated && userInfo !== null ? (
         <>
           <PageHeaderUserName
@@ -58,10 +60,10 @@ const PageHeader = ({ title }: PageHeaderProps) => {
           >
             {userInfo.name}
           </PageHeaderUserName>
-          <PageHeaderButton onClick={signOut}>Sign out</PageHeaderButton>
+          <AsyncButton onClick={signOut}>Sign out</AsyncButton>
         </>
       ) : (
-        <PageHeaderLink to={loginUrl}>Sign in</PageHeaderLink>
+        <Link to={loginUrl}>Sign in</Link>
       )}
     </PageHeaderContainer>
   )

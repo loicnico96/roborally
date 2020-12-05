@@ -11,12 +11,19 @@ import { useCloseRoom } from "hooks/room/useCloseRoom"
 import { useEnterRoom } from "hooks/room/useEnterRoom"
 import { useLeaveRoom } from "hooks/room/useLeaveRoom"
 import { useStartGame } from "hooks/room/useStartGame"
-
+import { ROUTES } from "utils/navigation"
 
 import { useRoomData, useRoomId } from "./RoomContext"
 import RoomOptions from "./RoomOptions"
 import RoomPlayerItem from "./RoomPlayerItem"
 
+const NAVIGATION_PARENTS = [
+  { title: "HOME", path: ROUTES.home() },
+  {
+    title: "ROOMS",
+    path: ROUTES.roomList(),
+  },
+]
 
 function getRoomTitle(room: RoomData): string {
   const gameName = {
@@ -54,7 +61,7 @@ const RoomPage = () => {
 
   return (
     <PageContainer>
-      <PageHeader title={getRoomTitle(roomData)} />
+      <PageHeader parents={NAVIGATION_PARENTS} title={getRoomTitle(roomData)} />
       <RoomPageContent>
         <RoomPageColumn>
           {roomData.playerOrder.map(playerId => (
