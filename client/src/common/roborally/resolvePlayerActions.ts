@@ -3,12 +3,13 @@ import { sortBy, SortDirection } from "common/utils/arrays"
 import { forEachAsync } from "common/utils/forEachAsync"
 
 import { Card, CardAction, getCardAction, getCardPriority } from "./model/Card"
-import { isWater } from "./model/CellData"
-import { Rotation } from "./model/Position"
+import { isTeleport, isWater } from "./model/CellData"
+import { isSamePos, movePos, Position, Rotation } from "./model/Position"
 import {
   getPlayerDir,
   isAbleToMove,
   rotatePlayer,
+  teleportPlayer,
 } from "./model/RoborallyPlayer"
 import { resolveMovement } from "./resolveMovement"
 import { RoborallyContext } from "./RoborallyContext"
@@ -41,8 +42,33 @@ function getOrderedPlayerActions(
   )
 }
 
+function isAbleToTeleport(
+  ctx: RoborallyContext,
+  playerId: PlayerId,
+  pos: Position
+): boolean {
+  return (
+    ctx.findPlayer((otherPlayer, otherPlayerId) => {
+      if (otherPlayerId === playerId) {
+        return false
+      }
+
+      return isSamePos(otherPlayer.pos, pos)
+    }) === undefined
+  )
+}
+
 async function setCurrentPlayer(ctx: RoborallyContext, playerId: PlayerId) {
   ctx.mergeState({ currentPlayer: playerId })
+  await ctx.post()
+}
+
+async function resolvePlayerTeleport(
+  ctx: RoborallyContext,
+  playerId: PlayerId,
+  pos: Position
+) {
+  ctx.updatePlayer(playerId, player => teleportPlayer(player, pos))
   await ctx.post()
 }
 
@@ -50,19 +76,32 @@ async function resolvePlayerMove(
   ctx: RoborallyContext,
   playerId: PlayerId,
   rot: Rotation,
-  distance: number
+  distance: number,
+  distanceTeleport: number
 ) {
-  const startCell = ctx.getCell(ctx.getPlayer(playerId).pos)
+  const player = ctx.getPlayer(playerId)
+  const startCell = ctx.getCell(player.pos)
+
+  if (isAbleToMove(player) && isTeleport(startCell)) {
+    const dir = getPlayerDir(player, rot)
+    const pos = movePos(player.pos, dir, distanceTeleport)
+    if (isAbleToTeleport(ctx, playerId, pos)) {
+      await resolvePlayerTeleport(ctx, playerId, pos)
+      return
+    }
+  }
+
   const realDistance = isWater(startCell) ? distance - 1 : distance
 
   for (let i = 0; i < realDistance; i++) {
-    const player = ctx.getPlayer(playerId)
-    if (!isAbleToMove(player)) {
-      return
+    if (isAbleToMove(ctx.getPlayer(playerId))) {
+      await resolveMovement(ctx, {
+        [playerId]: {
+          dir: getPlayerDir(player, rot),
+          push: true,
+        },
+      })
     }
-
-    const dir = getPlayerDir(player, rot)
-    await resolveMovement(ctx, { [playerId]: { dir, push: true } })
   }
 }
 
@@ -87,16 +126,16 @@ async function resolvePlayerAction(
 
   switch (action) {
     case CardAction.MOVE_1:
-      await resolvePlayerMove(ctx, playerId, Rotation.NONE, 1)
+      await resolvePlayerMove(ctx, playerId, Rotation.NONE, 1, 3)
       break
     case CardAction.MOVE_2:
-      await resolvePlayerMove(ctx, playerId, Rotation.NONE, 2)
+      await resolvePlayerMove(ctx, playerId, Rotation.NONE, 2, 4)
       break
     case CardAction.MOVE_3:
-      await resolvePlayerMove(ctx, playerId, Rotation.NONE, 3)
+      await resolvePlayerMove(ctx, playerId, Rotation.NONE, 3, 5)
       break
     case CardAction.MOVE_BACK:
-      await resolvePlayerMove(ctx, playerId, Rotation.REVERSE, 1)
+      await resolvePlayerMove(ctx, playerId, Rotation.REVERSE, 1, 2)
       break
     case CardAction.ROTATE_LEFT:
       await resolvePlayerRotate(ctx, playerId, Rotation.LEFT)

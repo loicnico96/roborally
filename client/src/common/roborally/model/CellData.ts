@@ -8,6 +8,7 @@ export enum CellType {
   CONVEYOR_FAST = 3,
   GEAR = 4,
   REPAIR = 5,
+  TELEPORT = 6,
 }
 
 export type CellData = {
@@ -27,26 +28,6 @@ export function getEmptyCell(): CellData {
 
 export function getHole(): CellData {
   const type = CellType.HOLE
-  return { type }
-}
-
-export function getConveyor(dir: Direction, turn = false): CellData {
-  const type = CellType.CONVEYOR
-  return { type, dir, turn }
-}
-
-export function getFastConveyor(dir: Direction, turn = false): CellData {
-  const type = CellType.CONVEYOR_FAST
-  return { type, dir, turn }
-}
-
-export function getGear(rot: Rotation): CellData {
-  const type = CellType.GEAR
-  return { type, rot }
-}
-
-export function getRepair(): CellData {
-  const type = CellType.REPAIR
   return { type }
 }
 
@@ -72,6 +53,10 @@ export function isHole(cell: CellData): boolean {
 
 export function isRepair(cell: CellData): boolean {
   return cell.type === CellType.REPAIR
+}
+
+export function isTeleport(cell: CellData): boolean {
+  return cell.type === CellType.TELEPORT
 }
 
 export function isTurnConveyor(cell: CellData): boolean {

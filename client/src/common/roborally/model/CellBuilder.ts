@@ -171,15 +171,15 @@ export class CellBuilder {
   // 	return this
   // }
 
-  // teleporter(): this {
-  // 	this.builder.addFeature(FeatureType.TELEPORT)
-  // 	this.builder.updateCell(this.pos, {
-  // 		$merge: {
-  // 			type: CellType.TELEPORT,
-  // 		},
-  // 	})
-  // 	return this
-  // }
+  teleporter(): this {
+    this.builder.addFeature(FeatureType.TELEPORT)
+    this.builder.updateCell(this.pos, {
+      $merge: {
+        type: CellType.TELEPORT,
+      },
+    })
+    return this
+  }
 
   // trap(sequences: number[]): this {
   // 	this.builder.addFeature(FeatureType.TRAP)

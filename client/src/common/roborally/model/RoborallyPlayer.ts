@@ -184,6 +184,15 @@ export function rotatePlayer(
   })
 }
 
+export function teleportPlayer(
+  player: RoborallyPlayer,
+  pos: Position
+): RoborallyPlayer {
+  return merge(player, {
+    pos,
+  })
+}
+
 export function triggerPlayerCheckpoint(
   player: RoborallyPlayer,
   checkpoint: number
