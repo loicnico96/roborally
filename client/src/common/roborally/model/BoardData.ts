@@ -28,6 +28,7 @@ export enum BoardId {
   EXCHANGE = "Exchange",
   FLOOD_ZONE = "FloodZone",
   ISLAND = "Island",
+  PIT_MAZE = "PitMaze",
 }
 
 export enum FeatureType {
