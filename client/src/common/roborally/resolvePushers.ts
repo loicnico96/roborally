@@ -23,11 +23,14 @@ export function getPusherMove(
   return undefined
 }
 
-export function getPusherMoves(ctx: RoborallyContext): Record<PlayerId, Move> {
+export function getPusherMoves(
+  ctx: RoborallyContext,
+  sequence: number
+): Record<PlayerId, Move> {
   return ctx.getPlayerOrder().reduce((moves, playerId) => {
     const player = ctx.getPlayer(playerId)
     const cell = ctx.getCell(player.pos)
-    if (isPusher(cell, ctx.getSequence()) && isAffectedByCells(player)) {
+    if (isPusher(cell, sequence) && isAffectedByCells(player)) {
       const move = getPusherMove(ctx, player.pos)
       if (move !== undefined) {
         moves[playerId] = move
@@ -37,6 +40,6 @@ export function getPusherMoves(ctx: RoborallyContext): Record<PlayerId, Move> {
   }, {} as Record<PlayerId, Move>)
 }
 
-export async function resolvePushers(ctx: RoborallyContext) {
-  await resolveMovement(ctx, getPusherMoves(ctx))
+export async function resolvePushers(ctx: RoborallyContext, sequence: number) {
+  await resolveMovement(ctx, getPusherMoves(ctx, sequence))
 }
