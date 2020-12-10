@@ -17,7 +17,7 @@ export function getPusherMove(
   const cell = ctx.getCell(pos)
   const dir = getPusherDir(cell)
   if (dir !== undefined) {
-    return { dir }
+    return { dir, push: true }
   }
 
   return undefined

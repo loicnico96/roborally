@@ -69,7 +69,6 @@ async function resolveTurnSequence(ctx: RoborallyContext, sequence: number) {
 async function resolveTurn(ctx: RoborallyContext) {
   for (let sequence = 0; sequence < SEQUENCE_COUNT; sequence++) {
     ctx.mergeState({ sequence })
-    await ctx.post()
     await resolveTurnSequence(ctx, sequence)
   }
 

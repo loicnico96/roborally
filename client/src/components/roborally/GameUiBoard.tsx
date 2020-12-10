@@ -1,9 +1,9 @@
 import React, { useCallback, useState } from "react"
 import styled from "styled-components"
 
+import { RoomData } from "common/model/RoomData"
 import {
   BoardData,
-  BoardId,
   getCell,
   getWall,
   WallType,
@@ -21,6 +21,10 @@ import {
   Position,
   Rotation,
 } from "common/roborally/model/Position"
+import { isAlive, isVirtual } from "common/roborally/model/RoborallyPlayer"
+import { RoborallyState } from "common/roborally/model/RoborallyState"
+import { useGameState } from "components/room/GameContext"
+import { useRoomData } from "components/room/RoomContext"
 
 import { getBoardImage } from "./BoardImage"
 
@@ -82,7 +86,7 @@ function getConveyorTooltip(cell: CellData): string {
 
   if (cell.dir !== undefined) {
     if (isTurnConveyor(cell)) {
-      return `${cellType} (turning, ${getDir(cell.dir)})`
+      return `${cellType} (${getDir(cell.dir)} - turning)`
     }
     return `${cellType} (${getDir(cell.dir)})`
   }
@@ -106,8 +110,8 @@ function getRepairTooltip(cell: CellData): string {
   return isWater(cell) ? `${cellType} (water)` : cellType
 }
 
-function getCellTooltip(board: BoardData, pos: Position): string {
-  const cell = getCell(board, pos)
+function getCellTooltip(gameState: RoborallyState, pos: Position): string {
+  const cell = getCell(gameState.board, pos)
   switch (cell.type) {
     case CellType.HOLE:
       return getHoleTooltip(cell)
@@ -124,8 +128,11 @@ function getCellTooltip(board: BoardData, pos: Position): string {
   }
 }
 
-function getCheckpointTooltip(board: BoardData, pos: Position): string {
-  const checkpoint = board.checkpoints.findIndex(checkpointPos =>
+function getCheckpointTooltip(
+  gameState: RoborallyState,
+  pos: Position
+): string {
+  const checkpoint = gameState.checkpoints.findIndex(checkpointPos =>
     isSamePos(pos, checkpointPos)
   )
   if (checkpoint >= 0) {
@@ -134,28 +141,78 @@ function getCheckpointTooltip(board: BoardData, pos: Position): string {
   return ""
 }
 
-function getCrusherTooltip(board: BoardData, pos: Position): string {
-  const cell = getCell(board, pos)
+function getCrusherTooltip(gameState: RoborallyState, pos: Position): string {
+  const cell = getCell(gameState.board, pos)
   if (cell.crush) {
-    return `Crusher (${cell.crush.join(", ")})`
+    return `Crusher (${cell.crush.join("-")})`
   }
   return ""
 }
 
-function getWallTooltip(board: BoardData, pos: Position): string {
-  const dirs = DIRS.filter(dir => getWall(board, pos, dir) !== WallType.NONE)
+function getPusherTooltip(gameState: RoborallyState, pos: Position): string {
+  const cell = getCell(gameState.board, pos)
+  if (cell.push) {
+    if (cell.pushDir !== undefined) {
+      return `Pusher (${cell.push.join("-")}, ${getDir(cell.pushDir)})`
+    }
+    return `Pusher (${cell.push.join("-")})`
+  }
+  return ""
+}
+
+function getWallTooltip(gameState: RoborallyState, pos: Position): string {
+  const dirs = DIRS.filter(
+    dir => getWall(gameState.board, pos, dir) !== WallType.NONE
+  )
   if (dirs.length > 0) {
     return `Walls: ${dirs.map(getDir).join(", ")}`
   }
   return ""
 }
 
-function getTooltip(board: BoardData, pos: Position): string {
+function getLaserTooltips(gameState: RoborallyState, pos: Position): string[] {
+  return gameState.board.lasers.map(laser => {
+    if (isSamePos(laser.pos, pos)) {
+      return `Laser x${laser.damage} (${getDir(laser.dir)})`
+    }
+
+    return ""
+  })
+}
+
+function getPlayerTooltips(
+  gameState: RoborallyState,
+  roomData: RoomData,
+  pos: Position
+): string[] {
+  return gameState.playerOrder.map(playerId => {
+    const player = gameState.players[playerId]
+    if (isSamePos(player.pos, pos) && isAlive(player)) {
+      const playerName = roomData.players[playerId].name
+      if (isVirtual(player)) {
+        return `${playerName} (virtual)`
+      }
+
+      return playerName
+    }
+
+    return ""
+  })
+}
+
+function getTooltip(
+  gameState: RoborallyState,
+  roomData: RoomData,
+  pos: Position
+): string {
   return [
-    getCellTooltip(board, pos),
-    getCheckpointTooltip(board, pos),
-    getCrusherTooltip(board, pos),
-    getWallTooltip(board, pos),
+    getCellTooltip(gameState, pos),
+    getCheckpointTooltip(gameState, pos),
+    getCrusherTooltip(gameState, pos),
+    getPusherTooltip(gameState, pos),
+    getWallTooltip(gameState, pos),
+    ...getLaserTooltips(gameState, pos),
+    ...getPlayerTooltips(gameState, roomData, pos),
   ]
     .filter(tooltip => tooltip)
     .join("\n")
@@ -170,13 +227,14 @@ const GameUiBoardBackground = styled.div`
   width: ${getBackgroundSizeX}px;
 `
 
-type GameUiBoardProps = React.PropsWithChildren<{
-  boardId: BoardId
-  board: BoardData
-}>
+type GameUiBoardProps = {
+  children: React.ReactNode
+}
 
-const GameUiBoard = ({ board, boardId, children }: GameUiBoardProps) => {
+const GameUiBoard = ({ children }: GameUiBoardProps) => {
   const [tooltip, setTooltip] = useState("")
+  const gameState = useGameState()
+  const roomData = useRoomData()
 
   const onMouseMove = useCallback(
     (e: React.MouseEvent) => {
@@ -189,18 +247,18 @@ const GameUiBoard = ({ board, boardId, children }: GameUiBoardProps) => {
         x: Math.floor(mousePosition.x / CELL_SIZE),
         y: Math.floor(mousePosition.y / CELL_SIZE),
       }
-      const newTooltip = getTooltip(board, boardPosition)
+      const newTooltip = getTooltip(gameState, roomData, boardPosition)
       if (newTooltip !== tooltip) {
         setTooltip(newTooltip)
       }
     },
-    [board, tooltip]
+    [gameState, roomData, tooltip]
   )
 
   return (
     <GameUiBoardBackground
-      board={board}
-      imageUrl={getBoardImage(boardId)}
+      board={gameState.board}
+      imageUrl={getBoardImage(gameState.boardId)}
       onMouseMove={onMouseMove}
       title={tooltip}
     >
