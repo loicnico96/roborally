@@ -29,6 +29,8 @@ function formatRoomInfo(room: RoomData): string {
     [BoardId.EXCHANGE]: "Exchange",
     [BoardId.FLOOD_ZONE]: "Flood Zone",
     [BoardId.ISLAND]: "Island",
+    [BoardId.LASER_MAZE]: "Laser Maze",
+    [BoardId.PIT_MAZE]: "Pit Maze",
   }[room.options.boardId]
 
   const playerNames = room.playerOrder.map(

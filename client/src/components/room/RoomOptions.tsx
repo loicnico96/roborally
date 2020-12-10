@@ -15,6 +15,8 @@ function getBoardName(boardId: BoardId): string {
     [BoardId.EXCHANGE]: "Exchange",
     [BoardId.FLOOD_ZONE]: "Flood Zone",
     [BoardId.ISLAND]: "Island",
+    [BoardId.LASER_MAZE]: "Laser Maze",
+    [BoardId.PIT_MAZE]: "Pit Maze",
   }[boardId]
 }
 
