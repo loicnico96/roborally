@@ -1,3 +1,4 @@
+import BoardCanneryRow from "assets/boards/CanneryRow.png"
 import BoardCross from "assets/boards/Cross.png"
 import BoardExchange from "assets/boards/Exchange.png"
 import BoardFloodZone from "assets/boards/FloodZone.png"
@@ -7,6 +8,7 @@ import BoardPitMaze from "assets/boards/PitMaze.png"
 import { BoardId } from "common/roborally/model/BoardData"
 
 const BOARD_IMAGES: Record<BoardId, string> = {
+  [BoardId.CANNERY_ROW]: BoardCanneryRow,
   [BoardId.CROSS]: BoardCross,
   [BoardId.EXCHANGE]: BoardExchange,
   [BoardId.FLOOD_ZONE]: BoardFloodZone,

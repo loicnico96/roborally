@@ -24,6 +24,7 @@ export type LaserData = {
 }
 
 export enum BoardId {
+  CANNERY_ROW = "CanneryRow",
   CROSS = "Cross",
   EXCHANGE = "Exchange",
   FLOOD_ZONE = "FloodZone",
