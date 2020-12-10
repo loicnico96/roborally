@@ -28,7 +28,7 @@ export class CellBuilder {
     this.builder.addFeature(FeatureType.CRUSHER)
     this.builder.updateCell(this.pos, {
       $merge: {
-        crush: sequences,
+        crush: sequences.map(seq => seq - 1),
       },
     })
     return this
@@ -128,17 +128,17 @@ export class CellBuilder {
   // 	return this
   // }
 
-  // pusher(dir: Direction, sequences: number[]): this {
-  // 	this.builder.addFeature(FeatureType.PUSHER)
-  // 	this.builder.updateCell(this.pos, {
-  // 		$merge: {
-  // 			push: sequences,
-  // 			pushDir: getReverseDir(dir),
-  // 		},
-  // 	})
-  // 	// Add corresponding wall automatically
-  // 	return this.wall(dir)
-  // }
+  pusherWall(dir: Direction, sequences: number[]): this {
+    this.builder.addFeature(FeatureType.PUSHER)
+    this.builder.updateCell(this.pos, {
+      $merge: {
+        push: sequences.map(seq => seq - 1),
+        pushDir: getReverseDir(dir),
+      },
+    })
+    // Add corresponding wall automatically
+    return this.wall(dir)
+  }
 
   // ramp(dir: Direction): this {
   // 	this.builder.addWall(this.pos, dir, WallType.RAMP, true)
@@ -185,7 +185,7 @@ export class CellBuilder {
   // 	this.builder.addFeature(FeatureType.TRAP)
   // 	this.builder.updateCell(this.pos, {
   // 		$merge: {
-  // 			trap: sequences,
+  // 			trap: sequences.map(seq => seq - 1),
   // 		},
   // 	})
   // 	return this

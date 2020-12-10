@@ -15,6 +15,8 @@ export type CellData = {
   type: CellType
   crush?: number[]
   dir?: Direction
+  push?: number[]
+  pushDir?: Direction
   rot?: Rotation
   turn?: boolean
   walls?: WallData
@@ -49,6 +51,10 @@ export function isGear(cell: CellData): boolean {
 
 export function isHole(cell: CellData): boolean {
   return cell.type === CellType.HOLE
+}
+
+export function isPusher(cell: CellData, sequence: number): boolean {
+  return cell.push?.includes(sequence) ?? false
 }
 
 export function isRepair(cell: CellData): boolean {

@@ -37,6 +37,7 @@ export enum FeatureType {
   CRUSHER = "crusher",
   GEAR = "gear",
   LASER = "laser",
+  PUSHER = "pusher",
   REPAIR = "repair",
   TELEPORT = "teleport",
   WATER = "water",

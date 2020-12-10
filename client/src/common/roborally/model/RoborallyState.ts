@@ -10,6 +10,7 @@ export enum GamePhase {
   RESOLVE_PLAYERS = "resolve_players",
   RESOLVE_CONVEYORS_FAST = "resolve_conveyors_fast",
   RESOLVE_CONVEYORS = "resolve_conveyors",
+  RESOLVE_PUSHERS = "resolve_pushers",
   RESOLVE_CRUSHERS = "resolve_crushers",
   RESOLVE_GEARS = "resolve_gears",
   RESOLVE_LASERS = "resolve_lasers",

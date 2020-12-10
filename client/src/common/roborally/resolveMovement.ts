@@ -233,7 +233,7 @@ export async function resolveMovement(
   moves: Partial<Record<PlayerId, Move>>
 ) {
   const validMoves = checkMoves(ctx, moves)
-  ctx.updatePlayers((player, playerId) => {
+  const updateCount = ctx.updatePlayers((player, playerId) => {
     const move = validMoves[playerId]
     if (move !== undefined) {
       return applyMove(player, move)
@@ -241,6 +241,9 @@ export async function resolveMovement(
 
     return false
   })
-  await ctx.post()
-  await checkHoles(ctx)
+
+  if (updateCount > 0) {
+    await ctx.post()
+    await checkHoles(ctx)
+  }
 }

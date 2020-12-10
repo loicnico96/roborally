@@ -11,6 +11,7 @@ import {
   resolvePlayerLasers,
 } from "./resolveLasers"
 import { resolvePlayerActions } from "./resolvePlayerActions"
+import { resolvePushers } from "./resolvePushers"
 import { resolveRepairs } from "./resolveRepairs"
 import { resolveRespawn } from "./resolveRespawn"
 import { resolveVirtualPlayers } from "./resolveVirtualPlayers"
@@ -40,14 +41,19 @@ async function resolveTurnSequence(ctx: RoborallyContext, sequence: number) {
     await resolveConveyors(ctx)
   }
 
-  if (features.includes(FeatureType.GEAR)) {
-    await setGamePhase(ctx, GamePhase.RESOLVE_GEARS)
-    await resolveGears(ctx)
+  if (features.includes(FeatureType.PUSHER)) {
+    await setGamePhase(ctx, GamePhase.RESOLVE_PUSHERS)
+    await resolvePushers(ctx, sequence)
   }
 
   if (features.includes(FeatureType.CRUSHER)) {
     await setGamePhase(ctx, GamePhase.RESOLVE_CRUSHERS)
     await resolveCrushers(ctx, sequence)
+  }
+
+  if (features.includes(FeatureType.GEAR)) {
+    await setGamePhase(ctx, GamePhase.RESOLVE_GEARS)
+    await resolveGears(ctx)
   }
 
   await setGamePhase(ctx, GamePhase.RESOLVE_LASERS)
