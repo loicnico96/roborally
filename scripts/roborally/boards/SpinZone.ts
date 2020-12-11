@@ -6,7 +6,7 @@ const builder = BoardBuilder.emptyBoard(12, 12)
 builder.addCheckpoint(6, 5)
 builder.addCheckpoint(2, 9)
 builder.addCheckpoint(9, 2)
-builder.addCheckpoint(8, 6)
+builder.addCheckpoint(8, 9)
 
 // Row 0
 

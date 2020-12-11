@@ -57,10 +57,12 @@ function isPhaseAvailable(phase: GamePhase, state: RoborallyState): boolean {
       return state.board.features.includes(FeatureType.CONVEYOR_FAST)
     case GamePhase.RESOLVE_CONVEYORS:
       return state.board.features.includes(FeatureType.CONVEYOR)
-    case GamePhase.RESOLVE_GEARS:
-      return state.board.features.includes(FeatureType.GEAR)
+    case GamePhase.RESOLVE_PUSHERS:
+      return state.board.features.includes(FeatureType.PUSHER)
     case GamePhase.RESOLVE_CRUSHERS:
       return state.board.features.includes(FeatureType.CRUSHER)
+    case GamePhase.RESOLVE_GEARS:
+      return state.board.features.includes(FeatureType.GEAR)
     default:
       return true
   }
