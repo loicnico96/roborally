@@ -25,12 +25,17 @@ export type LaserData = {
 
 export enum BoardId {
   CANNERY_ROW = "CanneryRow",
+  CHESS = "Chess",
+  CHOP_SHOP = "ChopShop",
   CROSS = "Cross",
   EXCHANGE = "Exchange",
   FLOOD_ZONE = "FloodZone",
   ISLAND = "Island",
   LASER_MAZE = "LaserMaze",
+  MAELSTROM = "Maelstrom",
   PIT_MAZE = "PitMaze",
+  SPIN_ZONE = "SpinZone",
+  VAULT = "Vault",
 }
 
 export enum FeatureType {
