@@ -144,7 +144,8 @@ function getCheckpointTooltip(
 function getCrusherTooltip(gameState: RoborallyState, pos: Position): string {
   const cell = getCell(gameState.board, pos)
   if (cell.crush) {
-    return `Crusher (${cell.crush.join("-")})`
+    const sequences = cell.crush.map(seq => seq + 1)
+    return `Crusher (${sequences.join("-")})`
   }
   return ""
 }
@@ -152,10 +153,11 @@ function getCrusherTooltip(gameState: RoborallyState, pos: Position): string {
 function getPusherTooltip(gameState: RoborallyState, pos: Position): string {
   const cell = getCell(gameState.board, pos)
   if (cell.push) {
+    const sequences = cell.push.map(seq => seq + 1)
     if (cell.pushDir !== undefined) {
-      return `Pusher (${cell.push.join("-")}, ${getDir(cell.pushDir)})`
+      return `Pusher (${sequences.join("-")}, ${getDir(cell.pushDir)})`
     }
-    return `Pusher (${cell.push.join("-")})`
+    return `Pusher (${sequences.join("-")})`
   }
   return ""
 }
