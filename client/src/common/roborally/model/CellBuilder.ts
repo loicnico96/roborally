@@ -42,6 +42,7 @@ export class CellBuilder {
 
   fastConveyor(dir: Direction, turn: boolean = false): this {
     this.builder.addFeature(FeatureType.CONVEYOR_FAST)
+    this.builder.addFeature(FeatureType.CONVEYOR)
     this.builder.updateCell(this.pos, {
       $merge: {
         type: CellType.CONVEYOR_FAST,
