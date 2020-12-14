@@ -3,10 +3,10 @@ import styled, { css, keyframes } from "styled-components"
 
 import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
 
+import GameUiObject, { GameUiObjectProps } from "./GameUiObject"
 import { getRobotImage } from "./RobotImage"
 
-const CELL_SIZE = 100
-const ROBOT_SIZE = 60
+const ROBOT_SIZE = 0.6
 const TRANSITION_DURATION = 0.5
 
 type GameUiPlayerRobotProps = {
@@ -14,33 +14,22 @@ type GameUiPlayerRobotProps = {
   player: RoborallyPlayer
 }
 
-function getRobotUrl({ playerIndex }: GameUiPlayerRobotProps): string {
-  return getRobotImage(playerIndex)
+type PlayerRobotContainerProps = GameUiObjectProps & {
+  isDestroyed: boolean
+  isVirtual: boolean
 }
 
-function getDisplay({ player }: GameUiPlayerRobotProps): string {
-  return player.destroyed ? "none" : "initial"
+function getDisplay({ isDestroyed }: PlayerRobotContainerProps): string {
+  return isDestroyed ? "none" : "initial"
 }
 
-function getOpacity({ player }: GameUiPlayerRobotProps): number {
-  return player.virtual ? 0.7 : 1.0
+function getOpacity({ isVirtual }: PlayerRobotContainerProps): number {
+  return isVirtual ? 0.7 : 1.0
 }
 
-function getTransform({ player }: GameUiPlayerRobotProps): string {
-  const translateX = player.pos.x * CELL_SIZE + (CELL_SIZE - ROBOT_SIZE) / 2
-  const translateY = player.pos.y * CELL_SIZE + (CELL_SIZE - ROBOT_SIZE) / 2
-  const rotateDeg = player.rot * 90
-  return `translate(${translateX}px, ${translateY}px) rotate(${rotateDeg}deg)`
-}
-
-const PlayerRobotContainer = styled.div`
+const PlayerRobotContainer = styled(GameUiObject)`
   display: ${getDisplay};
-  height: ${ROBOT_SIZE}px;
-  position: absolute;
   opacity: ${getOpacity};
-  transform: ${getTransform};
-  transition: transform ${TRANSITION_DURATION}s;
-  width: ${ROBOT_SIZE}px;
 `
 
 const PlayerRobotDamageAnimation = keyframes`
@@ -67,15 +56,14 @@ const PlayerRobotDamage = styled.img`
 
 const PlayerRobotImage = styled.img`
   height: 100%;
+  vertical-align: top;
   width: 100%;
 `
 
-const GameUiPlayerRobot = (props: GameUiPlayerRobotProps) => {
+const GameUiPlayerRobot = ({ player, playerIndex }: GameUiPlayerRobotProps) => {
   const [damageAnimation, setDamageAnimation] = useState(0)
-
-  const { player } = props
   const lastPlayerRef = useRef(player)
-  const robotUrl = getRobotUrl(props)
+  const robotUrl = getRobotImage(playerIndex)
 
   useEffect(() => {
     if (player.damage > lastPlayerRef.current.damage) {
@@ -89,7 +77,15 @@ const GameUiPlayerRobot = (props: GameUiPlayerRobotProps) => {
   }, [setDamageAnimation])
 
   return (
-    <PlayerRobotContainer {...props}>
+    <PlayerRobotContainer
+      height={ROBOT_SIZE}
+      isDestroyed={player.destroyed}
+      isVirtual={player.virtual}
+      rot={player.rot}
+      width={ROBOT_SIZE}
+      x={player.pos.x + (1 - ROBOT_SIZE) / 2}
+      y={player.pos.y + (1 - ROBOT_SIZE) / 2}
+    >
       <PlayerRobotImage src={robotUrl} />
       <PlayerRobotDamage
         damage={damageAnimation}

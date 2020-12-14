@@ -18,6 +18,7 @@ import GameUiPlayerRobot from "./GameUiPlayerRobot"
 import GameUiProgram from "./GameUiProgram"
 import GameUiTurnPhase from "./GameUiTurnPhase"
 import GameUiViewport from "./GameUiViewport"
+import { getViewportHeight, getViewportWidth } from "./Viewport"
 
 const GameUiContentWrapper = styled.div`
   background-color: lightgray;
@@ -95,19 +96,21 @@ const GamePage = () => {
             />
           ))}
         </GameUiTurnPhaseSequence>
-        <GameUiViewport>
-          <GameUiBoard>
-            {gameState.checkpoints.map((checkpoint, index) => (
-              <GameUiCheckpoint key={index} index={index} pos={checkpoint} />
-            ))}
-            {gameState.playerOrder.map((playerId, index) => (
-              <GameUiPlayerRobot
-                key={playerId}
-                player={gameState.players[playerId]}
-                playerIndex={index}
-              />
-            ))}
-          </GameUiBoard>
+        <GameUiViewport
+          viewportHeight={getViewportHeight(gameState)}
+          viewportWidth={getViewportWidth(gameState)}
+        >
+          <GameUiBoard />
+          {gameState.checkpoints.map((checkpoint, index) => (
+            <GameUiCheckpoint key={index} index={index} pos={checkpoint} />
+          ))}
+          {gameState.playerOrder.map((playerId, index) => (
+            <GameUiPlayerRobot
+              key={playerId}
+              player={gameState.players[playerId]}
+              playerIndex={index}
+            />
+          ))}
         </GameUiViewport>
         <div id="GameUiContentMainRight">
           {gameState.playerOrder.map((playerId, index) => (

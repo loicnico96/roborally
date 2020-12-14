@@ -3,8 +3,9 @@ import styled from "styled-components"
 
 import { Position } from "common/roborally/model/Position"
 
-const CELL_SIZE = 100
-const CHECKPOINT_SIZE = 80
+import GameUiObject from "./GameUiObject"
+
+const CHECKPOINT_SIZE = 0.8
 const CHECKPOINT_BACKGROUND_COLOR = "#090"
 const CHECKPOINT_LABEL_COLOR = "#FFF"
 const CHEKCPOINT_LABEL_OPACITY = 0.9
@@ -15,35 +16,30 @@ type GameUiCheckpointProps = {
   pos: Position
 }
 
-function getTransform({ pos }: GameUiCheckpointProps): string {
-  const translateX = pos.x * CELL_SIZE + (CELL_SIZE - CHECKPOINT_SIZE) / 2
-  const translateY = pos.y * CELL_SIZE + (CELL_SIZE - CHECKPOINT_SIZE) / 2
-  return `translate(${translateX}px, ${translateY}px)`
-}
-
-const GameUiCheckpointContainer = styled.div`
+const GameUiCheckpointContainer = styled(GameUiObject)`
   align-items: center;
   background-color: ${CHECKPOINT_BACKGROUND_COLOR};
-  background-repeat: no-repeat;
-  background-size: ${CHECKPOINT_SIZE}px;
-  border-radius: ${CHECKPOINT_SIZE / 2}px;
+  border-radius: 50%;
   display: flex;
-  height: ${CHECKPOINT_SIZE}px;
   justify-content: center;
-  position: absolute;
-  transform: ${getTransform};
-  width: ${CHECKPOINT_SIZE}px;
 `
 
 const GameUiCheckpointLabel = styled.div`
   color: ${CHECKPOINT_LABEL_COLOR};
-  font-size: ${CHECKPOINT_LABEL_SIZE}px;
+  cursor: default;
+  font-size: ${CHECKPOINT_LABEL_SIZE}%;
   opacity: ${CHEKCPOINT_LABEL_OPACITY};
+  user-select: none;
 `
 
-const GameUiCheckpoint = (props: GameUiCheckpointProps) => (
-  <GameUiCheckpointContainer {...props}>
-    <GameUiCheckpointLabel>{props.index}</GameUiCheckpointLabel>
+const GameUiCheckpoint = ({ index, pos }: GameUiCheckpointProps) => (
+  <GameUiCheckpointContainer
+    height={CHECKPOINT_SIZE}
+    width={CHECKPOINT_SIZE}
+    x={pos.x + (1 - CHECKPOINT_SIZE) / 2}
+    y={pos.y + (1 - CHECKPOINT_SIZE) / 2}
+  >
+    <GameUiCheckpointLabel>{index}</GameUiCheckpointLabel>
   </GameUiCheckpointContainer>
 )
 

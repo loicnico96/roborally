@@ -1,13 +1,8 @@
-import React, { useCallback, useState } from "react"
+import React, { useMemo } from "react"
 import styled from "styled-components"
 
 import { RoomData } from "common/model/RoomData"
-import {
-  BoardData,
-  getCell,
-  getWall,
-  WallType,
-} from "common/roborally/model/BoardData"
+import { getCell, getWall, WallType } from "common/roborally/model/BoardData"
 import {
   CellData,
   CellType,
@@ -27,24 +22,16 @@ import { useGameState } from "components/room/GameContext"
 import { useRoomData } from "components/room/RoomContext"
 
 import { getBoardImage } from "./BoardImage"
-
-const CELL_SIZE = 100
+import GameUiObject from "./GameUiObject"
+import { useViewport } from "./GameUiViewport"
+import { fromViewportCoord } from "./Viewport"
 
 type GameUiBoardBackgroundProps = {
-  board: BoardData
   imageUrl: string
 }
 
 function getBackgroundUrl({ imageUrl }: GameUiBoardBackgroundProps): string {
   return imageUrl
-}
-
-function getBackgroundSizeX({ board }: GameUiBoardBackgroundProps): number {
-  return board.dimensions.x * CELL_SIZE
-}
-
-function getBackgroundSizeY({ board }: GameUiBoardBackgroundProps): number {
-  return board.dimensions.y * CELL_SIZE
 }
 
 const DIRS = [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST]
@@ -220,52 +207,35 @@ function getTooltip(
     .join("\n")
 }
 
-const GameUiBoardBackground = styled.div`
+const GameUiBoardBackground = styled(GameUiObject)`
   background-image: url(${getBackgroundUrl});
   background-repeat: no-repeat;
-  background-size: ${getBackgroundSizeX}px ${getBackgroundSizeY}px;
-  height: ${getBackgroundSizeY}px;
-  margin: ${CELL_SIZE}px;
-  width: ${getBackgroundSizeX}px;
+  background-size: 100% 100%;
 `
 
-type GameUiBoardProps = {
-  children: React.ReactNode
-}
-
-const GameUiBoard = ({ children }: GameUiBoardProps) => {
-  const [tooltip, setTooltip] = useState("")
+const GameUiBoard = () => {
   const gameState = useGameState()
   const roomData = useRoomData()
+  const { mousePos } = useViewport()
 
-  const onMouseMove = useCallback(
-    (e: React.MouseEvent) => {
-      const elementRect = e.currentTarget.getBoundingClientRect()
-      const mousePosition = {
-        x: e.pageX - elementRect.left,
-        y: e.pageY - elementRect.top,
-      }
-      const boardPosition = {
-        x: Math.floor(mousePosition.x / CELL_SIZE),
-        y: Math.floor(mousePosition.y / CELL_SIZE),
-      }
-      const newTooltip = getTooltip(gameState, roomData, boardPosition)
-      if (newTooltip !== tooltip) {
-        setTooltip(newTooltip)
-      }
-    },
-    [gameState, roomData, tooltip]
+  const tooltip = useMemo(
+    () =>
+      getTooltip(gameState, roomData, {
+        x: Math.floor(fromViewportCoord(mousePos.x)),
+        y: Math.floor(fromViewportCoord(mousePos.y)),
+      }),
+    [gameState, mousePos, roomData]
   )
 
   return (
     <GameUiBoardBackground
-      board={gameState.board}
+      height={gameState.board.dimensions.y}
       imageUrl={getBoardImage(gameState.boardId)}
-      onMouseMove={onMouseMove}
       title={tooltip}
-    >
-      {children}
-    </GameUiBoardBackground>
+      width={gameState.board.dimensions.y}
+      x={0}
+      y={0}
+    />
   )
 }
 
