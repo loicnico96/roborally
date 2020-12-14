@@ -145,6 +145,7 @@ const GameUiViewport = ({
       <GameUiViewportContent
         offset={offset}
         ratio={ratio}
+        ref={contentRef}
         viewportHeight={viewportHeight}
         viewportWidth={viewportWidth}
       >
