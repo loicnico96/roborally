@@ -45,7 +45,7 @@ function getRobotUrl({ playerIndex }: PlayerCardRobotImageProps): string {
 const PlayerCardRobotImage = styled.div`
   background-image: url(${getRobotUrl});
   background-repeat: no-repeat;
-  background-size: 80px;
+  background-size: 100% 100%;
   height: 80px;
   margin-right: 16px;
   width: 80px;

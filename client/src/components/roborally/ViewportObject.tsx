@@ -7,50 +7,50 @@ const TRANSITION_DURATION = 0.5
 
 export type ViewportObjectProps = React.HtmlHTMLAttributes<HTMLDivElement> & {
   height: number
-  rot?: number
+  hidden?: boolean
+  opacity?: number
+  rotation?: number
   width: number
   x: number
   y: number
 }
 
-type ViewportObjectContainerProps = ViewportObjectProps & {
+type ObjectProps = ViewportObjectProps & {
   viewportHeight: number
   viewportWidth: number
 }
 
-function getHeight({
-  height,
-  viewportHeight,
-}: ViewportObjectContainerProps): string {
+function getHidden({ hidden = false }: ObjectProps): string {
+  return hidden ? "display: none;" : ""
+}
+
+function getOpacity({ opacity = 1.0 }: ObjectProps): number {
+  return opacity
+}
+
+function getHeight({ height, viewportHeight }: ObjectProps): string {
   return `calc(100% * ${height} / ${viewportHeight})`
 }
 
-function getTransform({
-  height,
-  rot,
-  width,
-  x,
-  y,
-}: ViewportObjectContainerProps): string {
+function getTransform({ height, rotation, width, x, y }: ObjectProps): string {
   const translateX = `calc(100% * ${x} / ${width})`
   const translateY = `calc(100% * ${y} / ${height})`
   const transform = `translate(${translateX}, ${translateY})`
-  if (rot !== undefined) {
-    return `${transform} rotate(${rot}deg)`
+  if (rotation !== undefined) {
+    return `${transform} rotate(${rotation}deg)`
   }
 
   return transform
 }
 
-function getWidth({
-  width,
-  viewportWidth,
-}: ViewportObjectContainerProps): string {
+function getWidth({ width, viewportWidth }: ObjectProps): string {
   return `calc(100% * ${width} / ${viewportWidth})`
 }
 
-const ViewportObjectContainer = styled.div`
+const ObjectContainer = styled.div`
+  ${getHidden}
   height: ${getHeight};
+  opacity: ${getOpacity};
   position: absolute;
   transform: ${getTransform};
   transition: transform ${TRANSITION_DURATION}s;
@@ -61,7 +61,7 @@ const ViewportObject = (props: ViewportObjectProps) => {
   const { viewportHeight, viewportWidth } = useViewport()
 
   return (
-    <ViewportObjectContainer
+    <ObjectContainer
       viewportHeight={viewportHeight}
       viewportWidth={viewportWidth}
       {...props}

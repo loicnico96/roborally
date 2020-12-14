@@ -2,7 +2,6 @@ import React, {
   createContext,
   useCallback,
   useContext,
-  useEffect,
   useMemo,
   useRef,
   useState,
@@ -98,10 +97,6 @@ const GameUiViewport = ({
     }),
     [mousePos, offset, ratio]
   )
-
-  useEffect(() => {
-    console.log("mousePos", mousePos, offset, ratio, viewportMousePos)
-  }, [mousePos, ratio, offset, viewportMousePos])
 
   const changeZoom = useCallback(
     (newZoom: number, oldZoom: number) => {

@@ -232,7 +232,7 @@ const GameUiBoard = () => {
       height={gameState.board.dimensions.y}
       imageUrl={getBoardImage(gameState.boardId)}
       title={tooltip}
-      width={gameState.board.dimensions.y}
+      width={gameState.board.dimensions.x}
       x={0}
       y={0}
     />

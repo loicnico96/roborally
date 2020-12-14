@@ -218,7 +218,7 @@ function getImageHeight(props: GameUiCardButtonProps): number {
 const GameUiCardButton = styled.button`
   background-image: url("${getImageUrl}");
   background-repeat: no-repeat;
-  background-size: ${getImageWidth}px ${getImageHeight}px;
+  background-size: 100% 100%;
   height: ${getImageHeight}px;
   width: ${getImageWidth}px;
 `

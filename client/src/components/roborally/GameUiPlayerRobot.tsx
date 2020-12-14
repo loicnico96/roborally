@@ -4,7 +4,7 @@ import styled, { css, keyframes } from "styled-components"
 import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
 import { usePrevious } from "hooks/usePrevious"
 
-import GameUiObject, { GameUiObjectProps } from "./GameUiObject"
+import GameUiObject from "./GameUiObject"
 import { getRobotImage } from "./RobotImage"
 
 const ROBOT_SIZE = 0.6
@@ -14,24 +14,6 @@ type GameUiPlayerRobotProps = {
   playerIndex: number
   player: RoborallyPlayer
 }
-
-type PlayerRobotContainerProps = GameUiObjectProps & {
-  isDestroyed: boolean
-  isVirtual: boolean
-}
-
-function getDisplay({ isDestroyed }: PlayerRobotContainerProps): string {
-  return isDestroyed ? "none" : "initial"
-}
-
-function getOpacity({ isVirtual }: PlayerRobotContainerProps): number {
-  return isVirtual ? 0.7 : 1.0
-}
-
-const PlayerRobotContainer = styled(GameUiObject)`
-  display: ${getDisplay};
-  opacity: ${getOpacity};
-`
 
 type PlayerRobotDamageProps = {
   damage: number
@@ -92,11 +74,11 @@ const GameUiPlayerRobot = ({ player, playerIndex }: GameUiPlayerRobotProps) => {
   }, [setDamageAnimation])
 
   return (
-    <PlayerRobotContainer
+    <GameUiObject
       height={ROBOT_SIZE}
-      isDestroyed={player.destroyed}
-      isVirtual={player.virtual}
-      rot={player.rot}
+      hidden={player.destroyed}
+      opacity={player.virtual ? 0.7 : 1.0}
+      rotation={player.rot * 90}
       width={ROBOT_SIZE}
       x={player.pos.x + (1 - ROBOT_SIZE) / 2}
       y={player.pos.y + (1 - ROBOT_SIZE) / 2}
@@ -106,7 +88,7 @@ const GameUiPlayerRobot = ({ player, playerIndex }: GameUiPlayerRobotProps) => {
         damage={damageAnimation}
         onAnimationEnd={onDamageAnimationEnd}
       />
-    </PlayerRobotContainer>
+    </GameUiObject>
   )
 }
 
