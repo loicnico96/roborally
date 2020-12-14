@@ -1,7 +1,8 @@
-import React, { useCallback, useEffect, useRef, useState } from "react"
+import React, { useCallback, useEffect, useState } from "react"
 import styled, { css, keyframes } from "styled-components"
 
 import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
+import { usePrevious } from "hooks/usePrevious"
 
 import GameUiObject, { GameUiObjectProps } from "./GameUiObject"
 import { getRobotImage } from "./RobotImage"
@@ -32,20 +33,33 @@ const PlayerRobotContainer = styled(GameUiObject)`
   opacity: ${getOpacity};
 `
 
-const PlayerRobotDamageAnimation = keyframes`
+type PlayerRobotDamageProps = {
+  damage: number
+}
+
+const PlayerRobotDamageKeyframes = keyframes`
   0% { opacity: 0.0 }
   50% { opacity: 0.7 }
   100% { opacity: 0.0 }
 `
 
+function getAnimation({ damage }: PlayerRobotDamageProps) {
+  if (damage === 0) {
+    return "paused"
+  }
+
+  return css`
+    ${PlayerRobotDamageKeyframes} ${TRANSITION_DURATION}s forwards
+  `
+}
+
+function getAnimationColor({ damage }: PlayerRobotDamageProps) {
+  return damage > 0 ? "red" : "green"
+}
+
 const PlayerRobotDamage = styled.img`
-  animation: ${({ damage }: { damage: number }) =>
-    damage > 0
-      ? css`
-          ${PlayerRobotDamageAnimation} ${TRANSITION_DURATION}s forwards
-        `
-      : "paused"};
-  background-color: red;
+  animation: ${getAnimation};
+  background-color: ${getAnimationColor};
   height: 100%;
   left: 0;
   opacity: 0;
@@ -62,15 +76,16 @@ const PlayerRobotImage = styled.img`
 
 const GameUiPlayerRobot = ({ player, playerIndex }: GameUiPlayerRobotProps) => {
   const [damageAnimation, setDamageAnimation] = useState(0)
-  const lastPlayerRef = useRef(player)
+  const previousPlayer = usePrevious(player)
   const robotUrl = getRobotImage(playerIndex)
 
   useEffect(() => {
-    if (player.damage > lastPlayerRef.current.damage) {
-      setDamageAnimation(player.damage - lastPlayerRef.current.damage)
+    if (previousPlayer !== undefined && previousPlayer !== player) {
+      if (previousPlayer.damage !== player.damage) {
+        setDamageAnimation(player.damage - previousPlayer.damage)
+      }
     }
-    lastPlayerRef.current = player
-  }, [lastPlayerRef, player, setDamageAnimation])
+  }, [player, previousPlayer, setDamageAnimation])
 
   const onDamageAnimationEnd = useCallback(() => {
     setDamageAnimation(0)
