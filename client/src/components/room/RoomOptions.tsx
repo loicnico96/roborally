@@ -12,6 +12,7 @@ import { useRoomData, useRoomId } from "./RoomContext"
 function getBoardName(boardId: BoardId): string {
   return {
     [BoardId.CANNERY_ROW]: "Cannery Row",
+    [BoardId.CHASM]: "Chasm",
     [BoardId.CHESS]: "Chess",
     [BoardId.CHOP_SHOP]: "Chop Shop",
     [BoardId.CIRCUIT_TRAP]: "Circuit Trap",

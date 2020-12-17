@@ -26,6 +26,7 @@ function formatRoomInfo(room: RoomData): string {
 
   const boardName = {
     [BoardId.CANNERY_ROW]: "Cannery Row",
+    [BoardId.CHASM]: "Chasm",
     [BoardId.CHESS]: "Chess",
     [BoardId.CHOP_SHOP]: "Chop Shop",
     [BoardId.CIRCUIT_TRAP]: "Circuit Trap",
