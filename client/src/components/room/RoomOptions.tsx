@@ -2,12 +2,51 @@ import React, { useCallback } from "react"
 import styled from "styled-components"
 
 import { BoardId } from "common/roborally/model/BoardData"
+import { sortByAlpha } from "common/utils/arrays"
+import { randomEnumValue } from "common/utils/enums"
 import { validateEnum } from "common/utils/validation"
 import { getBoardImage } from "components/roborally/BoardImage"
 import Box from "components/ui/Box"
 import { useChangeRoomOptions } from "hooks/room/useChangeRoomOptions"
+import { useAsyncHandler } from "hooks/useAsyncHandler"
 
 import { useRoomData, useRoomId } from "./RoomContext"
+
+enum BoardCategory {
+  ORIGINAL = "Original",
+  ARMED_AND_DANGEROUS = "ArmedAndDangerous",
+}
+
+const BOARD_CATEGORY_ORDER: BoardCategory[] = [
+  BoardCategory.ORIGINAL,
+  BoardCategory.ARMED_AND_DANGEROUS,
+]
+
+function getBoardCategoryName(category: BoardCategory): string {
+  return {
+    [BoardCategory.ORIGINAL]: "Original",
+    [BoardCategory.ARMED_AND_DANGEROUS]: "Armed and Dangerous",
+  }[category]
+}
+
+function getBoardCategory(boardId: BoardId): BoardCategory {
+  return {
+    [BoardId.CANNERY_ROW]: BoardCategory.ORIGINAL,
+    [BoardId.CHASM]: BoardCategory.ARMED_AND_DANGEROUS,
+    [BoardId.CHESS]: BoardCategory.ORIGINAL,
+    [BoardId.CHOP_SHOP]: BoardCategory.ORIGINAL,
+    [BoardId.CIRCUIT_TRAP]: BoardCategory.ARMED_AND_DANGEROUS,
+    [BoardId.CROSS]: BoardCategory.ORIGINAL,
+    [BoardId.EXCHANGE]: BoardCategory.ORIGINAL,
+    [BoardId.FLOOD_ZONE]: BoardCategory.ARMED_AND_DANGEROUS,
+    [BoardId.ISLAND]: BoardCategory.ORIGINAL,
+    [BoardId.LASER_MAZE]: BoardCategory.ARMED_AND_DANGEROUS,
+    [BoardId.MAELSTROM]: BoardCategory.ORIGINAL,
+    [BoardId.PIT_MAZE]: BoardCategory.ORIGINAL,
+    [BoardId.SPIN_ZONE]: BoardCategory.ORIGINAL,
+    [BoardId.VAULT]: BoardCategory.ORIGINAL,
+  }[boardId]
+}
 
 function getBoardName(boardId: BoardId): string {
   return {
@@ -26,6 +65,14 @@ function getBoardName(boardId: BoardId): string {
     [BoardId.SPIN_ZONE]: "Spin Zone",
     [BoardId.VAULT]: "Vault",
   }[boardId]
+}
+
+function getBoardsInCategory(category: BoardCategory): BoardId[] {
+  const boardIds = Object.values(BoardId).filter(
+    boardId => getBoardCategory(boardId) === category
+  )
+
+  return sortByAlpha(boardIds, boardId => getBoardName(boardId))
 }
 
 const RoomOptionsContainer = styled(Box)`
@@ -58,22 +105,28 @@ const RoomOptions = () => {
   const roomId = useRoomId()
   const roomData = useRoomData()
   const [changeOptions, isEnabled] = useChangeRoomOptions(roomId, roomData)
+  const [changeOptionsSafe, isChanging] = useAsyncHandler(changeOptions)
 
   const { options } = roomData
 
   const onSelectBoardId = useCallback(
     async (event: SelectEvent) => {
-      try {
-        const boardId = validateEnum(BoardId)(event.target.value)
-        if (boardId !== options.boardId) {
-          await changeOptions({ boardId })
-        }
-      } catch (error) {
-        console.error(error)
+      const boardId = validateEnum(BoardId)(event.target.value)
+      if (boardId !== options.boardId) {
+        await changeOptionsSafe({ boardId })
       }
     },
-    [changeOptions, options]
+    [changeOptionsSafe, options]
   )
+
+  const onSelectBoardIdRandom = useCallback(async () => {
+    const boardId = randomEnumValue(BoardId)
+    if (boardId !== options.boardId) {
+      await changeOptionsSafe({ boardId })
+    }
+  }, [changeOptionsSafe, options])
+
+  const isChangeDisabled = isChanging || !isEnabled
 
   return (
     <RoomOptionsContainer>
@@ -82,16 +135,23 @@ const RoomOptions = () => {
         <RoomOptionsRowLabel>Board:</RoomOptionsRowLabel>
         <select
           defaultValue={options.boardId}
-          disabled={!isEnabled}
+          disabled={isChangeDisabled}
           onChange={onSelectBoardId}
           value={isEnabled ? undefined : options.boardId}
         >
-          {Object.values(BoardId).map(boardId => (
-            <option key={boardId} value={boardId}>
-              {getBoardName(boardId)}
-            </option>
+          {BOARD_CATEGORY_ORDER.map(category => (
+            <optgroup key={category} label={getBoardCategoryName(category)}>
+              {getBoardsInCategory(category).map(boardId => (
+                <option key={boardId} value={boardId}>
+                  {getBoardName(boardId)}
+                </option>
+              ))}
+            </optgroup>
           ))}
         </select>
+        <button disabled={isChangeDisabled} onClick={onSelectBoardIdRandom}>
+          Random
+        </button>
       </RoomOptionsRow>
       <RoomOptionsBoardImage
         src={getBoardImage(options.boardId)}

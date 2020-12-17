@@ -1,4 +1,4 @@
-import { isEnum } from "./isEnum"
+import { isEnum } from "./enums"
 import { isObjectRecord, keys, mapValues, Key, ObjectRecord } from "./objects"
 
 export type Validator<T> = (data: unknown) => T
