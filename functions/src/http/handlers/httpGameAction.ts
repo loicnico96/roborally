@@ -56,7 +56,7 @@ const validationSchema = {
   turn: required(validateNumber({ integer: true })),
 }
 
-export default handleTrigger<HttpTrigger.READY>(
+export default handleTrigger<HttpTrigger.GAME_ACTION>(
   validationSchema,
   async (data, playerId) => {
     const success = await firestore.runTransaction(async transaction => {

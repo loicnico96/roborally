@@ -10,7 +10,7 @@ import {
   RoborallyState,
 } from "common/roborally/model/RoborallyState"
 import AsyncButton from "components/ui/AsyncButton"
-import { triggerReady } from "functions/triggers"
+import { triggerGameAction } from "functions/triggers"
 
 import GameUiCard from "./GameUiCard"
 
@@ -63,7 +63,7 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
   }, [poweredDown])
 
   const onReady = useCallback(async () => {
-    await triggerReady({
+    await triggerGameAction({
       gameId: roomId,
       program,
       poweredDown,

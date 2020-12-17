@@ -1,4 +1,4 @@
-import { HttpReadyParams } from "./httpReady"
+import { HttpGameActionParams, HttpGameActionResponse } from "./httpGameAction"
 import { HttpRoomCloseParams, HttpRoomCloseResponse } from "./httpRoomClose"
 import { HttpRoomCreateParams, HttpRoomCreateResponse } from "./httpRoomCreate"
 import { HttpRoomEnterParams, HttpRoomEnterResponse } from "./httpRoomEnter"
@@ -16,7 +16,7 @@ export type HttpBasicResponse = {
 }
 
 export enum HttpTrigger {
-  READY = "httpReady",
+  GAME_ACTION = "httpGameAction",
   ROOM_CLOSE = "httpRoomClose",
   ROOM_CREATE = "httpRoomCreate",
   ROOM_ENTER = "httpRoomEnter",
@@ -26,7 +26,7 @@ export enum HttpTrigger {
 }
 
 export type HttpParams<T extends HttpTrigger = HttpTrigger> = {
-  [HttpTrigger.READY]: HttpReadyParams
+  [HttpTrigger.GAME_ACTION]: HttpGameActionParams
   [HttpTrigger.ROOM_CLOSE]: HttpRoomCloseParams
   [HttpTrigger.ROOM_CREATE]: HttpRoomCreateParams
   [HttpTrigger.ROOM_ENTER]: HttpRoomEnterParams
@@ -36,7 +36,7 @@ export type HttpParams<T extends HttpTrigger = HttpTrigger> = {
 }[T]
 
 export type HttpResponse<T extends HttpTrigger = HttpTrigger> = {
-  [HttpTrigger.READY]: HttpBasicResponse
+  [HttpTrigger.GAME_ACTION]: HttpGameActionResponse
   [HttpTrigger.ROOM_CLOSE]: HttpRoomCloseResponse
   [HttpTrigger.ROOM_CREATE]: HttpRoomCreateResponse
   [HttpTrigger.ROOM_ENTER]: HttpRoomEnterResponse

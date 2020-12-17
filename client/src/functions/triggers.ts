@@ -4,7 +4,7 @@ import {
   HttpResponse,
   HttpPayload,
 } from "common/functions"
-import { HttpReadyParams } from "common/functions/httpReady"
+import { HttpGameActionParams } from "common/functions/httpGameAction"
 import { HttpRoomCloseParams } from "common/functions/httpRoomClose"
 import { HttpRoomCreateParams } from "common/functions/httpRoomCreate"
 import { HttpRoomEnterParams } from "common/functions/httpRoomEnter"
@@ -35,8 +35,10 @@ export async function httpTrigger<T extends HttpTrigger>(
   return response
 }
 
-export async function triggerReady(params: HttpReadyParams): Promise<boolean> {
-  const response = await httpTrigger(HttpTrigger.READY, params)
+export async function triggerGameAction(
+  params: HttpGameActionParams
+): Promise<boolean> {
+  const response = await httpTrigger(HttpTrigger.GAME_ACTION, params)
   return response.success
 }
 
