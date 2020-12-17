@@ -27,6 +27,7 @@ export enum BoardId {
   CANNERY_ROW = "CanneryRow",
   CHESS = "Chess",
   CHOP_SHOP = "ChopShop",
+  CIRCUIT_TRAP = "CircuitTrap",
   CROSS = "Cross",
   EXCHANGE = "Exchange",
   FLOOD_ZONE = "FloodZone",

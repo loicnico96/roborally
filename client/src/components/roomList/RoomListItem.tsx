@@ -28,6 +28,7 @@ function formatRoomInfo(room: RoomData): string {
     [BoardId.CANNERY_ROW]: "Cannery Row",
     [BoardId.CHESS]: "Chess",
     [BoardId.CHOP_SHOP]: "Chop Shop",
+    [BoardId.CIRCUIT_TRAP]: "Circuit Trap",
     [BoardId.CROSS]: "Cross",
     [BoardId.EXCHANGE]: "Exchange",
     [BoardId.FLOOD_ZONE]: "Flood Zone",

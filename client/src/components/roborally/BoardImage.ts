@@ -1,6 +1,7 @@
 import BoardCanneryRow from "assets/boards/CanneryRow.png"
 import BoardChess from "assets/boards/Chess.png"
 import BoardChopShop from "assets/boards/ChopShop.png"
+import BoardCircuitTrap from "assets/boards/CircuitTrap.png"
 import BoardCross from "assets/boards/Cross.png"
 import BoardExchange from "assets/boards/Exchange.png"
 import BoardFloodZone from "assets/boards/FloodZone.png"
@@ -16,6 +17,7 @@ const BOARD_IMAGES: Record<BoardId, string> = {
   [BoardId.CANNERY_ROW]: BoardCanneryRow,
   [BoardId.CHESS]: BoardChess,
   [BoardId.CHOP_SHOP]: BoardChopShop,
+  [BoardId.CIRCUIT_TRAP]: BoardCircuitTrap,
   [BoardId.CROSS]: BoardCross,
   [BoardId.EXCHANGE]: BoardExchange,
   [BoardId.FLOOD_ZONE]: BoardFloodZone,
