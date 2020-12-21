@@ -46,7 +46,6 @@ module.exports = {
     }],
 
     // TypeScript
-    "@typescript-eslint/explicit-module-boundary-types": ["warn"],
     "@typescript-eslint/method-signature-style": ["error", "property"],
     "@typescript-eslint/no-dynamic-delete": ["error"],
     "@typescript-eslint/no-explicit-any": ["warn"],
