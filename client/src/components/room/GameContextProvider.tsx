@@ -99,17 +99,13 @@ const GameContextProvider = ({
 
   useFirestoreLoader(Collection.CLIENT, roomId, handleGameResource)
 
-  if (isLoading(gameResource)) {
-    return renderLoading()
-  }
-
-  if (isError(gameResource)) {
-    return renderError(gameResource.error)
-  }
-
   return (
     <GameContext.Provider value={gameResource.data}>
-      {renderLoaded(gameResource.data)}
+      {isLoading(gameResource)
+        ? renderLoading()
+        : isError(gameResource)
+        ? renderError({ error: gameResource.error })
+        : renderLoaded(gameResource.data)}
     </GameContext.Provider>
   )
 }

@@ -3,6 +3,8 @@ import { useParams } from "react-router-dom"
 
 import { RoomId, RoomStatus } from "common/model/RoomData"
 import GamePage from "components/roborally/GamePage"
+import { renderError } from "components/ui/PageError"
+import { renderLoader } from "components/ui/PageLoader"
 
 import GameContextProvider from "./GameContextProvider"
 import RoomContextProvider from "./RoomContextProvider"
@@ -18,8 +20,8 @@ const RoomRoute = () => {
   return (
     <RoomContextProvider
       roomId={roomId}
-      renderError={() => <div>Invalid room ID</div>}
-      renderLoading={() => <div>Loading room...</div>}
+      renderError={renderError}
+      renderLoading={() => renderLoader("Loading room...")}
       renderLoaded={data => {
         if (data.status === RoomStatus.OPENED) {
           return <RoomPage />
@@ -28,8 +30,8 @@ const RoomRoute = () => {
         return (
           <GameContextProvider
             roomId={roomId}
-            renderError={() => <div>Invalid room ID</div>}
-            renderLoading={() => <div>Loading game...</div>}
+            renderError={renderError}
+            renderLoading={() => renderLoader("Loading game...")}
             renderLoaded={() => <GamePage />}
           />
         )

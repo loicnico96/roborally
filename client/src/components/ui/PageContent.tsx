@@ -2,7 +2,7 @@ import React, { ReactNode } from "react"
 import styled from "styled-components"
 
 import ErrorBoundary from "./ErrorBoundary"
-import PageError from "./PageError"
+import { renderError } from "./PageError"
 
 export type PageContentProps = {
   children?: ReactNode
@@ -13,9 +13,9 @@ const PageContentContainer = styled.div`
 `
 
 const PageContent = ({ children }: PageContentProps) => (
-    <PageContentContainer>
-      <ErrorBoundary renderError={PageError}>{children}</ErrorBoundary>
-    </PageContentContainer>
-  )
+  <PageContentContainer>
+    <ErrorBoundary renderError={renderError}>{children}</ErrorBoundary>
+  </PageContentContainer>
+)
 
 export default PageContent

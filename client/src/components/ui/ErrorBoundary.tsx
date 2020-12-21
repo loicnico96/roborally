@@ -1,4 +1,4 @@
-import { Component, PropsWithChildren, ReactNode } from "react"
+import { Component, PropsWithChildren } from "react"
 
 import { toError } from "common/utils/errors"
 
@@ -8,7 +8,7 @@ export type ErrorComponentProps = {
 
 export type ErrorBoundaryProps = PropsWithChildren<{
   onError?: (error: Error) => void
-  renderError?: (props: ErrorComponentProps) => ReactNode
+  renderError?: (error: Error) => JSX.Element
 }>
 
 export type ErrorBoundaryState = {

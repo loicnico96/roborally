@@ -1,9 +1,9 @@
 import { createContext, useContext } from "react"
 
 import { RoomData, RoomId } from "common/model/RoomData"
-import { LoadedResource } from "utils/resources"
+import { isLoaded, Resource } from "utils/resources"
 
-const RoomContext = createContext<LoadedResource<RoomData> | null>(null)
+const RoomContext = createContext<Resource<RoomData> | null>(null)
 
 export function useRoomId(): RoomId {
   const resource = useContext(RoomContext)
@@ -16,7 +16,7 @@ export function useRoomId(): RoomId {
 
 export function useRoomData(): RoomData {
   const resource = useContext(RoomContext)
-  if (resource === null) {
+  if (resource === null || !isLoaded(resource)) {
     throw Error("Invalid room context")
   }
 

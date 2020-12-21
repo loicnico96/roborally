@@ -46,6 +46,7 @@ module.exports = {
     }],
 
     // TypeScript
+    "@typescript-eslint/explicit-module-boundary-types": ["off"],
     "@typescript-eslint/method-signature-style": ["error", "property"],
     "@typescript-eslint/no-dynamic-delete": ["error"],
     "@typescript-eslint/no-explicit-any": ["warn"],
@@ -67,7 +68,7 @@ module.exports = {
     "@typescript-eslint/prefer-ts-expect-error": ["error"],
     "@typescript-eslint/promise-function-async": ["error"],
     "@typescript-eslint/require-array-sort-compare": ["error"],
-    "@typescript-eslint/strict-boolean-expressions": ["error"],
+    "@typescript-eslint/strict-boolean-expressions": ["off"],
     "@typescript-eslint/switch-exhaustiveness-check": ["error"],
 
 

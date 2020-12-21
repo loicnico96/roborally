@@ -25,23 +25,19 @@ const RoomContextProvider = ({
   renderLoading,
   roomId,
 }: RoomContextProviderProps) => {
-  const [resource, setResource] = useState<Resource<RoomData>>(
+  const [roomResource, setRoomResource] = useState<Resource<RoomData>>(
     getLoadingResource(roomId)
   )
 
-  useFirestoreLoader(Collection.ROOM, roomId, setResource)
-
-  if (isLoading(resource)) {
-    return renderLoading()
-  }
-
-  if (isError(resource)) {
-    return renderError(resource.error)
-  }
+  useFirestoreLoader(Collection.ROOM, roomId, setRoomResource)
 
   return (
-    <RoomContext.Provider value={resource}>
-      {renderLoaded(resource.data)}
+    <RoomContext.Provider value={roomResource}>
+      {isLoading(roomResource)
+        ? renderLoading()
+        : isError(roomResource)
+        ? renderError({ error: roomResource.error })
+        : renderLoaded(roomResource.data)}
     </RoomContext.Provider>
   )
 }
