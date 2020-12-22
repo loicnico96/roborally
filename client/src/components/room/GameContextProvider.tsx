@@ -104,7 +104,7 @@ const GameContextProvider = ({
       {isLoading(gameResource)
         ? renderLoading()
         : isError(gameResource)
-        ? renderError({ error: gameResource.error })
+        ? renderError(gameResource.error)
         : renderLoaded(gameResource.data)}
     </GameContext.Provider>
   )

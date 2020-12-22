@@ -33,7 +33,7 @@
     "client/src/**/*.{js,jsx,ts,tsx}": [
       "yarn format",
       "yarn app:lint:fix",
-      "bash -c yarn app:typecheck"
+      "bash -c 'yarn app:typecheck'"
     ],
     "functions/src/**/*.{js,ts}": [
       "yarn format",
@@ -42,7 +42,7 @@
     "scripts/**/*.{js,ts}": [
       "yarn format",
       "yarn scripts:lint:fix",
-      "bash -c yarn scripts:typecheck"
+      "bash -c 'yarn scripts:typecheck'"
     ]
   },
   "husky": {

@@ -36,7 +36,7 @@ const RoomContextProvider = ({
       {isLoading(roomResource)
         ? renderLoading()
         : isError(roomResource)
-        ? renderError({ error: roomResource.error })
+        ? renderError(roomResource.error)
         : renderLoaded(roomResource.data)}
     </RoomContext.Provider>
   )

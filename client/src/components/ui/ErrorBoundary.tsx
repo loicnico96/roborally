@@ -40,7 +40,7 @@ class ErrorBoundary extends Component<ErrorBoundaryProps, ErrorBoundaryState> {
     const { error } = this.state
 
     if (error !== null) {
-      return renderError ? renderError({ error }) : error.message
+      return renderError ? renderError(error) : error.message
     }
 
     return children

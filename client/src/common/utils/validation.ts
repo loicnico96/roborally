@@ -1,4 +1,4 @@
-import { isEnum } from "./enums"
+import { Enum, EnumValue, isEnum } from "./enums"
 import { isObjectRecord, keys, mapValues, Key, ObjectRecord } from "./objects"
 
 export type Validator<T> = (data: unknown) => T
@@ -80,9 +80,9 @@ export function validateBoolean(): Validator<boolean> {
   }
 }
 
-export function validateEnum<T extends Record<string, string | number>>(
-  enumType: T
-): Validator<T[keyof T]> {
+export function validateEnum<T extends EnumValue>(
+  enumType: Enum<T>
+): Validator<T> {
   return (data: unknown) => {
     if (!isEnum(data, enumType)) {
       throw Error("Not an enum")
