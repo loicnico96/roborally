@@ -1,19 +1,17 @@
-import React, { ReactNode } from "react"
+import React from "react"
 import styled from "styled-components"
 
 import ErrorBoundary from "./ErrorBoundary"
 import { renderError } from "./PageError"
 
-export type PageContentProps = {
-  children?: ReactNode
-}
+export type PageContentProps = React.HtmlHTMLAttributes<HTMLDivElement>
 
 const PageContentContainer = styled.div`
   padding: 24px 48px;
 `
 
-const PageContent = ({ children }: PageContentProps) => (
-  <PageContentContainer>
+const PageContent = ({ children, ...props }: PageContentProps) => (
+  <PageContentContainer {...props}>
     <ErrorBoundary renderError={renderError}>{children}</ErrorBoundary>
   </PageContentContainer>
 )

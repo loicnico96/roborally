@@ -134,10 +134,9 @@ const RoomOptions = () => {
       <RoomOptionsRow>
         <RoomOptionsRowLabel>Board:</RoomOptionsRowLabel>
         <select
-          defaultValue={options.boardId}
           disabled={isChangeDisabled}
           onChange={onSelectBoardId}
-          value={isEnabled ? undefined : options.boardId}
+          value={options.boardId}
         >
           {BOARD_CATEGORY_ORDER.map(category => (
             <optgroup key={category} label={getBoardCategoryName(category)}>
@@ -149,7 +148,11 @@ const RoomOptions = () => {
             </optgroup>
           ))}
         </select>
-        <button disabled={isChangeDisabled} onClick={onSelectBoardIdRandom}>
+        <button
+          disabled={isChangeDisabled}
+          onClick={onSelectBoardIdRandom}
+          title="Select a random board"
+        >
           Random
         </button>
       </RoomOptionsRow>
