@@ -1,7 +1,6 @@
 import update, { Spec } from "immutability-helper"
 
 import { merge, size } from "common/utils/objects"
-import { Params } from "hooks/useAsyncHandler"
 
 import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
 import { PlayerStateBasic } from "./model/PlayerStateBasic"
@@ -118,7 +117,7 @@ export class GameContext<
     }
   }
 
-  async resolve<P extends Params>(
+  async resolve<P extends any[]>(
     fn: (ctx: this, ...args: P) => Promise<void>,
     ...args: P
   ): Promise<State> {
