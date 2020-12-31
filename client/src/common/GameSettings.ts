@@ -1,23 +1,51 @@
 import { DataFetcher } from "./firestore/collections"
-import { PlayerId } from "./model/GameStateBasic"
+import { GameContext, StateChangeHandler } from "./GameContext"
+import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
+import { PlayerStateBasic } from "./model/PlayerStateBasic"
 import { RoborallySettings } from "./roborally/RoborallySettings"
 import { ObjectRecord } from "./utils/objects"
-import { SchemaValidators } from "./utils/validation"
+import { Validators } from "./utils/validation"
 
 export enum GameType {
   ROBORALLY = "roborally",
 }
 
-export type BaseSettings<State, Options extends ObjectRecord> = {
+export type BaseSettings<
+  Player extends PlayerStateBasic,
+  State extends GameStateBasic<Player>,
+  Options extends ObjectRecord,
+  Context extends GameContext<Player, State>,
+  PlayerAction
+> = {
   defaultOptions: Options
   maxPlayers: number
   minPlayers: number
-  optionsValidator: SchemaValidators<Partial<Options>>
+  optionsValidator: Validators<Partial<Options>>
+
   getInitialGameState: (
     playerIds: PlayerId[],
     options: Options,
     fetchData: DataFetcher
   ) => Promise<State>
+
+  getContext: (
+    gameState: State,
+    onStateChanged?: StateChangeHandler<State>
+  ) => Context
+
+  resolvePlayerAction: (
+    ctx: Context,
+    playerId: PlayerId,
+    action: PlayerAction
+  ) => Promise<void>
+
+  resolveState: (ctx: Context) => Promise<void>
+
+  validateAction: (
+    gameState: State,
+    playerId: PlayerId,
+    action: unknown
+  ) => PlayerAction
 }
 
 const SETTINGS = {
@@ -28,13 +56,13 @@ export type GameSettings<T extends GameType = GameType> = typeof SETTINGS[T]
 
 export type GameOptions<T extends GameType = GameType> = GameSettings<
   T
-> extends BaseSettings<any, infer Options>
+> extends BaseSettings<any, any, infer Options, any, any>
   ? Options
   : never
 
 export type GameState<T extends GameType = GameType> = GameSettings<
   T
-> extends BaseSettings<infer State, any>
+> extends BaseSettings<any, infer State, any, any, any>
   ? State
   : never
 

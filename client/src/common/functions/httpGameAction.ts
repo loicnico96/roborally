@@ -1,14 +1,16 @@
-import { Program } from "../roborally/model/Program"
-import { GamePhase } from "../roborally/model/RoborallyState"
+import { RoomId } from "common/model/RoomData"
+import { Program } from "common/roborally/model/Program"
 
 import { HttpBasicResponse } from "."
 
+export type RoborallyAction = {
+  poweredDown: boolean
+  program: Program
+}
+
 export type HttpGameActionParams = {
-  gameId: string
-  phase: GamePhase
-  poweredDown?: boolean
-  program?: Program
-  turn: number
+  roomId: RoomId
+  action: unknown
 }
 
 export type HttpGameActionResponse = HttpBasicResponse

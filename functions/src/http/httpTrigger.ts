@@ -1,9 +1,5 @@
 import { HttpTrigger } from "common/functions"
-import {
-  required,
-  validateUnknown,
-  validateEnum,
-} from "common/utils/validation"
+import { validateAny, validateEnum } from "common/utils/validation"
 
 import { httpsCallable } from "../utils/httpsCallable"
 import { validatePayload } from "../utils/validation"
@@ -16,8 +12,8 @@ export type HttpPayload<T extends HttpTrigger = HttpTrigger> = {
 }
 
 const validationSchema = {
-  trigger: required(validateEnum(HttpTrigger)),
-  data: required(validateUnknown()),
+  trigger: validateEnum(HttpTrigger),
+  data: validateAny(),
 }
 
 export default httpsCallable(async (data, userId, userInfo) => {

@@ -1,6 +1,7 @@
 import update, { Spec } from "immutability-helper"
 
 import { merge, size } from "common/utils/objects"
+import { Params } from "hooks/useAsyncHandler"
 
 import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
 import { PlayerStateBasic } from "./model/PlayerStateBasic"
@@ -10,13 +11,13 @@ const INTERRUPT_WIN = Object.assign(Error("interrupt"), { reason: "win" })
 export type StateChangeHandler<T> = (newState: T) => Promise<void>
 
 export class GameContext<
-  P extends PlayerStateBasic,
-  T extends GameStateBasic<P>
+  Player extends PlayerStateBasic,
+  State extends GameStateBasic<Player>
 > {
-  onStateChanged?: StateChangeHandler<T>
-  state: T
+  onStateChanged?: StateChangeHandler<State>
+  state: State
 
-  constructor(state: T, onStateChanged?: StateChangeHandler<T>) {
+  constructor(state: State, onStateChanged?: StateChangeHandler<State>) {
     this.onStateChanged = onStateChanged
     this.state = state
   }
@@ -28,7 +29,7 @@ export class GameContext<
     })
   }
 
-  getPlayer(playerId: PlayerId): P {
+  getPlayer(playerId: PlayerId): Player {
     return this.state.players[playerId]
   }
 
@@ -36,12 +37,12 @@ export class GameContext<
     return this.state.playerOrder
   }
 
-  getState(): T {
+  getState(): State {
     return this.state
   }
 
   filterPlayers(
-    filterFn: (player: P, playerId: PlayerId) => boolean
+    filterFn: (player: Player, playerId: PlayerId) => boolean
   ): PlayerId[] {
     return this.getPlayerOrder().filter(playerId => {
       const player = this.getPlayer(playerId)
@@ -50,7 +51,7 @@ export class GameContext<
   }
 
   findPlayer(
-    filterFn: (player: P, playerId: PlayerId) => boolean
+    filterFn: (player: Player, playerId: PlayerId) => boolean
   ): PlayerId | undefined {
     return this.getPlayerOrder().find(playerId => {
       const player = this.getPlayer(playerId)
@@ -58,23 +59,27 @@ export class GameContext<
     })
   }
 
-  mergeState(mergeSpec: Partial<T>) {
+  isFinished(): boolean {
+    return this.state.winners !== null
+  }
+
+  mergeState(mergeSpec: Partial<State>) {
     this.state = merge(this.state, mergeSpec)
   }
 
-  updatePlayer(playerId: PlayerId, updateSpec: Spec<P>): void {
+  updatePlayer(playerId: PlayerId, updateSpec: Spec<Player>): void {
     this.updateState({
       players: {
         [playerId]: updateSpec,
       },
-    } as Spec<T>)
+    } as Spec<State>)
   }
 
   // Calls an update function for each player (in player order)
   // Returns the number of players that were updated
   // If the update function returns false, the player is not updated
   updatePlayers(
-    updateFn: (player: P, playerId: PlayerId) => P | false
+    updateFn: (player: Player, playerId: PlayerId) => Player | false
   ): number {
     const updatedPlayers = this.getPlayerOrder().reduce((result, playerId) => {
       const oldPlayer = this.getPlayer(playerId)
@@ -83,7 +88,7 @@ export class GameContext<
         result[playerId] = newPlayer
       }
       return result
-    }, {} as Record<PlayerId, P>)
+    }, {} as Record<PlayerId, Player>)
 
     const updateCount = size(updatedPlayers)
 
@@ -92,18 +97,18 @@ export class GameContext<
         players: {
           $merge: updatedPlayers,
         },
-      } as Spec<T>)
+      } as Spec<State>)
     }
 
     return updateCount
   }
 
-  updateState(updateSpec: Spec<T>): void {
+  updateState(updateSpec: Spec<State>): void {
     this.state = update(this.state, updateSpec)
   }
 
   win(winners: PlayerId[]): never {
-    this.mergeState({ winners } as Partial<T>)
+    this.mergeState({ winners } as Partial<State>)
     throw INTERRUPT_WIN
   }
 
@@ -113,17 +118,18 @@ export class GameContext<
     }
   }
 
-  async resolve(): Promise<void> {
+  async resolve<P extends Params>(
+    fn: (ctx: this, ...args: P) => Promise<void>,
+    ...args: P
+  ): Promise<State> {
     try {
-      await this.resolveInternal()
+      await fn(this, ...args)
     } catch (error) {
       if (error !== INTERRUPT_WIN) {
         console.error(error)
       }
     }
-  }
 
-  async resolveInternal(): Promise<void> {
-    throw Object.assign(Error("Not implemented"), { object: this })
+    return this.state
   }
 }

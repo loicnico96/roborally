@@ -1,44 +1,21 @@
 import { Enum, EnumValue, isEnum } from "./enums"
-import { isObjectRecord, keys, mapValues, Key, ObjectRecord } from "./objects"
+import { isObjectRecord, keys, mapValues, ObjectRecord } from "./objects"
 
 export type Validator<T> = (data: unknown) => T
-export type SchemaValidator<T> = (data: ObjectRecord, key: string) => T
-export type SchemaValidators<T extends ObjectRecord> = {
-  [K in Key<T>]: SchemaValidator<T[K]>
+export type Validators<T extends ObjectRecord> = {
+  [K in keyof T]: Validator<T[K]>
 }
 
-export function optional<T>(
-  validator: Validator<T>
-): SchemaValidator<T | undefined> {
-  return (data: ObjectRecord, key: string) => {
-    if (key in data) {
-      try {
-        return validator(data[key])
-      } catch (error) {
-        throw Error(`Invalid field "${key}" - ${error.message}`)
-      }
-    } else {
-      return undefined
-    }
-  }
+export function optional<T>(validator: Validator<T>): Validator<T | undefined> {
+  return data => (data === undefined ? data : validator(data))
 }
 
-export function required<T>(validator: Validator<T>): SchemaValidator<T> {
-  return (data: ObjectRecord, key: string) => {
-    if (key in data) {
-      try {
-        return validator(data[key])
-      } catch (error) {
-        throw Error(`Invalid field "${key}" - ${error.message}`)
-      }
-    } else {
-      throw Error(`Missing field "${key}"`)
-    }
-  }
+export function validateAny(): Validator<unknown> {
+  return data => data
 }
 
 export function validateArray<T>(
-  elementValidator: Validator<T>,
+  validator: Validator<T>,
   options?: {
     minSize?: number
     maxSize?: number
@@ -62,7 +39,7 @@ export function validateArray<T>(
 
     return data.map((value, index) => {
       try {
-        return elementValidator(value)
+        return validator(value)
       } catch (error) {
         throw Error(`Invalid element [${index}] - ${error.message}`)
       }
@@ -122,22 +99,34 @@ export function validateNumber(options?: {
 }
 
 export function validateObject<T extends ObjectRecord>(
-  schemaValidators: SchemaValidators<T>
+  validators: Validators<T>
 ): Validator<T> {
   return (data: unknown) => {
     if (!isObjectRecord(data)) {
       throw Error("Not an object")
     }
 
-    return keys(schemaValidators).reduce((result, key) => {
-      result[key] = schemaValidators[key](data, key)
-      return result
+    return keys(validators).reduce((result, key) => {
+      try {
+        result[key] = validators[key](data[key])
+        return result
+      } catch (error) {
+        if (data[key] === undefined) {
+          throw Error(`Missing field "${key}"`)
+        } else {
+          throw Error(`Invalid field "${key}" - ${error.message}`)
+        }
+      }
     }, {} as T)
   }
 }
 
+export function validateRecord(): Validator<ObjectRecord>
 export function validateRecord<T>(
-  elementValidator: Validator<T>
+  validator: Validator<T>
+): Validator<ObjectRecord<T>>
+export function validateRecord<T = unknown>(
+  validator?: Validator<T>
 ): Validator<ObjectRecord<T>> {
   return (data: unknown) => {
     if (!isObjectRecord(data)) {
@@ -146,11 +135,11 @@ export function validateRecord<T>(
 
     return mapValues(data, (value, key) => {
       try {
-        return elementValidator(value)
+        return validator ? validator(value) : value
       } catch (error) {
         throw Error(`Invalid field "${key}" - ${error.message}`)
       }
-    })
+    }) as ObjectRecord<T>
   }
 }
 
@@ -181,34 +170,4 @@ export function validateString(options?: {
 
     return data
   }
-}
-
-export function validateTuple<T extends any[]>(
-  ...validators: { [K in keyof T]: Validator<T[K]> }
-): Validator<T> {
-  return (data: unknown) => {
-    if (!Array.isArray(data)) {
-      throw Error("Not a tuple")
-    }
-
-    if (data.length < validators.length) {
-      throw Error("Tuple is too short")
-    }
-
-    if (data.length > validators.length) {
-      throw Error("Tuple is too long")
-    }
-
-    return data.map((value, index) => {
-      try {
-        return validators[index](value)
-      } catch (error) {
-        throw Error(`Invalid element [${index}] - ${error.message}`)
-      }
-    }) as T
-  }
-}
-
-export function validateUnknown(): Validator<unknown> {
-  return (data: unknown) => data
 }

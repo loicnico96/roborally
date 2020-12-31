@@ -1,9 +1,9 @@
 import React, { useCallback, useRef, useState } from "react"
 
 import { Collection } from "common/firestore/collections"
+import { GameType, getGameSettings } from "common/GameSettings"
 import { RoomId } from "common/model/RoomData"
 import { RoborallyState } from "common/roborally/model/RoborallyState"
-import { resolveTurn } from "common/roborally/resolveTurn"
 import { useFirestoreLoader } from "firestore/useFirestoreLoader"
 import {
   Resource,
@@ -37,6 +37,8 @@ const GameContextProvider = ({
     getLoadingResource(roomId)
   )
 
+  const gameType = GameType.ROBORALLY
+
   const handleGameResource = useCallback(
     async (resource: Resource<RoborallyState>) => {
       async function handleStateChanged(
@@ -54,23 +56,18 @@ const GameContextProvider = ({
         }
       }
 
-      function allPlayersReady(gameStame: RoborallyState): boolean {
-        const players = Object.values(gameStame.players)
-        return players.every(player => player.ready)
-      }
-
       async function resolveStateQueue() {
         try {
           isResolving.current = true
           while (stateQueue.current.length > 0) {
             let nextState = stateQueue.current.shift()
             if (nextState) {
-              if (nextState.phase === "program" && allPlayersReady(nextState)) {
-                try {
-                  nextState = await resolveTurn(nextState, handleStateChanged)
-                } catch (error) {
-                  console.error(error)
-                }
+              try {
+                const { getContext, resolveState } = getGameSettings(gameType)
+                const ctx = getContext(nextState, handleStateChanged)
+                nextState = await ctx.resolve(resolveState)
+              } catch (error) {
+                console.error(error)
               }
 
               await handleStateChanged(nextState, 0)
@@ -94,7 +91,7 @@ const GameContextProvider = ({
         stateQueue.current = []
       }
     },
-    [currentState, isResolving, setGameResource, stateQueue]
+    [currentState, gameType, isResolving, setGameResource, stateQueue]
   )
 
   useFirestoreLoader(Collection.CLIENT, roomId, handleGameResource)

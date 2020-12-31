@@ -3,11 +3,9 @@ import { HttpTrigger } from "common/functions"
 import { getGameSettings, GameOptions } from "common/GameSettings"
 import { RoomStatus } from "common/model/RoomData"
 import {
-  required,
-  validateString,
-  validateUnknown,
-  validateRecord,
   validateObject,
+  validateRecord,
+  validateString,
 } from "common/utils/validation"
 
 import { getCollection } from "../../utils/collections"
@@ -21,8 +19,8 @@ import { firestore } from "../../utils/firestore"
 import { handleTrigger } from "./handleTrigger"
 
 const validationSchema = {
-  options: required(validateRecord(validateUnknown())),
-  roomId: required(validateString()),
+  options: validateRecord(),
+  roomId: validateString(),
 }
 
 export default handleTrigger<HttpTrigger.ROOM_OPTIONS>(

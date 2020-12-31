@@ -1,6 +1,6 @@
 import { HttpTrigger, HttpResponse, HttpParams } from "common/functions"
 import { UserId, UserInfo } from "common/model/UserInfo"
-import { SchemaValidators } from "common/utils/validation"
+import { Validators } from "common/utils/validation"
 
 import { validatePayload } from "../../utils/validation"
 
@@ -11,7 +11,7 @@ export type HttpHandler<T extends HttpTrigger = HttpTrigger> = (
 ) => Promise<HttpResponse<T>>
 
 export function handleTrigger<T extends HttpTrigger>(
-  schemaValidators: SchemaValidators<HttpParams<T>>,
+  schemaValidators: Validators<HttpParams<T>>,
   handler: (
     data: HttpParams<T>,
     userId: UserId,

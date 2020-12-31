@@ -21,7 +21,7 @@ type GameUiProgramProps = {
 }
 
 const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
-  const { phase, players, turn } = gameState
+  const { phase, players } = gameState
   const player = players[playerId]
   const { downNext, cards } = player
 
@@ -64,13 +64,13 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
 
   const onReady = useCallback(async () => {
     await triggerGameAction({
-      gameId: roomId,
-      program,
-      poweredDown,
-      phase,
-      turn,
+      roomId,
+      action: {
+        program,
+        poweredDown,
+      },
     })
-  }, [roomId, program, poweredDown, phase, turn])
+  }, [roomId, program, poweredDown])
 
   const shownProgram = phase === GamePhase.PROGRAM ? program : player.program
 

@@ -1,82 +1,33 @@
 import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
+import { getGameSettings, GameType } from "common/GameSettings"
 import { RoomStatus } from "common/model/RoomData"
-import { confirmPlayerProgram } from "common/roborally/confirmPlayerProgram"
-import { isValidProgram } from "common/roborally/isValidProgram"
-import { Program } from "common/roborally/model/Program"
-import {
-  RoborallyState,
-  GamePhase,
-} from "common/roborally/model/RoborallyState"
-import { readyPlayerForTurn } from "common/roborally/readyPlayerForTurn"
-import { resolveTurn } from "common/roborally/resolveTurn"
-import { startTurn } from "common/roborally/startTurn"
-import {
-  optional,
-  required,
-  validateBoolean,
-  validateEnum,
-  validateNumber,
-  validateString,
-} from "common/utils/validation"
+import { validateAny, validateString } from "common/utils/validation"
 
 import { getCollection } from "../../utils/collections"
-import { preconditionError, validationError } from "../../utils/errors"
+import { preconditionError } from "../../utils/errors"
 import { firestore } from "../../utils/firestore"
 
 import { handleTrigger } from "./handleTrigger"
 
-function validateProgram(value: unknown): Program {
-  if (!Array.isArray(value)) {
-    throw Error("Not an array")
-  }
-
-  if (value.length !== 5) {
-    throw Error("Invalid length")
-  }
-
-  value.forEach((sequence, index) => {
-    if (sequence !== null && !Number.isInteger(sequence)) {
-      throw Error(`Invalid sequence ${index}`)
-    }
-  })
-
-  return value as Program
-}
-
-function allPlayersReady(gameData: RoborallyState): boolean {
-  return Object.values(gameData.players).every(player => player.ready)
-}
-
 const validationSchema = {
-  gameId: required(validateString()),
-  phase: required(validateEnum(GamePhase)),
-  poweredDown: optional(validateBoolean()),
-  program: optional(validateProgram),
-  turn: required(validateNumber({ integer: true })),
+  roomId: validateString(),
+  action: validateAny(),
 }
 
 export default handleTrigger<HttpTrigger.GAME_ACTION>(
   validationSchema,
   async (data, playerId) => {
     const success = await firestore.runTransaction(async transaction => {
-      const clientRef = getCollection(Collection.CLIENT).doc(data.gameId)
-      const serverRef = getCollection(Collection.SERVER).doc(data.gameId)
+      const clientRef = getCollection(Collection.CLIENT).doc(data.roomId)
+      const serverRef = getCollection(Collection.SERVER).doc(data.roomId)
       const serverDoc = await transaction.get(serverRef)
-      const initialState = serverDoc.data()
-      if (initialState === undefined) {
+      const gameState = serverDoc.data()
+      if (gameState === undefined) {
         throw preconditionError("Invalid game ID")
       }
 
-      if (initialState.phase !== data.phase) {
-        throw preconditionError("Inconsistent state - Wrong phase")
-      }
-
-      if (initialState.turn !== data.turn) {
-        throw preconditionError("Inconsistent state - Wrong turn")
-      }
-
-      const player = initialState.players[playerId]
+      const player = gameState.players[playerId]
       if (player === undefined) {
         throw preconditionError("Not a player")
       }
@@ -85,59 +36,34 @@ export default handleTrigger<HttpTrigger.GAME_ACTION>(
         return false
       }
 
-      let gameState = initialState
+      // TODO Determine this from call/document
+      const gameType = GameType.ROBORALLY
 
-      switch (gameState.phase) {
-        case GamePhase.STANDBY: {
-          gameState = readyPlayerForTurn(gameState, playerId)
+      const {
+        getContext,
+        resolvePlayerAction,
+        resolveState,
+        validateAction,
+      } = getGameSettings(gameType)
 
-          if (allPlayersReady(gameState)) {
-            gameState = startTurn(gameState)
-          }
+      const action = validateAction(gameState, playerId, data.action)
 
-          transaction.set(clientRef, gameState)
-          transaction.set(serverRef, gameState)
+      const ctx = getContext(gameState)
 
-          return true
-        }
+      const nextState = await ctx.resolve(resolvePlayerAction, playerId, action)
 
-        case GamePhase.PROGRAM: {
-          if (data.poweredDown === undefined) {
-            throw validationError('Missing field "poweredDown"')
-          }
+      transaction.set(clientRef, nextState)
 
-          if (data.program === undefined) {
-            throw validationError('Missing field "program"')
-          }
+      const resolvedState = await ctx.resolve(resolveState)
 
-          if (!isValidProgram(data.program, player)) {
-            throw preconditionError("Invalid program")
-          }
+      transaction.set(serverRef, resolvedState)
 
-          gameState = confirmPlayerProgram(
-            gameState,
-            playerId,
-            data.program,
-            data.poweredDown
-          )
-
-          transaction.set(clientRef, gameState)
-
-          gameState = await resolveTurn(gameState)
-
-          transaction.set(serverRef, gameState)
-
-          if (gameState.winners !== null) {
-            const roomRef = getCollection(Collection.ROOM).doc(data.gameId)
-            transaction.update(roomRef, { status: RoomStatus.FINISHED })
-          }
-
-          return true
-        }
-
-        default:
-          throw preconditionError("Invalid game state")
+      if (ctx.isFinished()) {
+        const roomRef = getCollection(Collection.ROOM).doc(data.roomId)
+        transaction.update(roomRef, { status: RoomStatus.FINISHED })
       }
+
+      return true
     })
 
     return { success }

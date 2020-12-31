@@ -1,7 +1,7 @@
 import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
 import { RoomStatus } from "common/model/RoomData"
-import { required, validateString } from "common/utils/validation"
+import { validateString } from "common/utils/validation"
 
 import { getCollection } from "../../utils/collections"
 import { preconditionError, permissionError } from "../../utils/errors"
@@ -10,7 +10,7 @@ import { firestore } from "../../utils/firestore"
 import { handleTrigger } from "./handleTrigger"
 
 const validationSchema = {
-  roomId: required(validateString()),
+  roomId: validateString(),
 }
 
 export default handleTrigger<HttpTrigger.ROOM_CLOSE>(

@@ -2,7 +2,7 @@ import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
 import { GameType } from "common/GameSettings"
 import { getInitialRoomData } from "common/model/RoomData"
-import { required, validateEnum } from "common/utils/validation"
+import { validateEnum } from "common/utils/validation"
 
 import { getCollection } from "../../utils/collections"
 import { firestore } from "../../utils/firestore"
@@ -10,7 +10,7 @@ import { firestore } from "../../utils/firestore"
 import { handleTrigger } from "./handleTrigger"
 
 const validationSchema = {
-  game: required(validateEnum(GameType)),
+  game: validateEnum(GameType),
 }
 
 export default handleTrigger<HttpTrigger.ROOM_CREATE>(
