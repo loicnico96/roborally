@@ -10,6 +10,7 @@ export type PageLoaderProps = {
 const PageLoaderContainer = styled.div`
   align-items: center;
   display: flex;
+  flex-direction: column;
   justify-content: center;
   min-height: 100%;
   min-width: 100%;
@@ -19,7 +20,7 @@ const PageLoaderMessage = styled.div``
 
 const PageLoader = ({ message }: PageLoaderProps) => (
   <PageLoaderContainer>
-    <Spinner />
+    <Spinner size={96} />
     {!!message && <PageLoaderMessage>{message}</PageLoaderMessage>}
   </PageLoaderContainer>
 )

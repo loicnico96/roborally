@@ -15,7 +15,7 @@ const PageErrorMessage = styled.div``
 
 const PageError = ({ error }: ErrorComponentProps) => (
   <PageErrorContainer>
-    <PageErrorMessage>{error.message}</PageErrorMessage>
+    <PageErrorMessage>Error: {error.message}</PageErrorMessage>
   </PageErrorContainer>
 )
 
