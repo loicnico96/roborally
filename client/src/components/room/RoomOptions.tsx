@@ -15,22 +15,26 @@ import { useRoomData, useRoomId } from "./RoomContext"
 enum BoardCategory {
   ORIGINAL = "Original",
   ARMED_AND_DANGEROUS = "ArmedAndDangerous",
+  CRASH_AND_BURN = "CrashAndBurn",
 }
 
 const BOARD_CATEGORY_ORDER: BoardCategory[] = [
   BoardCategory.ORIGINAL,
   BoardCategory.ARMED_AND_DANGEROUS,
+  BoardCategory.CRASH_AND_BURN,
 ]
 
 function getBoardCategoryName(category: BoardCategory): string {
   return {
     [BoardCategory.ORIGINAL]: "Original",
     [BoardCategory.ARMED_AND_DANGEROUS]: "Armed and Dangerous",
+    [BoardCategory.CRASH_AND_BURN]: "Crash and Burn",
   }[category]
 }
 
 function getBoardCategory(boardId: BoardId): BoardCategory {
   return {
+    [BoardId.BLAST_FURNACE]: BoardCategory.CRASH_AND_BURN,
     [BoardId.CANNERY_ROW]: BoardCategory.ORIGINAL,
     [BoardId.CHASM]: BoardCategory.ARMED_AND_DANGEROUS,
     [BoardId.CHESS]: BoardCategory.ORIGINAL,
@@ -50,6 +54,7 @@ function getBoardCategory(boardId: BoardId): BoardCategory {
 
 function getBoardName(boardId: BoardId): string {
   return {
+    [BoardId.BLAST_FURNACE]: "Blast Furnace",
     [BoardId.CANNERY_ROW]: "Cannery Row",
     [BoardId.CHASM]: "Chasm",
     [BoardId.CHESS]: "Chess",

@@ -1,3 +1,4 @@
+import BoardBlastFurnace from "assets/boards/BlastFurnace.png"
 import BoardCanneryRow from "assets/boards/CanneryRow.png"
 import BoardChasm from "assets/boards/Chasm.png"
 import BoardChess from "assets/boards/Chess.png"
@@ -15,6 +16,7 @@ import BoardVault from "assets/boards/Vault.png"
 import { BoardId } from "common/roborally/model/BoardData"
 
 const BOARD_IMAGES: Record<BoardId, string> = {
+  [BoardId.BLAST_FURNACE]: BoardBlastFurnace,
   [BoardId.CANNERY_ROW]: BoardCanneryRow,
   [BoardId.CHASM]: BoardChasm,
   [BoardId.CHESS]: BoardChess,

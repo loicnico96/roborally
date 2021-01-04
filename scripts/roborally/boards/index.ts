@@ -1,5 +1,6 @@
 import { BoardData, BoardId } from "common/roborally/model/BoardData"
 
+import BOARD_BLAST_FURNACE from "./BlastFurnace"
 import BOARD_CANNERY_ROW from "./CanneryRow"
 import BOARD_CHASM from "./Chasm"
 import BOARD_CHESS from "./Chess"
@@ -16,6 +17,7 @@ import BOARD_SPIN_ZONE from "./SpinZone"
 import BOARD_VAULT from "./Vault"
 
 export const BOARDS: Record<BoardId, BoardData> = {
+  [BoardId.BLAST_FURNACE]: BOARD_BLAST_FURNACE,
   [BoardId.CANNERY_ROW]: BOARD_CANNERY_ROW,
   [BoardId.CHASM]: BOARD_CHASM,
   [BoardId.CHESS]: BOARD_CHESS,
