@@ -2,7 +2,12 @@ import React, { useMemo } from "react"
 import styled from "styled-components"
 
 import { RoomData } from "common/model/RoomData"
-import { getCell, getWall, WallType } from "common/roborally/model/BoardData"
+import {
+  getCell,
+  getWall,
+  LaserType,
+  WallType,
+} from "common/roborally/model/BoardData"
 import {
   CellData,
   CellType,
@@ -162,7 +167,18 @@ function getWallTooltip(gameState: RoborallyState, pos: Position): string {
 function getLaserTooltips(gameState: RoborallyState, pos: Position): string[] {
   return gameState.board.lasers.map(laser => {
     if (isSamePos(laser.pos, pos)) {
-      return `Laser x${laser.damage} (${getDir(laser.dir)})`
+      const laserDir = getDir(laser.dir)
+      const laserType = {
+        [LaserType.NORMAL]: `Laser x${laser.damage}`,
+        [LaserType.FLAME]: "Flamethrower",
+      }[laser.type]
+
+      if (laser.seq !== undefined) {
+        const sequences = laser.seq.map(seq => seq + 1)
+        return `${laserType} (${sequences.join("-")}, ${laserDir})`
+      }
+
+      return `${laserType} (${laserDir})`
     }
 
     return ""
