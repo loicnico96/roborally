@@ -1,5 +1,5 @@
 import { BoardBuilder } from "./BoardBuilder"
-import { FeatureType, WallType } from "./BoardData"
+import { FeatureType, LaserType, WallType } from "./BoardData"
 import { CellType } from "./CellData"
 import { Direction, getReverseDir, Position, Rotation } from "./Position"
 
@@ -53,18 +53,19 @@ export class CellBuilder {
     return this
   }
 
-  // flameWall(dir: Direction, distance: number, sequences: number[]): this {
-  // 	this.builder.addFeature(FeatureType.FLAME)
-  // 	this.builder.addLaser(this.pos, {
-  // 		type: LaserType.FLAME,
-  // 		damage: 2,
-  // 		dir: getReverseDir(dir),
-  // 		dis: distance,
-  // 		seq: sequences,
-  // 	})
-  // 	// Add corresponding wall automatically
-  // 	return this.wall(dir)
-  // }
+  flameWall(dir: Direction, distance: number, sequences: number[]): this {
+    this.builder.addFeature(FeatureType.FLAME)
+    this.builder.addLaser({
+      type: LaserType.FLAME,
+      damage: 2,
+      dir: getReverseDir(dir),
+      dis: distance,
+      pos: this.pos,
+      seq: sequences.map(seq => seq - 1),
+    })
+    // Add corresponding wall automatically
+    return this.wall(dir)
+  }
 
   gear(rot: Rotation): this {
     this.builder.addFeature(FeatureType.GEAR)
@@ -89,7 +90,7 @@ export class CellBuilder {
   laserWall(dir: Direction, damage: number): this {
     this.builder.addFeature(FeatureType.LASER)
     this.builder.addLaser({
-      // type: LaserType.LASER,
+      type: LaserType.NORMAL,
       damage,
       dir: getReverseDir(dir),
       pos: this.pos,

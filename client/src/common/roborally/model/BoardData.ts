@@ -1,7 +1,7 @@
 import update, { Spec } from "immutability-helper"
 
 import { CellData, getEmptyCell, getHole } from "./CellData"
-import { Position, Direction, movePos, getDir } from "./Position"
+import { Position, Direction } from "./Position"
 
 export type Dimension = {
   x: number
@@ -17,10 +17,18 @@ export type WallData = {
   [dir in Direction]?: WallType
 }
 
+export enum LaserType {
+  NORMAL = 0,
+  FLAME = 1,
+}
+
 export type LaserData = {
   damage: number
   dir: Direction
+  dis?: number
   pos: Position
+  seq?: number[]
+  type: LaserType
 }
 
 export enum BoardId {
@@ -44,6 +52,7 @@ export enum FeatureType {
   CONVEYOR = "conveyor",
   CONVEYOR_FAST = "conveyor_fast",
   CRUSHER = "crusher",
+  FLAME = "flame",
   GEAR = "gear",
   LASER = "laser",
   PUSHER = "pusher",
@@ -118,87 +127,4 @@ export function updateCell(
   }
 
   return updatedBoard
-}
-
-export function setCell(
-  board: BoardData,
-  pos: Position,
-  cell: CellData
-): BoardData {
-  return updateCell(board, pos, {
-    $set: cell,
-  })
-}
-
-export function setWall(
-  board: BoardData,
-  pos: Position,
-  dir: Direction,
-  wall: WallType = WallType.NORMAL,
-  doubleSided: boolean = true
-): BoardData {
-  let updatedBoard = board
-
-  if (inBounds(board, pos)) {
-    const cellIndex = getCellIndex(board, pos)
-    updatedBoard = update(updatedBoard, {
-      cells: {
-        [cellIndex]: {
-          walls: walls =>
-            update(walls ?? {}, {
-              [dir]: {
-                $set: wall,
-              },
-            }),
-        },
-      },
-    })
-  }
-
-  if (doubleSided) {
-    const reverseDir = getDir(dir + 2)
-    const reversePos = movePos(pos, dir, 1)
-    return setWall(updatedBoard, reversePos, reverseDir, wall, false)
-  } else {
-    return updatedBoard
-  }
-}
-
-export function addLaser(
-  board: BoardData,
-  pos: Position,
-  dir: Direction,
-  damage: number
-): BoardData {
-  return update(board, {
-    lasers: {
-      $push: [
-        {
-          damage,
-          dir,
-          pos,
-        },
-      ],
-    },
-  })
-}
-
-export function addCrusher(
-  board: BoardData,
-  pos: Position,
-  sequences: number[]
-): BoardData {
-  return updateCell(board, pos, {
-    $merge: {
-      crush: sequences,
-    },
-  })
-}
-
-export function addWater(board: BoardData, pos: Position): BoardData {
-  return updateCell(board, pos, {
-    $merge: {
-      water: true,
-    },
-  })
 }

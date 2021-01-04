@@ -1,7 +1,7 @@
 import { PlayerId } from "common/model/GameStateBasic"
 import { isEmpty } from "common/utils/objects"
 
-import { inBounds, WallType } from "./model/BoardData"
+import { inBounds, LaserType, WallType } from "./model/BoardData"
 import { Direction, isSamePos, movePos, Position } from "./model/Position"
 import {
   damagePlayer,
@@ -18,8 +18,10 @@ import { RoborallyContext } from "./RoborallyContext"
 export type Laser = {
   damage: number
   dir: Direction
+  dis?: number
   pos: Position
   startExcluded?: boolean
+  type: LaserType
 }
 
 export async function checkDamage(ctx: RoborallyContext) {
@@ -37,7 +39,13 @@ export async function checkDamage(ctx: RoborallyContext) {
 }
 
 function getBoardLasers(ctx: RoborallyContext): Laser[] {
-  return ctx.getBoard().lasers
+  return ctx.getBoard().lasers.filter(laser => {
+    if (laser.seq) {
+      return laser.seq.includes(ctx.getSequence())
+    }
+
+    return true
+  })
 }
 
 function getPlayerLasers(ctx: RoborallyContext): Laser[] {
@@ -49,6 +57,7 @@ function getPlayerLasers(ctx: RoborallyContext): Laser[] {
         dir: getPlayerDir(player),
         pos: player.pos,
         startExcluded: true,
+        type: LaserType.NORMAL,
       })
     }
     return lasers
@@ -65,23 +74,35 @@ export async function resolveLasers(ctx: RoborallyContext, lasers: Laser[]) {
   const laserDamage: Record<PlayerId, number> = {}
   const board = ctx.getBoard()
 
-  lasers.forEach(laser => {
-    let laserPos = laser.pos
-    while (inBounds(board, laserPos)) {
-      if (laserPos !== laser.pos || laser.startExcluded !== true) {
-        const playerId = ctx.findPlayer(getLaserCollisionFn(laserPos))
+  function addDamage(playerId: PlayerId, damage: number) {
+    const previousDamage = laserDamage[playerId] ?? 0
+    laserDamage[playerId] = previousDamage + damage
+  }
 
-        if (playerId !== undefined) {
-          laserDamage[playerId] = (laserDamage[playerId] ?? 0) + laser.damage
-          return
+  lasers.forEach(laser => {
+    for (let distance = 0; distance < 1000; distance++) {
+      const laserPos = movePos(laser.pos, laser.dir, distance)
+      if (!inBounds(board, laserPos)) {
+        break
+      }
+
+      if (laser.dis !== undefined && laser.dis === distance) {
+        break
+      }
+
+      if (distance > 0 || laser.startExcluded !== true) {
+        const playerIds = ctx.filterPlayers(getLaserCollisionFn(laserPos))
+
+        playerIds.forEach(playerId => addDamage(playerId, laser.damage))
+
+        if (playerIds.length > 0 && laser.type === LaserType.NORMAL) {
+          break
         }
       }
 
       if (ctx.getWall(laserPos, laser.dir) !== WallType.NONE) {
-        return
+        break
       }
-
-      laserPos = movePos(laserPos, laser.dir, 1)
     }
   })
 
