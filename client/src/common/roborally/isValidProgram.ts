@@ -5,12 +5,6 @@ export function isValidProgram(
   program: Program,
   player: RoborallyPlayer
 ): boolean {
-  if (player.down) {
-    // Program must be empty
-    return program.every(sequence => sequence === null)
-  }
-
-  // Program must be complete
   return program.every((sequence, index) => {
     const lockedProgram = getLockedProgram(player)
 

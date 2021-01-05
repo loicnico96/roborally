@@ -106,7 +106,7 @@ export function getPlayerHandSize(player: RoborallyPlayer): number {
 }
 
 export function getLockedProgramIndex(player: RoborallyPlayer): number {
-  return clamp(MAX_DAMAGE - player.damage, 0, PROGRAM_SIZE)
+  return player.down ? 0 : clamp(MAX_DAMAGE - player.damage, 0, PROGRAM_SIZE)
 }
 
 export function getLockedProgram(player: RoborallyPlayer): Program {

@@ -4,7 +4,6 @@ import { resolveCheckpoints } from "./resolveCheckpoints"
 import { resolveConveyors } from "./resolveConveyors"
 import { resolveCrushers } from "./resolveCrushers"
 import { resolveGears } from "./resolveGears"
-// import { resolveCrushers } from "./resolveCrushers"
 import {
   checkDamage,
   resolveBoardLasers,
@@ -13,10 +12,9 @@ import {
 import { resolvePlayerActions } from "./resolvePlayerActions"
 import { resolvePushers } from "./resolvePushers"
 import { resolveRepairs } from "./resolveRepairs"
-import { resolveRespawn } from "./resolveRespawn"
+import { resolveTurnEnd } from "./resolveTurnEnd"
 import { resolveVirtualPlayers } from "./resolveVirtualPlayers"
 import { RoborallyContext } from "./RoborallyContext"
-import { startNextTurn } from "./startNextTurn"
 
 const SEQUENCE_COUNT = 5
 
@@ -73,8 +71,7 @@ async function resolveTurn(ctx: RoborallyContext) {
   }
 
   await resolveVirtualPlayers(ctx)
-  await resolveRespawn(ctx)
-  await startNextTurn(ctx)
+  await resolveTurnEnd(ctx)
 }
 
 export async function resolveState(ctx: RoborallyContext) {

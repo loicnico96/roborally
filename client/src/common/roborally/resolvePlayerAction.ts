@@ -1,11 +1,12 @@
 import { RoborallyAction } from "common/functions/httpGameAction"
 import { PlayerId } from "common/model/GameStateBasic"
+import { shuffle } from "common/utils/arrays"
 
 import { confirmPlayerProgram } from "./confirmPlayerProgram"
 import { GamePhase } from "./model/RoborallyState"
 import { readyPlayerForTurn } from "./readyPlayerForTurn"
 import { RoborallyContext } from "./RoborallyContext"
-import { startTurn } from "./startTurn"
+import { startProgramPhase } from "./startProgramPhase"
 
 export async function resolvePlayerAction(
   ctx: RoborallyContext,
@@ -16,7 +17,7 @@ export async function resolvePlayerAction(
     case GamePhase.STANDBY:
       ctx.updateState(state => readyPlayerForTurn(state, playerId))
       if (ctx.allPlayersReady()) {
-        ctx.updateState(startTurn)
+        ctx.updateState(startProgramPhase)
       }
       break
 
@@ -29,6 +30,10 @@ export async function resolvePlayerAction(
           action.poweredDown
         )
       )
+
+      if (ctx.allPlayersReady()) {
+        ctx.updateState({ deck: shuffle })
+      }
       break
 
     default:

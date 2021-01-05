@@ -1,6 +1,7 @@
 import { GameStateBasic, PlayerId } from "common/model/GameStateBasic"
 
 import { BoardData, BoardId } from "./BoardData"
+import { Card, getAllCards } from "./Card"
 import { Direction, Position } from "./Position"
 import { RoborallyPlayer, getInitialPlayerState } from "./RoborallyPlayer"
 
@@ -22,6 +23,7 @@ export type RoborallyState = GameStateBasic<RoborallyPlayer> & {
   boardId: BoardId
   checkpoints: Position[]
   currentPlayer: PlayerId | null
+  deck: Card[]
   phase: GamePhase
   sequence: number
 }
@@ -40,6 +42,7 @@ export function getInitialGameState(
     board: boardData,
     checkpoints,
     currentPlayer: null,
+    deck: getAllCards(),
     phase: GamePhase.STANDBY,
     playerOrder: playerIds,
     players: playerIds.reduce((players, playerId) => {
