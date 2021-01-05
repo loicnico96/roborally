@@ -7,6 +7,7 @@ import BoardCircuitTrap from "assets/boards/CircuitTrap.png"
 import BoardCross from "assets/boards/Cross.png"
 import BoardExchange from "assets/boards/Exchange.png"
 import BoardFloodZone from "assets/boards/FloodZone.png"
+import BoardGearBox from "assets/boards/GearBox.png"
 import BoardIsland from "assets/boards/Island.png"
 import BoardLaserMaze from "assets/boards/LaserMaze.png"
 import BoardMaelstrom from "assets/boards/Maelstrom.png"
@@ -25,6 +26,7 @@ const BOARD_IMAGES: Record<BoardId, string> = {
   [BoardId.CROSS]: BoardCross,
   [BoardId.EXCHANGE]: BoardExchange,
   [BoardId.FLOOD_ZONE]: BoardFloodZone,
+  [BoardId.GEAR_BOX]: BoardGearBox,
   [BoardId.ISLAND]: BoardIsland,
   [BoardId.LASER_MAZE]: BoardLaserMaze,
   [BoardId.MAELSTROM]: BoardMaelstrom,

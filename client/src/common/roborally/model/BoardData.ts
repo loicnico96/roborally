@@ -41,6 +41,7 @@ export enum BoardId {
   CROSS = "Cross",
   EXCHANGE = "Exchange",
   FLOOD_ZONE = "FloodZone",
+  GEAR_BOX = "GearBox",
   ISLAND = "Island",
   LASER_MAZE = "LaserMaze",
   MAELSTROM = "Maelstrom",

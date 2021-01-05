@@ -9,6 +9,7 @@ import BOARD_CIRCUIT_TRAP from "./CircuitTrap"
 import BOARD_CROSS from "./Cross"
 import BOARD_EXCHANGE from "./Exchange"
 import BOARD_FLOOD_ZONE from "./FloodZone"
+import BOARD_GEAR_BOX from "./GearBox"
 import BOARD_ISLAND from "./Island"
 import BOARD_LASER_MAZE from "./LaserMaze"
 import BOARD_MAELSTROM from "./Maelstrom"
@@ -26,6 +27,7 @@ export const BOARDS: Record<BoardId, BoardData> = {
   [BoardId.CROSS]: BOARD_CROSS,
   [BoardId.EXCHANGE]: BOARD_EXCHANGE,
   [BoardId.FLOOD_ZONE]: BOARD_FLOOD_ZONE,
+  [BoardId.GEAR_BOX]: BOARD_GEAR_BOX,
   [BoardId.ISLAND]: BOARD_ISLAND,
   [BoardId.LASER_MAZE]: BOARD_LASER_MAZE,
   [BoardId.MAELSTROM]: BOARD_MAELSTROM,
