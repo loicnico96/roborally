@@ -11,6 +11,7 @@ import {
 } from "./resolveLasers"
 import { resolvePlayerActions } from "./resolvePlayerActions"
 import { resolvePushers } from "./resolvePushers"
+import { resolveRandomizers } from "./resolveRandomizers"
 import { resolveRepairs } from "./resolveRepairs"
 import { resolveTurnEnd } from "./resolveTurnEnd"
 import { resolveVirtualPlayers } from "./resolveVirtualPlayers"
@@ -25,6 +26,11 @@ async function setGamePhase(ctx: RoborallyContext, phase: GamePhase) {
 
 async function resolveTurnSequence(ctx: RoborallyContext, sequence: number) {
   const { features } = ctx.getBoard()
+
+  if (features.includes(FeatureType.RANDOM)) {
+    await setGamePhase(ctx, GamePhase.RESOLVE_RANDOMIZERS)
+    await resolveRandomizers(ctx, sequence)
+  }
 
   await setGamePhase(ctx, GamePhase.RESOLVE_PLAYERS)
   await resolvePlayerActions(ctx, sequence)

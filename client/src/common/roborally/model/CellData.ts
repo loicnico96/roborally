@@ -9,6 +9,7 @@ export enum CellType {
   GEAR = 4,
   REPAIR = 5,
   TELEPORT = 6,
+  RANDOM = 7,
 }
 
 export type CellData = {
@@ -55,6 +56,10 @@ export function isHole(cell: CellData): boolean {
 
 export function isPusher(cell: CellData, sequence: number): boolean {
   return cell.push?.includes(sequence) ?? false
+}
+
+export function isRandomizer(cell: CellData): boolean {
+  return cell.type === CellType.RANDOM
 }
 
 export function isRepair(cell: CellData): boolean {

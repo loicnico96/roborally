@@ -1,6 +1,7 @@
 import { GameContext } from "common/GameContext"
 
 import { BoardData, getCell, getWall, WallType } from "./model/BoardData"
+import { Card } from "./model/Card"
 import { CellData } from "./model/CellData"
 import { Direction, isSamePos, Position } from "./model/Position"
 import { RoborallyPlayer } from "./model/RoborallyPlayer"
@@ -32,6 +33,10 @@ export class RoborallyContext extends GameContext<
       isSamePos(pos, checkpointsPos)
     )
     return checkpoint >= 0 ? checkpoint : undefined
+  }
+
+  getDeck(): Card[] {
+    return this.state.deck
   }
 
   getLastCheckpoint(): number {

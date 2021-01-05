@@ -105,14 +105,16 @@ function getRepairTooltip(cell: CellData): string {
 function getCellTooltip(gameState: RoborallyState, pos: Position): string {
   const cell = getCell(gameState.board, pos)
   switch (cell.type) {
-    case CellType.HOLE:
-      return getHoleTooltip(cell)
     case CellType.CONVEYOR:
       return getConveyorTooltip(cell)
     case CellType.CONVEYOR_FAST:
       return getConveyorTooltip(cell)
     case CellType.GEAR:
       return getGearTooltip(cell)
+    case CellType.HOLE:
+      return getHoleTooltip(cell)
+    case CellType.RANDOM:
+      return "Randomizer"
     case CellType.REPAIR:
       return getRepairTooltip(cell)
     default:

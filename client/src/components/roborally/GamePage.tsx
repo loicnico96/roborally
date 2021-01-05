@@ -42,6 +42,7 @@ const GameUiTurnPhaseSequence = styled.div`
 const TURN_PHASES = [
   GamePhase.STANDBY,
   GamePhase.PROGRAM,
+  GamePhase.RESOLVE_RANDOMIZERS,
   GamePhase.RESOLVE_PLAYERS,
   GamePhase.RESOLVE_CONVEYORS_FAST,
   GamePhase.RESOLVE_CONVEYORS,
@@ -54,6 +55,8 @@ const TURN_PHASES = [
 
 function isPhaseAvailable(phase: GamePhase, state: RoborallyState): boolean {
   switch (phase) {
+    case GamePhase.RESOLVE_RANDOMIZERS:
+      return state.board.features.includes(FeatureType.RANDOM)
     case GamePhase.RESOLVE_CONVEYORS_FAST:
       return state.board.features.includes(FeatureType.CONVEYOR_FAST)
     case GamePhase.RESOLVE_CONVEYORS:

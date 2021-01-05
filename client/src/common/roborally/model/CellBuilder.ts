@@ -147,15 +147,15 @@ export class CellBuilder {
   // 	return this
   // }
 
-  // randomizer(): this {
-  // 	this.builder.addFeature(FeatureType.RANDOM)
-  // 	this.builder.updateCell(this.pos, {
-  // 		$merge: {
-  // 			type: CellType.RANDOM,
-  // 		},
-  // 	})
-  // 	return this
-  // }
+  randomizer(): this {
+    this.builder.addFeature(FeatureType.RANDOM)
+    this.builder.updateCell(this.pos, {
+      $merge: {
+        type: CellType.RANDOM,
+      },
+    })
+    return this
+  }
 
   repair(): this {
     this.builder.addFeature(FeatureType.REPAIR)
