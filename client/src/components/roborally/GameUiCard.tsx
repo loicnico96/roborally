@@ -87,6 +87,7 @@ import RotateRight_380 from "assets/cards/RotateRight_380.png"
 import RotateRight_400 from "assets/cards/RotateRight_400.png"
 import RotateRight_420 from "assets/cards/RotateRight_420.png"
 import RotateRight_80 from "assets/cards/RotateRight_80.png"
+import { ReactComponent as LockIcon } from "assets/icons/Lock.svg"
 import {
   Card,
   CardAction,
@@ -186,6 +187,7 @@ const CARD_SIZE_HIGHLIGHT = 120
 
 type GameUiCardButtonProps = {
   imageUrl: string
+  isDisabled: boolean
   isHighlighted: boolean
 }
 
@@ -215,17 +217,32 @@ function getImageHeight(props: GameUiCardButtonProps): number {
   return getImageWidth(props) * 1.5
 }
 
+function getOpacity({ isDisabled }: GameUiCardButtonProps): number {
+  return isDisabled ? 0.7 : 1.0
+}
+
 const GameUiCardButton = styled.button`
   background-image: url("${getImageUrl}");
   background-repeat: no-repeat;
   background-size: 100% 100%;
   height: ${getImageHeight}px;
+  opacity: ${getOpacity};
+  position: relative;
   width: ${getImageWidth}px;
+`
+
+const CardLockIcon = styled(LockIcon)`
+  height: 40%;
+  left: 30%;
+  position: absolute;
+  top: 30%;
+  width: 40%;
 `
 
 type GameUiCardProps = {
   card: Card | null
   disabled?: boolean
+  isDisabled?: boolean
   isHighlighted?: boolean
   isLocked?: boolean
   onClick: () => any
@@ -234,16 +251,21 @@ type GameUiCardProps = {
 const GameUiCard = ({
   card,
   disabled,
+  isDisabled = false,
   isHighlighted = false,
+  isLocked = false,
   onClick,
 }: GameUiCardProps) => (
   <GameUiCardButton
     disabled={disabled}
     imageUrl={card === null ? CardBack : CARD_IMAGES[card]}
+    isDisabled={isDisabled}
     isHighlighted={isHighlighted}
     onClick={onClick}
     title={card === null ? "" : getCardTooltip(card)}
-  />
+  >
+    {isLocked && <CardLockIcon />}
+  </GameUiCardButton>
 )
 
 export default GameUiCard

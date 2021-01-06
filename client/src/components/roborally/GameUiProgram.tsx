@@ -4,7 +4,10 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { RoomId } from "common/model/RoomData"
 import { Card } from "common/roborally/model/Card"
 import { getEmptyProgram, Program } from "common/roborally/model/Program"
-import { getLockedProgram } from "common/roborally/model/RoborallyPlayer"
+import {
+  getLockedProgram,
+  isAbleToMove,
+} from "common/roborally/model/RoborallyPlayer"
 import {
   GamePhase,
   RoborallyState,
@@ -84,17 +87,12 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
             key={index}
             card={card}
             disabled={
-              lockedProgram[index] !== null ||
               card === null ||
+              lockedProgram[index] !== null ||
               phase !== GamePhase.PROGRAM
             }
-            isHighlighted={
-              isResolving &&
-              gameState.sequence === index &&
-              card !== null &&
-              !player.down &&
-              !player.destroyed
-            }
+            isDisabled={card === null || !isAbleToMove(player)}
+            isHighlighted={isResolving && gameState.sequence === index}
             isLocked={lockedProgram[index] !== null}
             onClick={() => onRemoveCard(index)}
           />
