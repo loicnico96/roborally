@@ -11,7 +11,7 @@ import {
   rotatePlayer,
   teleportPlayer,
 } from "./model/RoborallyPlayer"
-import { resolveMovement } from "./resolveMovement"
+import { checkHoles, resolveMovement } from "./resolveMovement"
 import { RoborallyContext } from "./RoborallyContext"
 
 export type PlayerAction = {
@@ -70,6 +70,7 @@ async function resolvePlayerTeleport(
 ) {
   ctx.updatePlayer(playerId, player => teleportPlayer(player, pos))
   await ctx.post()
+  await checkHoles(ctx)
 }
 
 async function resolvePlayerMove(
