@@ -35,6 +35,7 @@ const GameUiCheckpointLabel = styled.div`
 const GameUiCheckpoint = ({ index, pos }: GameUiCheckpointProps) => (
   <GameUiCheckpointContainer
     height={CHECKPOINT_SIZE}
+    title={`Checkpoint ${index}`}
     width={CHECKPOINT_SIZE}
     x={pos.x + (1 - CHECKPOINT_SIZE) / 2}
     y={pos.y + (1 - CHECKPOINT_SIZE) / 2}

@@ -7,7 +7,7 @@ import {
   RoborallyState,
 } from "common/roborally/model/RoborallyState"
 import { useGameState } from "components/room/GameContext"
-import { useRoomId } from "components/room/RoomContext"
+import { useRoomData, useRoomId } from "components/room/RoomContext"
 import { useAuthContext } from "firestore/auth/AuthContext"
 
 import GameUiBoard from "./GameUiBoard"
@@ -78,6 +78,7 @@ function getTurnPhases(state: RoborallyState): GamePhase[] {
 
 const GamePage = () => {
   const roomId = useRoomId()
+  const roomData = useRoomData()
   const gameState = useGameState()
   const { userId } = useAuthContext()
 
@@ -111,6 +112,7 @@ const GamePage = () => {
             <GameUiPlayerRobot
               key={playerId}
               player={gameState.players[playerId]}
+              playerName={roomData.players[playerId].name}
               playerIndex={index}
             />
           ))}
