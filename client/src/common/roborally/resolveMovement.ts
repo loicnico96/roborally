@@ -2,16 +2,18 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { filter, reduce, size } from "common/utils/objects"
 
 import { WallType } from "./model/BoardData"
-import { isHole } from "./model/CellData"
+import { isHole, isOil, isPortal } from "./model/CellData"
 import { Direction, isSamePos, Position, Rotation } from "./model/Position"
 import {
   destroyPlayer,
+  isAffectedByCells,
   isAffectedByHoles,
   isAffectedByPlayers,
   isAffectedByWalls,
   movePlayer,
   RoborallyPlayer,
   rotatePlayer,
+  teleportPlayer,
 } from "./model/RoborallyPlayer"
 import { RoborallyContext } from "./RoborallyContext"
 
@@ -228,6 +230,55 @@ export async function checkHoles(ctx: RoborallyContext) {
   }
 }
 
+export async function checkPortals(
+  ctx: RoborallyContext,
+  moves: Partial<Record<PlayerId, Move>>
+) {
+  const updateCount = ctx.updatePlayers((player, playerId) => {
+    if (moves[playerId] === undefined) {
+      return false
+    }
+
+    const cell = ctx.getCell(player.pos)
+    if (isPortal(cell) && isAffectedByCells(player)) {
+      if (cell.pos !== undefined) {
+        return teleportPlayer(player, cell.pos)
+      } else {
+        console.error("Portal cell should specify teleport location")
+      }
+    }
+
+    return false
+  })
+
+  if (updateCount > 0) {
+    await ctx.post()
+  }
+}
+
+export function getOilMoves(
+  ctx: RoborallyContext,
+  moves: Partial<Record<PlayerId, Move>>
+): Partial<Record<PlayerId, Move>> {
+  return reduce(
+    moves,
+    (result, move, playerId) => {
+      if (move !== undefined) {
+        const player = ctx.getPlayer(playerId)
+        const cell = ctx.getCell(player.pos)
+        if (isOil(cell) && isAffectedByCells(player)) {
+          result[playerId] = {
+            dir: move.dir,
+          }
+        }
+      }
+
+      return result
+    },
+    {} as Partial<Record<PlayerId, Move>>
+  )
+}
+
 export async function resolveMovement(
   ctx: RoborallyContext,
   moves: Partial<Record<PlayerId, Move>>
@@ -245,5 +296,7 @@ export async function resolveMovement(
   if (updateCount > 0) {
     await ctx.post()
     await checkHoles(ctx)
+    await checkPortals(ctx, moves)
+    await resolveMovement(ctx, getOilMoves(ctx, moves))
   }
 }

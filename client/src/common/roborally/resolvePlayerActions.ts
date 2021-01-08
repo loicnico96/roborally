@@ -3,7 +3,7 @@ import { sortBy, SortDirection } from "common/utils/arrays"
 import { forEachAsync } from "common/utils/forEachAsync"
 
 import { Card, CardAction, getCardAction, getCardPriority } from "./model/Card"
-import { isTeleport, isWater } from "./model/CellData"
+import { isOil, isTeleport, isWater } from "./model/CellData"
 import { isSamePos, movePos, Position, Rotation } from "./model/Position"
 import {
   getPlayerDir,
@@ -92,7 +92,8 @@ async function resolvePlayerMove(
     }
   }
 
-  const realDistance = isWater(startCell) ? distance - 1 : distance
+  const realDistance =
+    isWater(startCell) || isOil(startCell) ? distance - 1 : distance
 
   for (let i = 0; i < realDistance; i++) {
     if (isAbleToMove(ctx.getPlayer(playerId))) {

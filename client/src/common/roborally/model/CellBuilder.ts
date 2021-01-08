@@ -1,7 +1,13 @@
 import { BoardBuilder } from "./BoardBuilder"
 import { FeatureType, LaserType, WallType } from "./BoardData"
 import { CellType } from "./CellData"
-import { Direction, getReverseDir, Position, Rotation } from "./Position"
+import {
+  Direction,
+  getPos,
+  getReverseDir,
+  Position,
+  Rotation,
+} from "./Position"
 
 export class CellBuilder {
   private readonly builder: BoardBuilder
@@ -109,26 +115,26 @@ export class CellBuilder {
   // 	return this
   // }
 
-  // oil(): this {
-  // 	this.builder.addFeature(FeatureType.OIL)
-  // 	this.builder.updateCell(this.pos, {
-  // 		$merge: {
-  // 			oil: true,
-  // 		},
-  // 	})
-  // 	return this
-  // }
+  oil(): this {
+    this.builder.addFeature(FeatureType.OIL)
+    this.builder.updateCell(this.pos, {
+      $merge: {
+        oil: true,
+      },
+    })
+    return this
+  }
 
-  // portal(x: number, y: number): this {
-  // 	this.builder.addFeature(FeatureType.PORTAL)
-  // 	this.builder.updateCell(this.pos, {
-  // 		$merge: {
-  // 			type: CellType.PORTAL,
-  // 			pos: getPos(x, y),
-  // 		},
-  // 	})
-  // 	return this
-  // }
+  portal(x: number, y: number): this {
+    this.builder.addFeature(FeatureType.PORTAL)
+    this.builder.updateCell(this.pos, {
+      $merge: {
+        type: CellType.PORTAL,
+        pos: getPos(x, y),
+      },
+    })
+    return this
+  }
 
   pusherWall(dir: Direction, sequences: number[]): this {
     this.builder.addFeature(FeatureType.PUSHER)

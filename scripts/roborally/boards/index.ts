@@ -12,6 +12,7 @@ import BOARD_FLOOD_ZONE from "./FloodZone"
 import BOARD_GEAR_BOX from "./GearBox"
 import BOARD_ISLAND from "./Island"
 import BOARD_LASER_MAZE from "./LaserMaze"
+import BOARD_MACHINE_SHOP from "./MachineShop"
 import BOARD_MAELSTROM from "./Maelstrom"
 import BOARD_PIT_MAZE from "./PitMaze"
 import BOARD_SPIN_ZONE from "./SpinZone"
@@ -30,6 +31,7 @@ export const BOARDS: Record<BoardId, BoardData> = {
   [BoardId.GEAR_BOX]: BOARD_GEAR_BOX,
   [BoardId.ISLAND]: BOARD_ISLAND,
   [BoardId.LASER_MAZE]: BOARD_LASER_MAZE,
+  [BoardId.MACHINE_SHOP]: BOARD_MACHINE_SHOP,
   [BoardId.MAELSTROM]: BOARD_MAELSTROM,
   [BoardId.PIT_MAZE]: BOARD_PIT_MAZE,
   [BoardId.SPIN_ZONE]: BOARD_SPIN_ZONE,

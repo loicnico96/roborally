@@ -10,6 +10,7 @@ import BoardFloodZone from "assets/boards/FloodZone.png"
 import BoardGearBox from "assets/boards/GearBox.png"
 import BoardIsland from "assets/boards/Island.png"
 import BoardLaserMaze from "assets/boards/LaserMaze.png"
+import BoardMachineShop from "assets/boards/MachineShop.png"
 import BoardMaelstrom from "assets/boards/Maelstrom.png"
 import BoardPitMaze from "assets/boards/PitMaze.png"
 import BoardSpinZone from "assets/boards/SpinZone.png"
@@ -29,6 +30,7 @@ const BOARD_IMAGES: Record<BoardId, string> = {
   [BoardId.GEAR_BOX]: BoardGearBox,
   [BoardId.ISLAND]: BoardIsland,
   [BoardId.LASER_MAZE]: BoardLaserMaze,
+  [BoardId.MACHINE_SHOP]: BoardMachineShop,
   [BoardId.MAELSTROM]: BoardMaelstrom,
   [BoardId.PIT_MAZE]: BoardPitMaze,
   [BoardId.SPIN_ZONE]: BoardSpinZone,

@@ -1,5 +1,5 @@
 import { WallData } from "./BoardData"
-import { Direction, Rotation } from "./Position"
+import { Direction, Position, Rotation } from "./Position"
 
 export enum CellType {
   HOLE = 0,
@@ -10,12 +10,15 @@ export enum CellType {
   REPAIR = 5,
   TELEPORT = 6,
   RANDOM = 7,
+  PORTAL = 8,
 }
 
 export type CellData = {
   type: CellType
   crush?: number[]
   dir?: Direction
+  oil?: boolean
+  pos?: Position
   push?: number[]
   pushDir?: Direction
   rot?: Rotation
@@ -52,6 +55,14 @@ export function isGear(cell: CellData): boolean {
 
 export function isHole(cell: CellData): boolean {
   return cell.type === CellType.HOLE
+}
+
+export function isOil(cell: CellData): boolean {
+  return cell.oil ?? false
+}
+
+export function isPortal(cell: CellData): boolean {
+  return cell.type === CellType.PORTAL
 }
 
 export function isPusher(cell: CellData, sequence: number): boolean {

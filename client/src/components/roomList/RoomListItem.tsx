@@ -39,6 +39,7 @@ function formatRoomInfo(room: RoomData): string {
         [BoardId.GEAR_BOX]: "Gear Box",
         [BoardId.ISLAND]: "Island",
         [BoardId.LASER_MAZE]: "Laser Maze",
+        [BoardId.MACHINE_SHOP]: "Machine Shop",
         [BoardId.MAELSTROM]: "Maelstrom",
         [BoardId.PIT_MAZE]: "Pit Maze",
         [BoardId.SPIN_ZONE]: "Spin Zone",
