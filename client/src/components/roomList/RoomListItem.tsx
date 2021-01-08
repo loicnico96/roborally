@@ -24,24 +24,27 @@ function formatRoomInfo(room: RoomData): string {
     [RoomStatus.FINISHED]: "Finished",
   }[room.status]
 
-  const boardName = {
-    [BoardId.BLAST_FURNACE]: "Blast Furnace",
-    [BoardId.CANNERY_ROW]: "Cannery Row",
-    [BoardId.CHASM]: "Chasm",
-    [BoardId.CHESS]: "Chess",
-    [BoardId.CHOP_SHOP]: "Chop Shop",
-    [BoardId.CIRCUIT_TRAP]: "Circuit Trap",
-    [BoardId.CROSS]: "Cross",
-    [BoardId.EXCHANGE]: "Exchange",
-    [BoardId.FLOOD_ZONE]: "Flood Zone",
-    [BoardId.GEAR_BOX]: "Gear Box",
-    [BoardId.ISLAND]: "Island",
-    [BoardId.LASER_MAZE]: "Laser Maze",
-    [BoardId.MAELSTROM]: "Maelstrom",
-    [BoardId.PIT_MAZE]: "Pit Maze",
-    [BoardId.SPIN_ZONE]: "Spin Zone",
-    [BoardId.VAULT]: "Vault",
-  }[room.options.boardId]
+  const boardNames = room.options.boardIds.map(
+    boardId =>
+      ({
+        [BoardId.BLAST_FURNACE]: "Blast Furnace",
+        [BoardId.CANNERY_ROW]: "Cannery Row",
+        [BoardId.CHASM]: "Chasm",
+        [BoardId.CHESS]: "Chess",
+        [BoardId.CHOP_SHOP]: "Chop Shop",
+        [BoardId.CIRCUIT_TRAP]: "Circuit Trap",
+        [BoardId.CROSS]: "Cross",
+        [BoardId.EXCHANGE]: "Exchange",
+        [BoardId.FLOOD_ZONE]: "Flood Zone",
+        [BoardId.GEAR_BOX]: "Gear Box",
+        [BoardId.ISLAND]: "Island",
+        [BoardId.LASER_MAZE]: "Laser Maze",
+        [BoardId.MAELSTROM]: "Maelstrom",
+        [BoardId.PIT_MAZE]: "Pit Maze",
+        [BoardId.SPIN_ZONE]: "Spin Zone",
+        [BoardId.VAULT]: "Vault",
+      }[boardId])
+  )
 
   const playerNames = room.playerOrder.map(
     playerId => room.players[playerId].name
@@ -49,7 +52,7 @@ function formatRoomInfo(room: RoomData): string {
 
   return [
     `${gameName.toUpperCase()} - ${statusName.toUpperCase()}`,
-    `Board: ${boardName}`,
+    `Boards: ${boardNames.join(", ")}`,
     `Players: ${playerNames.join(", ")}`,
   ].join("\n")
 }

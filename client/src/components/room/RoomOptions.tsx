@@ -1,86 +1,15 @@
+import update from "immutability-helper"
 import React, { useCallback } from "react"
 import styled from "styled-components"
 
 import { BoardId } from "common/roborally/model/BoardData"
-import { sortByAlpha } from "common/utils/arrays"
-import { randomEnumValue } from "common/utils/enums"
-import { validateEnum } from "common/utils/validation"
 import { getBoardImage } from "components/roborally/BoardImage"
 import Box from "components/ui/Box"
 import { useChangeRoomOptions } from "hooks/room/useChangeRoomOptions"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 
+import BoardSelector from "./BoardSelector"
 import { useRoomData, useRoomId } from "./RoomContext"
-
-enum BoardCategory {
-  ORIGINAL = "Original",
-  ARMED_AND_DANGEROUS = "ArmedAndDangerous",
-  CRASH_AND_BURN = "CrashAndBurn",
-}
-
-const BOARD_CATEGORY_ORDER: BoardCategory[] = [
-  BoardCategory.ORIGINAL,
-  BoardCategory.ARMED_AND_DANGEROUS,
-  BoardCategory.CRASH_AND_BURN,
-]
-
-function getBoardCategoryName(category: BoardCategory): string {
-  return {
-    [BoardCategory.ORIGINAL]: "Original",
-    [BoardCategory.ARMED_AND_DANGEROUS]: "Armed and Dangerous",
-    [BoardCategory.CRASH_AND_BURN]: "Crash and Burn",
-  }[category]
-}
-
-function getBoardCategory(boardId: BoardId): BoardCategory {
-  return {
-    [BoardId.BLAST_FURNACE]: BoardCategory.CRASH_AND_BURN,
-    [BoardId.CANNERY_ROW]: BoardCategory.ORIGINAL,
-    [BoardId.CHASM]: BoardCategory.ARMED_AND_DANGEROUS,
-    [BoardId.CHESS]: BoardCategory.ORIGINAL,
-    [BoardId.CHOP_SHOP]: BoardCategory.ORIGINAL,
-    [BoardId.CIRCUIT_TRAP]: BoardCategory.ARMED_AND_DANGEROUS,
-    [BoardId.CROSS]: BoardCategory.ORIGINAL,
-    [BoardId.EXCHANGE]: BoardCategory.ORIGINAL,
-    [BoardId.FLOOD_ZONE]: BoardCategory.ARMED_AND_DANGEROUS,
-    [BoardId.GEAR_BOX]: BoardCategory.ARMED_AND_DANGEROUS,
-    [BoardId.ISLAND]: BoardCategory.ORIGINAL,
-    [BoardId.LASER_MAZE]: BoardCategory.ARMED_AND_DANGEROUS,
-    [BoardId.MAELSTROM]: BoardCategory.ORIGINAL,
-    [BoardId.PIT_MAZE]: BoardCategory.ORIGINAL,
-    [BoardId.SPIN_ZONE]: BoardCategory.ORIGINAL,
-    [BoardId.VAULT]: BoardCategory.ORIGINAL,
-  }[boardId]
-}
-
-function getBoardName(boardId: BoardId): string {
-  return {
-    [BoardId.BLAST_FURNACE]: "Blast Furnace",
-    [BoardId.CANNERY_ROW]: "Cannery Row",
-    [BoardId.CHASM]: "Chasm",
-    [BoardId.CHESS]: "Chess",
-    [BoardId.CHOP_SHOP]: "Chop Shop",
-    [BoardId.CIRCUIT_TRAP]: "Circuit Trap",
-    [BoardId.CROSS]: "Cross",
-    [BoardId.EXCHANGE]: "Exchange",
-    [BoardId.FLOOD_ZONE]: "Flood Zone",
-    [BoardId.GEAR_BOX]: "Gear Box",
-    [BoardId.ISLAND]: "Island",
-    [BoardId.LASER_MAZE]: "Laser Maze",
-    [BoardId.MAELSTROM]: "Maelstrom",
-    [BoardId.PIT_MAZE]: "Pit Maze",
-    [BoardId.SPIN_ZONE]: "Spin Zone",
-    [BoardId.VAULT]: "Vault",
-  }[boardId]
-}
-
-function getBoardsInCategory(category: BoardCategory): BoardId[] {
-  const boardIds = Object.values(BoardId).filter(
-    boardId => getBoardCategory(boardId) === category
-  )
-
-  return sortByAlpha(boardIds, boardId => getBoardName(boardId))
-}
 
 const RoomOptionsContainer = styled(Box)`
   flex: 1 1 auto;
@@ -102,11 +31,18 @@ const RoomOptionsRowLabel = styled.div`
   margin-right: 4px;
 `
 
-const RoomOptionsBoardImage = styled.img`
+const RoomOptionsBoardImageContainer = styled.div`
+  height: 600px;
   width: 600px;
 `
 
-type SelectEvent = React.ChangeEvent<HTMLSelectElement>
+type RoomOptionsBoardImageProps = {
+  rowCount: number
+}
+
+const RoomOptionsBoardImage = styled.img`
+  width: calc(100% / ${({ rowCount }: RoomOptionsBoardImageProps) => rowCount});
+`
 
 const RoomOptions = () => {
   const roomId = useRoomId()
@@ -116,57 +52,90 @@ const RoomOptions = () => {
 
   const { options } = roomData
 
-  const onSelectBoardId = useCallback(
-    async (event: SelectEvent) => {
-      const boardId = validateEnum(BoardId)(event.target.value)
-      if (boardId !== options.boardId) {
-        await changeOptionsSafe({ boardId })
-      }
+  const onAddBoardId = useCallback(
+    (boardId: BoardId) => {
+      changeOptionsSafe(
+        update(options, {
+          boardIds: {
+            $push: [boardId],
+          },
+        })
+      )
     },
     [changeOptionsSafe, options]
   )
 
-  const onSelectBoardIdRandom = useCallback(async () => {
-    const boardId = randomEnumValue(BoardId)
-    if (boardId !== options.boardId) {
-      await changeOptionsSafe({ boardId })
-    }
-  }, [changeOptionsSafe, options])
+  const onChangeBoardId = useCallback(
+    (boardId: BoardId, index: number) => {
+      changeOptionsSafe(
+        update(options, {
+          boardIds: {
+            [index]: {
+              $set: boardId,
+            },
+          },
+        })
+      )
+    },
+    [changeOptionsSafe, options]
+  )
 
+  const onRemoveBoardId = useCallback(
+    (index: number) => {
+      changeOptionsSafe(
+        update(options, {
+          boardIds: {
+            $splice: [[index, 1]],
+          },
+        })
+      )
+    },
+    [changeOptionsSafe, options]
+  )
+
+  const { boardIds } = options
+
+  const boardCount = boardIds.length
+  const boardCountX = Math.ceil(Math.sqrt(boardCount))
+  const isCanAddBoard = boardCount < 4
+  const isCanRemoveBoard = boardCount > 1
   const isChangeDisabled = isChanging || !isEnabled
 
   return (
     <RoomOptionsContainer>
       <RoomOptionsTitle>Options</RoomOptionsTitle>
-      <RoomOptionsRow>
-        <RoomOptionsRowLabel>Board:</RoomOptionsRowLabel>
-        <select
-          disabled={isChangeDisabled}
-          onChange={onSelectBoardId}
-          value={options.boardId}
-        >
-          {BOARD_CATEGORY_ORDER.map(category => (
-            <optgroup key={category} label={getBoardCategoryName(category)}>
-              {getBoardsInCategory(category).map(boardId => (
-                <option key={boardId} value={boardId}>
-                  {getBoardName(boardId)}
-                </option>
-              ))}
-            </optgroup>
-          ))}
-        </select>
-        <button
-          disabled={isChangeDisabled}
-          onClick={onSelectBoardIdRandom}
-          title="Select a random board"
-        >
-          Random
-        </button>
-      </RoomOptionsRow>
-      <RoomOptionsBoardImage
-        src={getBoardImage(options.boardId)}
-        title="Preview"
-      />
+      {boardIds.map((boardId, index) => (
+        <RoomOptionsRow key={`select-board-${index}`}>
+          <RoomOptionsRowLabel>Board {index + 1}:</RoomOptionsRowLabel>
+          <BoardSelector
+            isChangeDisabled={isChangeDisabled}
+            isRemoveDisabled={isChangeDisabled || !isCanRemoveBoard}
+            onChange={value => onChangeBoardId(value, index)}
+            onRemove={() => onRemoveBoardId(index)}
+            value={boardId}
+          />
+        </RoomOptionsRow>
+      ))}
+      {isCanAddBoard && isEnabled && (
+        <RoomOptionsRow key={`select-board-${boardCount}`}>
+          <RoomOptionsRowLabel>Board {boardCount + 1}:</RoomOptionsRowLabel>
+          <BoardSelector
+            isChangeDisabled={isChangeDisabled}
+            onChange={onAddBoardId}
+            value={null}
+          />
+        </RoomOptionsRow>
+      )}
+      <RoomOptionsBoardImageContainer>
+        {boardIds.map((boardId, index) => (
+          <RoomOptionsBoardImage
+            key={index}
+            rowCount={boardCountX}
+            src={getBoardImage(boardId)}
+            title={`Board ${index + 1}`}
+          />
+        ))}
+      </RoomOptionsBoardImageContainer>
     </RoomOptionsContainer>
   )
 }

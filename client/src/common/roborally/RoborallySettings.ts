@@ -4,9 +4,9 @@ import { StateChangeHandler } from "common/GameContext"
 import { BaseSettings } from "common/GameSettings"
 import { PlayerId } from "common/model/GameStateBasic"
 import { shuffle } from "common/utils/arrays"
-import { optional, validateEnum } from "common/utils/validation"
+import { optional, validateArray, validateEnum } from "common/utils/validation"
 
-import { BoardId } from "./model/BoardData"
+import { BoardData, BoardId, mergeBoards } from "./model/BoardData"
 import { RoborallyPlayer } from "./model/RoborallyPlayer"
 import { getInitialGameState, RoborallyState } from "./model/RoborallyState"
 import { resolvePlayerAction } from "./resolvePlayerAction"
@@ -15,7 +15,7 @@ import { RoborallyContext } from "./RoborallyContext"
 import { validateAction } from "./validateAction"
 
 export type RoborallyOptions = {
-  boardId: BoardId
+  boardIds: BoardId[]
 }
 
 export const RoborallySettings: BaseSettings<
@@ -26,14 +26,19 @@ export const RoborallySettings: BaseSettings<
   RoborallyAction
 > = {
   defaultOptions: {
-    boardId: BoardId.ISLAND,
+    boardIds: [BoardId.ISLAND],
   },
 
-  maxPlayers: 8,
+  maxPlayers: 4,
   minPlayers: 1,
 
   optionsValidator: {
-    boardId: optional(validateEnum(BoardId)),
+    boardIds: optional(
+      validateArray(validateEnum(BoardId), {
+        minSize: 1,
+        maxSize: 4,
+      })
+    ),
   },
 
   async getInitialGameState(
@@ -41,10 +46,16 @@ export const RoborallySettings: BaseSettings<
     options: RoborallyOptions,
     fetchData: DataFetcher
   ): Promise<RoborallyState> {
-    const { boardId } = options
-    const boardData = await fetchData(Collection.BOARD, boardId)
-    const checkpoints = shuffle(boardData.checkpoints)
-    return getInitialGameState(boardId, boardData, checkpoints, playerIds)
+    const { boardIds } = options
+
+    async function fetchBoardData(boardId: BoardId): Promise<BoardData> {
+      return fetchData(Collection.BOARD, boardId)
+    }
+
+    const boardData = await Promise.all(boardIds.map(fetchBoardData))
+    const mergedBoard = mergeBoards(boardData)
+    const checkpoints = shuffle(mergedBoard.checkpoints)
+    return getInitialGameState(boardIds, mergedBoard, checkpoints, playerIds)
   },
 
   getContext(

@@ -59,7 +59,7 @@ export function isVirtual(player: RoborallyPlayer): boolean {
 }
 
 export function isAbleToFire(player: RoborallyPlayer): boolean {
-  return isAlive(player) && !isVirtual(player)
+  return isAlive(player) && !isPoweredDown(player) && !isVirtual(player)
 }
 
 export function isAbleToMove(player: RoborallyPlayer): boolean {

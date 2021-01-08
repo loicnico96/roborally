@@ -245,15 +245,32 @@ const GameUiBoard = () => {
     [gameState, mousePos, roomData]
   )
 
+  const boardCount = gameState.boardIds.length
+  const boardCountX = Math.ceil(Math.sqrt(boardCount))
+  const boardCountY = Math.ceil(boardCount / boardCountX)
+
   return (
-    <GameUiBoardBackground
-      height={gameState.board.dimensions.y}
-      imageUrl={getBoardImage(gameState.boardId)}
-      title={tooltip}
-      width={gameState.board.dimensions.x}
-      x={0}
-      y={0}
-    />
+    <>
+      {gameState.boardIds.map((boardId, boardIndex) => (
+        <GameUiBoardBackground
+          key={boardIndex}
+          height={gameState.board.dimensions.y / boardCountY}
+          imageUrl={getBoardImage(boardId)}
+          title={tooltip}
+          width={gameState.board.dimensions.x / boardCountX}
+          x={
+            (Math.floor(boardIndex % boardCountX) *
+              gameState.board.dimensions.x) /
+            boardCountX
+          }
+          y={
+            (Math.floor(boardIndex / boardCountX) *
+              gameState.board.dimensions.y) /
+            boardCountY
+          }
+        />
+      ))}
+    </>
   )
 }
 

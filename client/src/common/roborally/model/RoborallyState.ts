@@ -21,7 +21,7 @@ export enum GamePhase {
 
 export type RoborallyState = GameStateBasic<RoborallyPlayer> & {
   board: BoardData
-  boardId: BoardId
+  boardIds: BoardId[]
   checkpoints: Position[]
   currentPlayer: PlayerId | null
   deck: Card[]
@@ -29,17 +29,15 @@ export type RoborallyState = GameStateBasic<RoborallyPlayer> & {
   sequence: number
 }
 
-export type B = RoborallyState
-
 export function getInitialGameState(
-  boardId: BoardId,
+  boardIds: BoardId[],
   boardData: BoardData,
   checkpoints: Position[],
   playerIds: PlayerId[],
   initialDir: Direction = Direction.NORTH
 ): RoborallyState {
   return {
-    boardId,
+    boardIds,
     board: boardData,
     checkpoints,
     currentPlayer: null,

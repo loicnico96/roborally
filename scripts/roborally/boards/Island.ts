@@ -368,7 +368,7 @@ builder.pos(3, 9).conveyor(Direction.WEST)
 builder.pos(4, 9).conveyor(Direction.WEST)
 
 // Pos (5, 9)
-builder.pos(5, 9).conveyor(Direction.WEST)
+builder.pos(5, 9).conveyor(Direction.WEST).wall(Direction.NORTH)
 
 // Pos (6, 9)
 builder.pos(6, 9).conveyor(Direction.WEST)
