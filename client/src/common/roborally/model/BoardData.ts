@@ -1,6 +1,6 @@
 import update, { Spec } from "immutability-helper"
 
-import { enumValues } from "common/utils/enums"
+import { range } from "common/utils/math"
 import { merge } from "common/utils/objects"
 
 import { CellData, getEmptyCell, getHole } from "./CellData"
@@ -135,6 +135,10 @@ export function updateCell(
   return updatedBoard
 }
 
+export function getMaxCheckpoints(boardIds: BoardId[]): number {
+  return boardIds.length * 4 - 1
+}
+
 export function mergeBoards(boards: BoardData[]): BoardData {
   const boardCount = boards.length
 
@@ -228,7 +232,7 @@ export function mergeBoards(boards: BoardData[]): BoardData {
         y: Math.floor(cellIndex / mergedSizeX),
       }
 
-      for (const dir of enumValues(Direction) as Direction[]) {
+      for (const dir of range(0, 4)) {
         if (getWall(mergedBoard, cellPos, dir) === WallType.NORMAL) {
           const otherPos = movePos(cellPos, dir, 1)
           if (inBounds(mergedBoard, otherPos)) {

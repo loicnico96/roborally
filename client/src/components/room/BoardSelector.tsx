@@ -4,8 +4,7 @@ import { BoardId } from "common/roborally/model/BoardData"
 import { sortByAlpha } from "common/utils/arrays"
 import { randomEnumValue } from "common/utils/enums"
 import { validateEnum } from "common/utils/validation"
-
-export type SelectEvent = React.ChangeEvent<HTMLSelectElement>
+import { SelectEvent } from "utils/dom"
 
 export type BoardSelectorProps = {
   isChangeDisabled?: boolean

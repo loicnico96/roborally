@@ -4,7 +4,7 @@ import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
 import { PlayerStateBasic } from "./model/PlayerStateBasic"
 import { RoborallySettings } from "./roborally/RoborallySettings"
 import { ObjectRecord } from "./utils/objects"
-import { Validators } from "./utils/validation"
+import { Validator } from "./utils/validation"
 
 export enum GameType {
   ROBORALLY = "roborally",
@@ -20,7 +20,6 @@ export type BaseSettings<
   defaultOptions: Options
   maxPlayers: number
   minPlayers: number
-  optionsValidator: Validators<Partial<Options>>
 
   getInitialGameState: (
     playerIds: PlayerId[],
@@ -46,6 +45,8 @@ export type BaseSettings<
     playerId: PlayerId,
     action: unknown
   ) => PlayerAction
+
+  validateOptions: Validator<Options>
 }
 
 const SETTINGS = {

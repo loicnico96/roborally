@@ -2,11 +2,14 @@ import update from "immutability-helper"
 import React, { useCallback } from "react"
 import styled from "styled-components"
 
-import { BoardId } from "common/roborally/model/BoardData"
+import { BoardId, getMaxCheckpoints } from "common/roborally/model/BoardData"
+import { RoborallyOptions } from "common/roborally/RoborallySettings"
+import { clamp, range } from "common/utils/math"
 import { getBoardImage } from "components/roborally/BoardImage"
 import Box from "components/ui/Box"
 import { useChangeRoomOptions } from "hooks/room/useChangeRoomOptions"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
+import { SelectEvent } from "utils/dom"
 
 import BoardSelector from "./BoardSelector"
 import { useRoomData, useRoomId } from "./RoomContext"
@@ -44,6 +47,13 @@ const RoomOptionsBoardImage = styled.img`
   width: calc(100% / ${({ rowCount }: RoomOptionsBoardImageProps) => rowCount});
 `
 
+function checkCheckpoints(options: RoborallyOptions): RoborallyOptions {
+  const maxCheckpoints = getMaxCheckpoints(options.boardIds)
+  return update(options, {
+    checkpoints: checkpoints => clamp(checkpoints, 1, maxCheckpoints),
+  })
+}
+
 const RoomOptions = () => {
   const roomId = useRoomId()
   const roomData = useRoomData()
@@ -55,11 +65,13 @@ const RoomOptions = () => {
   const onAddBoardId = useCallback(
     (boardId: BoardId) => {
       changeOptionsSafe(
-        update(options, {
-          boardIds: {
-            $push: [boardId],
-          },
-        })
+        checkCheckpoints(
+          update(options, {
+            boardIds: {
+              $push: [boardId],
+            },
+          })
+        )
       )
     },
     [changeOptionsSafe, options]
@@ -68,13 +80,15 @@ const RoomOptions = () => {
   const onChangeBoardId = useCallback(
     (boardId: BoardId, index: number) => {
       changeOptionsSafe(
-        update(options, {
-          boardIds: {
-            [index]: {
-              $set: boardId,
+        checkCheckpoints(
+          update(options, {
+            boardIds: {
+              [index]: {
+                $set: boardId,
+              },
             },
-          },
-        })
+          })
+        )
       )
     },
     [changeOptionsSafe, options]
@@ -83,23 +97,42 @@ const RoomOptions = () => {
   const onRemoveBoardId = useCallback(
     (index: number) => {
       changeOptionsSafe(
-        update(options, {
-          boardIds: {
-            $splice: [[index, 1]],
-          },
-        })
+        checkCheckpoints(
+          update(options, {
+            boardIds: {
+              $splice: [[index, 1]],
+            },
+          })
+        )
       )
     },
     [changeOptionsSafe, options]
   )
 
-  const { boardIds } = options
+  const onChangeCheckpoints = useCallback(
+    (event: SelectEvent) => {
+      const checkpoints = Number.parseInt(event.target.value, 10)
+      changeOptionsSafe(
+        checkCheckpoints(
+          update(options, {
+            checkpoints: {
+              $set: checkpoints,
+            },
+          })
+        )
+      )
+    },
+    [changeOptionsSafe, options]
+  )
+
+  const { checkpoints, boardIds } = options
 
   const boardCount = boardIds.length
   const boardCountX = Math.ceil(Math.sqrt(boardCount))
   const isCanAddBoard = boardCount < 4
   const isCanRemoveBoard = boardCount > 1
   const isChangeDisabled = isChanging || !isEnabled
+  const maxCheckpoints = getMaxCheckpoints(boardIds)
 
   return (
     <RoomOptionsContainer>
@@ -126,6 +159,20 @@ const RoomOptions = () => {
           />
         </RoomOptionsRow>
       )}
+      <RoomOptionsRow>
+        <RoomOptionsRowLabel>Checkpoints:</RoomOptionsRowLabel>
+        <select
+          disabled={isChangeDisabled}
+          onChange={onChangeCheckpoints}
+          value={checkpoints}
+        >
+          {range(1, maxCheckpoints + 1).map(count => (
+            <option key={count} value={count}>
+              {count}
+            </option>
+          ))}
+        </select>
+      </RoomOptionsRow>
       <RoomOptionsBoardImageContainer>
         {boardIds.map((boardId, index) => (
           <RoomOptionsBoardImage

@@ -6,6 +6,16 @@ export function mod(a: number, b: number): number {
   return ((a % b) + b) % b
 }
 
-export function randomInt(range: number): number {
-  return Math.floor(Math.random() * range)
+export function randomInt(count: number): number {
+  return Math.floor(Math.random() * count)
+}
+
+export function range(start: number, end: number): number[] {
+  if (end < start) {
+    throw Error("Range error: 'end' should not be less than 'start'")
+  }
+
+  return Array(end - start)
+    .fill(start)
+    .map((_, index) => start + index)
 }

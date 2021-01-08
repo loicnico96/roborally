@@ -2,11 +2,7 @@ import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
 import { getGameSettings, GameOptions } from "common/GameSettings"
 import { RoomStatus } from "common/model/RoomData"
-import {
-  validateObject,
-  validateRecord,
-  validateString,
-} from "common/utils/validation"
+import { validateRecord, validateString } from "common/utils/validation"
 
 import { getCollection } from "../../utils/collections"
 import {
@@ -42,14 +38,14 @@ export default handleTrigger<HttpTrigger.ROOM_OPTIONS>(
         throw permissionError("Not allowed")
       }
 
-      const { optionsValidator } = getGameSettings(roomData.game)
+      const { validateOptions } = getGameSettings(roomData.game)
       let newOptions: GameOptions
 
       try {
-        newOptions = {
+        newOptions = validateOptions({
           ...roomData.options,
-          ...validateObject(optionsValidator)(data.options),
-        }
+          ...data.options,
+        })
       } catch (error) {
         throw validationError(error.message)
       }

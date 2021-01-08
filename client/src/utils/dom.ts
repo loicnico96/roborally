@@ -5,6 +5,8 @@ export type Dimensions = {
   y: number
 }
 
+export type SelectEvent = React.ChangeEvent<HTMLSelectElement>
+
 export function getDimensions(ref: ElementRef): Dimensions {
   return {
     x: ref.current?.offsetWidth ?? 0,

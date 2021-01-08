@@ -1,3 +1,5 @@
+import { range } from "common/utils/math"
+
 export type Card = number
 
 export enum CardAction {
@@ -66,7 +68,5 @@ export function getCardPriority(card: Card): number {
 }
 
 export function getAllCards(): Card[] {
-  return Array(CARD_ACTIONS.length)
-    .fill(0)
-    .map((_, i) => i)
+  return range(0, CARD_ACTIONS.length)
 }
