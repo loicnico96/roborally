@@ -39,12 +39,13 @@ export const RoborallySettings: BaseSettings<
     options: RoborallyOptions,
     fetchData: DataFetcher
   ): Promise<RoborallyState> {
-    const { checkpoints: numCheckpoints, boardIds } = options
+    const { boardIds } = options
 
     async function fetchBoardData(boardId: BoardId): Promise<BoardData> {
       return fetchData(Collection.BOARD, boardId)
     }
 
+    const numCheckpoints = options.checkpoints + 1
     const boardDatas = await Promise.all(boardIds.map(fetchBoardData))
     const boardData = mergeBoards(boardDatas)
     const checkpoints = shuffle(boardData.checkpoints).slice(0, numCheckpoints)
