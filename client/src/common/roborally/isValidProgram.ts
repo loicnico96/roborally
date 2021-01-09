@@ -5,26 +5,25 @@ export function isValidProgram(
   program: Program,
   player: RoborallyPlayer
 ): boolean {
-  return program.every((sequence, index) => {
-    const lockedProgram = getLockedProgram(player)
-
-    // Sequence must match locked program if able
-    if (lockedProgram[index] !== null) {
-      return lockedProgram[index] === sequence
-    }
-
+  const lockedProgram = getLockedProgram(player)
+  return program.every((card, index) => {
     // Sequence must not be empty
-    if (sequence === null) {
+    if (card === null) {
       return false
     }
 
+    // Sequence must match locked program if able
+    if (lockedProgram[index] !== null) {
+      return lockedProgram[index] === card
+    }
+
     // Sequence must be unique
-    if (program.indexOf(sequence) !== index) {
+    if (program.indexOf(card) !== index) {
       return false
     }
 
     // Player must have the corresponding card in hand
-    if (!player.cards.includes(sequence)) {
+    if (!player.cards.includes(card)) {
       return false
     }
 

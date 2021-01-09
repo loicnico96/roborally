@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react"
 
 import { PlayerId } from "common/model/GameStateBasic"
 import { RoomId } from "common/model/RoomData"
+import { isValidProgram } from "common/roborally/isValidProgram"
 import { Card } from "common/roborally/model/Card"
 import { getEmptyProgram, Program } from "common/roborally/model/Program"
 import {
@@ -78,6 +79,7 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
   const shownProgram = phase === GamePhase.PROGRAM ? program : player.program
 
   const isResolving = ![GamePhase.PROGRAM, GamePhase.STANDBY].includes(phase)
+  const isValid = phase !== GamePhase.PROGRAM || isValidProgram(program, player)
 
   return (
     <div id="GameUiProgram">
@@ -117,7 +119,7 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
       >
         Initiate {poweredDown ? "ON" : "OFF"}
       </button>
-      <AsyncButton onClick={onReady} disabled={player.ready}>
+      <AsyncButton onClick={onReady} disabled={player.ready || !isValid}>
         {player.ready ? "Waiting..." : "Ready"}
       </AsyncButton>
     </div>
