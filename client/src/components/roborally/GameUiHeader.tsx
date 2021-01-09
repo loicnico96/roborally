@@ -1,15 +1,26 @@
 import React from "react"
 
-import { RoomId } from "common/model/RoomData"
 import PageHeader from "components/ui/PageHeader"
+import { ROUTES } from "utils/navigation"
+
+const NAVIGATION_PARENTS = [
+  { title: "HOME", path: ROUTES.home() },
+  {
+    title: "ROOMS",
+    path: ROUTES.roomList(),
+  },
+]
 
 type GameUiHeaderProps = {
   currentTurn: number
-  roomId: RoomId
 }
 
-const GameUiHeader = ({ currentTurn, roomId }: GameUiHeaderProps) => (
-  <PageHeader title={`ROOM ${roomId} - TURN ${currentTurn}`} />
+function getRoomTitle(currentTurn: number): string {
+  return `Roborally - Turn ${currentTurn}`.toUpperCase()
+}
+
+const GameUiHeader = ({ currentTurn }: GameUiHeaderProps) => (
+  <PageHeader parents={NAVIGATION_PARENTS} title={getRoomTitle(currentTurn)} />
 )
 
 export default GameUiHeader

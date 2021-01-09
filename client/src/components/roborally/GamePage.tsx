@@ -88,7 +88,7 @@ const GamePage = () => {
 
   return (
     <GameUiContentWrapper>
-      <GameUiHeader currentTurn={gameState.turn} roomId={roomId} />
+      <GameUiHeader currentTurn={gameState.turn} />
       <GameUiContentMain>
         <GameUiTurnPhaseSequence>
           {isResolving && <p>Sequence {gameState.sequence + 1}</p>}
