@@ -1,4 +1,5 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react"
+import styled from "styled-components"
 
 import { PlayerId } from "common/model/GameStateBasic"
 import { RoomId } from "common/model/RoomData"
@@ -8,6 +9,7 @@ import { getEmptyProgram, Program } from "common/roborally/model/Program"
 import {
   getLockedProgram,
   isAbleToMove,
+  RoborallyPlayer,
 } from "common/roborally/model/RoborallyPlayer"
 import {
   GamePhase,
@@ -22,6 +24,40 @@ type GameUiProgramProps = {
   gameState: RoborallyState
   playerId: PlayerId
   roomId: RoomId
+}
+
+const GameUiProgramSequence = styled.div`
+  align-items: center;
+  display: flex;
+`
+
+const GameUiProgramWarning = styled.div`
+  flex: 1 1 auto;
+  padding: 8px;
+`
+
+function getWarningText(
+  player: RoborallyPlayer,
+  phase: GamePhase,
+  powerDown: boolean
+): string {
+  if (phase === GamePhase.PROGRAM && powerDown) {
+    return "You are about to initiate power down. At the start of your turn, all damage to your robot will be repaired, but your robot will be unable to move or fire lasers during the whole turn."
+  } else if (player.destroyed) {
+    return "Your robot has been destroyed! It will respawn at the last checkpoint at the end of this turn."
+  } else if (player.down) {
+    return "Your robot is powered down. It cannot move or fire lasers this turn."
+  } else if (player.downNext) {
+    return "Your robot will power down next turn. It will not be able to move or fire lasers during the whole turn."
+  } else if (getLockedProgram(player).some(card => card !== null)) {
+    return "Your robot has taken a lot of damage and some registers have been locked. Your robot will execute the locked action each turn."
+  } else if (player.damage > 0) {
+    return "Your robot has taken damage. You will draw less Program Cards at the start of each turn."
+  } else if (player.virtual) {
+    return "Your robot is currently virtual. It ignores collisions with other robots and lasers, but is still affected by other board elements."
+  } else {
+    return ""
+  }
 }
 
 const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
@@ -83,7 +119,7 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
 
   return (
     <div id="GameUiProgram">
-      <div id="GameUiProgramSequence">
+      <GameUiProgramSequence>
         {shownProgram.map((card, index) => (
           <GameUiCard
             key={index}
@@ -99,7 +135,10 @@ const GameUiProgram = ({ gameState, playerId, roomId }: GameUiProgramProps) => {
             onClick={() => onRemoveCard(index)}
           />
         ))}
-      </div>
+        <GameUiProgramWarning>
+          {getWarningText(player, phase, poweredDown)}
+        </GameUiProgramWarning>
+      </GameUiProgramSequence>
       {phase === GamePhase.PROGRAM && (
         <div id="GameUiPlayerHand">
           {hand.map(card => (
