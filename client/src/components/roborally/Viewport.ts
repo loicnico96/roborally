@@ -1,5 +1,7 @@
 import { RoborallyState } from "common/roborally/model/RoborallyState"
 
+import { getBoardHeight, getBoardWidth } from "./utils/getters"
+
 const BOARD_MARGIN = 200
 const CELL_SIZE = 100
 
@@ -24,9 +26,9 @@ export function fromViewportCoord(coord: number): number {
 }
 
 export function getViewportHeight(gameState: RoborallyState): number {
-  return toViewportSize(gameState.board.dimensions.y) + BOARD_MARGIN * 2
+  return toViewportSize(getBoardHeight(gameState)) + BOARD_MARGIN * 2
 }
 
 export function getViewportWidth(gameState: RoborallyState): number {
-  return toViewportSize(gameState.board.dimensions.x) + BOARD_MARGIN * 2
+  return toViewportSize(getBoardWidth(gameState)) + BOARD_MARGIN * 2
 }

@@ -1,3 +1,5 @@
+import React from "react"
+
 import BoardBlastFurnace from "assets/boards/BlastFurnace.png"
 import BoardCanneryRow from "assets/boards/CanneryRow.png"
 import BoardChasm from "assets/boards/Chasm.png"
@@ -37,6 +39,16 @@ const BOARD_IMAGES: Record<BoardId, string> = {
   [BoardId.VAULT]: BoardVault,
 }
 
+export type BoardImageProps = React.HtmlHTMLAttributes<HTMLImageElement> & {
+  boardId: BoardId
+}
+
 export function getBoardImage(boardId: BoardId): string {
   return BOARD_IMAGES[boardId]
 }
+
+const BoardImage = ({ boardId, ...props }: BoardImageProps) => (
+  <img src={getBoardImage(boardId)} {...props} />
+)
+
+export default BoardImage

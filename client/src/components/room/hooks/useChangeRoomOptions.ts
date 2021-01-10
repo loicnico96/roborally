@@ -5,20 +5,26 @@ import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
 import { RoborallyOptions } from "common/roborally/RoborallySettings"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { triggerRoomOptions } from "functions/triggers"
+import { useRoomData } from "hooks/useRoomData"
 
 export function isAbleToChangeRoomOptions(
   room: RoomData,
   userId: PlayerId | null
 ): boolean {
-  return room.status === RoomStatus.OPENED && room.ownerId === userId
+  const { ownerId, status } = room
+  return status === RoomStatus.OPENED && userId === ownerId
 }
 
 export function useChangeRoomOptions(
-  roomId: RoomId,
-  room: RoomData
+  roomId: RoomId
 ): [(options: RoborallyOptions) => Promise<void>, boolean] {
   const { userId } = useAuthContext()
-  const isEnabled = isAbleToChangeRoomOptions(room, userId)
+
+  const isEnabled = useRoomData(
+    roomId,
+    useCallback(room => isAbleToChangeRoomOptions(room, userId), [userId])
+  )
+
   const changeRoomOptions = useCallback(
     async (options: RoborallyOptions) => {
       if (isEnabled) {

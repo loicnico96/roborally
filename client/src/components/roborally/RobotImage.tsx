@@ -1,3 +1,5 @@
+import React from "react"
+
 import Robot0 from "assets/robots/Robot0.png"
 import Robot1 from "assets/robots/Robot1.png"
 import Robot2 from "assets/robots/Robot2.png"
@@ -18,6 +20,16 @@ const ROBOT_IMAGES = [
   Robot7,
 ]
 
-export function getRobotImage(index: number): string {
-  return ROBOT_IMAGES[index]
+export type RobotImageProps = React.HtmlHTMLAttributes<HTMLImageElement> & {
+  playerIndex: number
 }
+
+export function getRobotImage(playerIndex: number): string {
+  return ROBOT_IMAGES[playerIndex]
+}
+
+const RobotImage = ({ playerIndex, ...props }: RobotImageProps) => (
+  <img src={getRobotImage(playerIndex)} {...props} />
+)
+
+export default RobotImage

@@ -7,12 +7,14 @@ import { RoborallyOptions } from "common/roborally/RoborallySettings"
 import { clamp, range } from "common/utils/math"
 import { getBoardImage } from "components/roborally/BoardImage"
 import Box from "components/ui/Box"
-import { useChangeRoomOptions } from "hooks/room/useChangeRoomOptions"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
+import { useRoomData } from "hooks/useRoomData"
+import { useRoomId } from "hooks/useRoomId"
 import { SelectEvent } from "utils/dom"
 
 import BoardSelector from "./BoardSelector"
-import { useRoomData, useRoomId } from "./RoomContext"
+import { useChangeRoomOptions } from "./hooks/useChangeRoomOptions"
+import { getRoomOptions } from "./utils/getters"
 
 const RoomOptionsContainer = styled(Box)`
   flex: 1 1 auto;
@@ -56,11 +58,9 @@ function checkCheckpoints(options: RoborallyOptions): RoborallyOptions {
 
 const RoomOptions = () => {
   const roomId = useRoomId()
-  const roomData = useRoomData()
-  const [changeOptions, isEnabled] = useChangeRoomOptions(roomId, roomData)
+  const options = useRoomData(roomId, getRoomOptions)
+  const [changeOptions, isEnabled] = useChangeRoomOptions(roomId)
   const [changeOptionsSafe, isChanging] = useAsyncHandler(changeOptions)
-
-  const { options } = roomData
 
   const onAddBoardId = useCallback(
     (boardId: BoardId) => {

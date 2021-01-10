@@ -1,42 +1,37 @@
 import React from "react"
-import { useParams } from "react-router-dom"
 
-import { RoomId, RoomStatus } from "common/model/RoomData"
+import { RoomStatus } from "common/model/RoomData"
 import GamePage from "components/roborally/GamePage"
-import { renderError } from "components/ui/PageError"
-import { renderLoader } from "components/ui/PageLoader"
+import { useRoomData } from "hooks/useRoomData"
+import { useRoomId } from "hooks/useRoomId"
 
-import GameContextProvider from "./GameContextProvider"
-import RoomContextProvider from "./RoomContextProvider"
+import GameProvider from "./GameProvider"
 import RoomPage from "./RoomPage"
+import RoomProvider from "./RoomProvider"
+import { getRoomStatus } from "./utils/getters"
 
-export type RoomRouteParams = {
-  roomId: RoomId
+const RoomRouteSwitch = () => {
+  const roomId = useRoomId()
+  const roomStatus = useRoomData(roomId, getRoomStatus)
+
+  if (roomStatus !== RoomStatus.OPENED) {
+    return (
+      <GameProvider roomId={roomId}>
+        <GamePage />
+      </GameProvider>
+    )
+  }
+
+  return <RoomPage />
 }
 
 const RoomRoute = () => {
-  const { roomId } = useParams<RoomRouteParams>()
+  const roomId = useRoomId()
 
   return (
-    <RoomContextProvider
-      roomId={roomId}
-      renderError={renderError}
-      renderLoading={() => renderLoader("Loading room...")}
-      renderLoaded={data => {
-        if (data.status === RoomStatus.OPENED) {
-          return <RoomPage />
-        }
-
-        return (
-          <GameContextProvider
-            roomId={roomId}
-            renderError={renderError}
-            renderLoading={() => renderLoader("Loading game...")}
-            renderLoaded={() => <GamePage />}
-          />
-        )
-      }}
-    />
+    <RoomProvider roomId={roomId}>
+      <RoomRouteSwitch />
+    </RoomProvider>
   )
 }
 

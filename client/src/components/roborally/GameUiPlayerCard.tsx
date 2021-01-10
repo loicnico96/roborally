@@ -2,20 +2,18 @@ import React from "react"
 import styled from "styled-components"
 
 import { PlayerId } from "common/model/GameStateBasic"
-import {
-  CardAction,
-  getCardAction,
-  getCardPriority,
-} from "common/roborally/model/Card"
-import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
-import {
-  GamePhase,
-  RoborallyState,
-} from "common/roborally/model/RoborallyState"
-import { useGameState } from "components/room/GameContext"
-import { useRoomData } from "components/room/RoomContext"
+import { usePlayerName } from "hooks/usePlayerName"
+import { useRoomId } from "hooks/useRoomId"
 
+import { useGameState } from "./hooks/useGameState"
+import { usePlayerState } from "./hooks/usePlayerState"
+import { usePlayerStatusText } from "./hooks/usePlayerStatusText"
 import { getRobotImage } from "./RobotImage"
+import {
+  getPlayerCheckpoint,
+  getPlayerDamage,
+  getTotalCheckpoints,
+} from "./utils/getters"
 
 type GameUiPlayerCardProps = {
   isCurrentUser: boolean
@@ -75,59 +73,17 @@ const PlayerCardName = styled.div`
 
 const PlayerCardScore = styled.div``
 
-function getPlayerStatusText(
-  playerId: PlayerId,
-  player: RoborallyPlayer,
-  gameState: RoborallyState
-): string {
-  if (gameState.winners !== null) {
-    if (gameState.winners.includes(playerId)) {
-      return "Winner!"
-    }
-  }
-
-  const readyPhases = [GamePhase.STANDBY, GamePhase.PROGRAM]
-  if (readyPhases.includes(gameState.phase)) {
-    return player.ready ? "Ready" : "Waiting..."
-  }
-
-  if (player.down) {
-    return "Powered Down"
-  }
-
-  if (player.destroyed) {
-    return "Destroyed"
-  }
-
-  const card = player.program[gameState.sequence]
-  if (card !== null) {
-    const action = {
-      [CardAction.MOVE_1]: "Speed 1",
-      [CardAction.MOVE_2]: "Speed 2",
-      [CardAction.MOVE_3]: "Speed 3",
-      [CardAction.MOVE_BACK]: "Back Up",
-      [CardAction.ROTATE_LEFT]: "Rotate Left",
-      [CardAction.ROTATE_RIGHT]: "Rotate Right",
-      [CardAction.ROTATE_BACK]: "U-Turn",
-    }[getCardAction(card)]
-
-    return `${action} (${getCardPriority(card)})`
-  }
-
-  return "Waiting..."
-}
-
 const GameUiPlayerCard = ({
   isCurrentUser,
   playerId,
   playerIndex,
 }: GameUiPlayerCardProps) => {
-  const roomData = useRoomData()
-  const gameState = useGameState()
-
-  const player = gameState.players[playerId]
-  const playerName = roomData.players[playerId].name
-  const totalCheckpoints = gameState.checkpoints.length - 1
+  const roomId = useRoomId()
+  const playerCheckpoint = usePlayerState(playerId, getPlayerCheckpoint)
+  const playerDamage = usePlayerState(playerId, getPlayerDamage)
+  const playerName = usePlayerName(roomId, playerId)
+  const playerStatus = usePlayerStatusText(playerId)
+  const totalCheckpoints = useGameState(getTotalCheckpoints)
 
   return (
     <PlayerCardContainer>
@@ -138,13 +94,11 @@ const GameUiPlayerCard = ({
             {isCurrentUser ? `${playerName} (you)` : playerName}
           </PlayerCardName>
           <PlayerCardScore>
-            Checkpoint: {player.checkpoint} / {totalCheckpoints}
+            Checkpoint: {playerCheckpoint} / {totalCheckpoints}
           </PlayerCardScore>
         </PlayerCardContextRow>
-        <PlayerCardContextRow>Damage: {player.damage}</PlayerCardContextRow>
-        <PlayerCardContextRow>
-          {getPlayerStatusText(playerId, player, gameState)}
-        </PlayerCardContextRow>
+        <PlayerCardContextRow>Damage: {playerDamage}</PlayerCardContextRow>
+        <PlayerCardContextRow>{playerStatus}</PlayerCardContextRow>
       </PlayerCardContentContainer>
     </PlayerCardContainer>
   )

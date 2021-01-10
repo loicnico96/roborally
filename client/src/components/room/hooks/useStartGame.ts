@@ -4,20 +4,24 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { triggerRoomStart } from "functions/triggers"
+import { useRoomData } from "hooks/useRoomData"
 
 export function isAbleToStartGame(
   room: RoomData,
   userId: PlayerId | null
 ): boolean {
-  return room.status === RoomStatus.OPENED && room.ownerId === userId
+  const { ownerId, status } = room
+  return status === RoomStatus.OPENED && userId === ownerId
 }
 
-export function useStartGame(
-  roomId: RoomId,
-  room: RoomData
-): [() => Promise<void>, boolean] {
+export function useStartGame(roomId: RoomId): [() => Promise<void>, boolean] {
   const { userId } = useAuthContext()
-  const isEnabled = isAbleToStartGame(room, userId)
+
+  const isEnabled = useRoomData(
+    roomId,
+    useCallback(room => isAbleToStartGame(room, userId), [userId])
+  )
+
   const startGame = useCallback(async () => {
     if (isEnabled) {
       await triggerRoomStart({ roomId })

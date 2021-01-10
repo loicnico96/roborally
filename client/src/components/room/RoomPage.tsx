@@ -7,15 +7,17 @@ import AsyncButton from "components/ui/AsyncButton"
 import PageContainer from "components/ui/PageContainer"
 import PageContent from "components/ui/PageContent"
 import PageHeader from "components/ui/PageHeader"
-import { useCloseRoom } from "hooks/room/useCloseRoom"
-import { useEnterRoom } from "hooks/room/useEnterRoom"
-import { useLeaveRoom } from "hooks/room/useLeaveRoom"
-import { useStartGame } from "hooks/room/useStartGame"
+import { useRoomData } from "hooks/useRoomData"
+import { useRoomId } from "hooks/useRoomId"
 import { ROUTES } from "utils/navigation"
 
-import { useRoomData, useRoomId } from "./RoomContext"
+import { useCloseRoom } from "./hooks/useCloseRoom"
+import { useEnterRoom } from "./hooks/useEnterRoom"
+import { useLeaveRoom } from "./hooks/useLeaveRoom"
+import { useStartGame } from "./hooks/useStartGame"
 import RoomOptions from "./RoomOptions"
 import RoomPlayerItem from "./RoomPlayerItem"
+import { getPlayerIds } from "./utils/getters"
 
 const NAVIGATION_PARENTS = [
   { title: "HOME", path: ROUTES.home() },
@@ -53,23 +55,20 @@ const RoomPageColumn = styled.div`
 
 const RoomPage = () => {
   const roomId = useRoomId()
-  const roomData = useRoomData()
-  const [startGame, isStartGameEnabled] = useStartGame(roomId, roomData)
-  const [enterRoom, isEnterRoomEnabled] = useEnterRoom(roomId, roomData)
-  const [leaveRoom, isLeaveRoomEnabled] = useLeaveRoom(roomId, roomData)
-  const [closeRoom, isCloseRoomEnabled] = useCloseRoom(roomId, roomData)
+  const roomTitle = useRoomData(roomId, getRoomTitle)
+  const playerIds = useRoomData(roomId, getPlayerIds)
+  const [startGame, isStartGameEnabled] = useStartGame(roomId)
+  const [enterRoom, isEnterRoomEnabled] = useEnterRoom(roomId)
+  const [leaveRoom, isLeaveRoomEnabled] = useLeaveRoom(roomId)
+  const [closeRoom, isCloseRoomEnabled] = useCloseRoom(roomId)
 
   return (
     <PageContainer>
-      <PageHeader parents={NAVIGATION_PARENTS} title={getRoomTitle(roomData)} />
+      <PageHeader parents={NAVIGATION_PARENTS} title={roomTitle} />
       <RoomPageContent>
         <RoomPageColumn>
-          {roomData.playerOrder.map(playerId => (
-            <RoomPlayerItem
-              key={playerId}
-              isRoomOwner={playerId === roomData.ownerId}
-              userInfo={roomData.players[playerId]}
-            />
+          {playerIds.map(playerId => (
+            <RoomPlayerItem key={playerId} playerId={playerId} />
           ))}
           {isStartGameEnabled && (
             <AsyncButton onClick={startGame}>Start game</AsyncButton>
