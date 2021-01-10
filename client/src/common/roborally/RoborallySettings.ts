@@ -10,7 +10,7 @@ import { RoborallyPlayer } from "./model/RoborallyPlayer"
 import { getInitialGameState, RoborallyState } from "./model/RoborallyState"
 import { resolvePlayerAction } from "./resolvePlayerAction"
 import { resolveState } from "./resolveState"
-import { RoborallyContext } from "./RoborallyContext"
+import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 import { validateAction } from "./validateAction"
 import { validateOptions } from "./validateOptions"
 
@@ -23,6 +23,7 @@ export const RoborallySettings: BaseSettings<
   RoborallyPlayer,
   RoborallyState,
   RoborallyOptions,
+  RoborallyEvent,
   RoborallyContext,
   RoborallyAction
 > = {
@@ -54,7 +55,7 @@ export const RoborallySettings: BaseSettings<
 
   getContext(
     gameState: RoborallyState,
-    onStateChanged?: StateChangeHandler<RoborallyState>
+    onStateChanged?: StateChangeHandler<RoborallyState, RoborallyEvent>
   ): RoborallyContext {
     return new RoborallyContext(gameState, onStateChanged)
   },

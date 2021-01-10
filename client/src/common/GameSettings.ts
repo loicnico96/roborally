@@ -14,7 +14,8 @@ export type BaseSettings<
   Player extends PlayerStateBasic,
   State extends GameStateBasic<Player>,
   Options extends ObjectRecord,
-  Context extends GameContext<Player, State>,
+  Event,
+  Context extends GameContext<Player, State, Event>,
   PlayerAction
 > = {
   defaultOptions: Options
@@ -29,7 +30,7 @@ export type BaseSettings<
 
   getContext: (
     gameState: State,
-    onStateChanged?: StateChangeHandler<State>
+    onStateChanged?: StateChangeHandler<State, Event>
   ) => Context
 
   resolvePlayerAction: (
@@ -57,13 +58,13 @@ export type GameSettings<T extends GameType = GameType> = typeof SETTINGS[T]
 
 export type GameOptions<T extends GameType = GameType> = GameSettings<
   T
-> extends BaseSettings<any, any, infer Options, any, any>
+> extends BaseSettings<any, any, infer Options, any, any, any>
   ? Options
   : never
 
 export type GameState<T extends GameType = GameType> = GameSettings<
   T
-> extends BaseSettings<any, infer State, any, any, any>
+> extends BaseSettings<any, infer State, any, any, any, any>
   ? State
   : never
 

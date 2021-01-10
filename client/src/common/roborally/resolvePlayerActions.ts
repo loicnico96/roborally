@@ -12,7 +12,7 @@ import {
   teleportPlayer,
 } from "./model/RoborallyPlayer"
 import { checkHoles, resolveMovement } from "./resolveMovement"
-import { RoborallyContext } from "./RoborallyContext"
+import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export type PlayerAction = {
   playerId: PlayerId
@@ -60,7 +60,7 @@ function isAbleToTeleport(
 
 async function setCurrentPlayer(ctx: RoborallyContext, playerId: PlayerId) {
   ctx.mergeState({ currentPlayer: playerId })
-  await ctx.post()
+  await ctx.post(RoborallyEvent.CHANGE_PLAYER)
 }
 
 async function resolvePlayerTeleport(
@@ -69,7 +69,7 @@ async function resolvePlayerTeleport(
   pos: Position
 ) {
   ctx.updatePlayer(playerId, player => teleportPlayer(player, pos))
-  await ctx.post()
+  await ctx.post(RoborallyEvent.TELEPORT)
   await checkHoles(ctx)
 }
 
@@ -113,7 +113,7 @@ async function resolvePlayerRotate(
   rot: Rotation
 ) {
   ctx.updatePlayer(playerId, player => rotatePlayer(player, rot))
-  await ctx.post()
+  await ctx.post(RoborallyEvent.ROTATE)
 }
 
 async function resolvePlayerAction(

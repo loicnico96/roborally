@@ -1,7 +1,7 @@
 import { CellData, isGear } from "./model/CellData"
 import { Rotation } from "./model/Position"
 import { isAffectedByCells, rotatePlayer } from "./model/RoborallyPlayer"
-import { RoborallyContext } from "./RoborallyContext"
+import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export function getGearRot(cell: CellData): Rotation {
   return cell.rot ?? Rotation.NONE
@@ -21,6 +21,6 @@ export async function resolveGears(ctx: RoborallyContext) {
   })
 
   if (updateCount > 0) {
-    await ctx.post()
+    await ctx.post(RoborallyEvent.ROTATE)
   }
 }

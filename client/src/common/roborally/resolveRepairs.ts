@@ -1,6 +1,6 @@
 import { isRepair } from "./model/CellData"
 import { isAbleToRepair, repairPlayer } from "./model/RoborallyPlayer"
-import { RoborallyContext } from "./RoborallyContext"
+import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export async function resolveRepairs(ctx: RoborallyContext) {
   const updateCount = ctx.updatePlayers(player => {
@@ -13,6 +13,6 @@ export async function resolveRepairs(ctx: RoborallyContext) {
   })
 
   if (updateCount > 0) {
-    await ctx.post()
+    await ctx.post(RoborallyEvent.REPAIR)
   }
 }

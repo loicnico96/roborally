@@ -4,6 +4,7 @@ import styled from "styled-components"
 import { ReactComponent as SleepIcon } from "assets/icons/Sleep.svg"
 import { PlayerId } from "common/model/GameStateBasic"
 import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
+import { EVENT_DURATION_NORMAL } from "components/room/GameProvider"
 import { usePlayerName } from "hooks/usePlayerName"
 import { useRoomId } from "hooks/useRoomId"
 
@@ -13,7 +14,7 @@ import { usePlayerState } from "./hooks/usePlayerState"
 import RobotImage from "./RobotImage"
 
 const ROBOT_SIZE = 0.6
-const TRANSITION_DURATION = 0.5
+const TRANSITION_DURATION = EVENT_DURATION_NORMAL / 1000
 
 export type GameUiPlayerRobotProps = {
   playerId: PlayerId

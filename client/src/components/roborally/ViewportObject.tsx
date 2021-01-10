@@ -1,9 +1,11 @@
 import React from "react"
 import styled from "styled-components"
 
+import { EVENT_DURATION_NORMAL } from "components/room/GameProvider"
+
 import { useViewport } from "./GameUiViewport"
 
-const TRANSITION_DURATION = 0.5
+const TRANSITION_DURATION = EVENT_DURATION_NORMAL / 1000
 
 export type ViewportObjectProps = React.HtmlHTMLAttributes<HTMLDivElement> & {
   height: number

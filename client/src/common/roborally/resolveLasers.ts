@@ -13,7 +13,7 @@ import {
   isDestroyedByDamage,
   RoborallyPlayer,
 } from "./model/RoborallyPlayer"
-import { RoborallyContext } from "./RoborallyContext"
+import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export type Laser = {
   damage: number
@@ -34,7 +34,7 @@ export async function checkDamage(ctx: RoborallyContext) {
   })
 
   if (updateCount > 0) {
-    await ctx.post()
+    await ctx.post(RoborallyEvent.DESTROY)
   }
 }
 
@@ -114,7 +114,7 @@ export async function resolveLasers(ctx: RoborallyContext, lasers: Laser[]) {
 
       return false
     })
-    await ctx.post()
+    await ctx.post(RoborallyEvent.DAMAGE)
   }
 }
 

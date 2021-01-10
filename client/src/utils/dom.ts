@@ -13,3 +13,9 @@ export function getDimensions(ref: ElementRef): Dimensions {
     y: ref.current?.offsetHeight ?? 0,
   }
 }
+
+export async function pause(millis: number): Promise<void> {
+  return new Promise(resolve => {
+    setTimeout(resolve, millis)
+  })
+}

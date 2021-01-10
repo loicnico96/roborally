@@ -7,16 +7,17 @@ import { PlayerStateBasic } from "./model/PlayerStateBasic"
 
 const INTERRUPT_WIN = Object.assign(Error("interrupt"), { reason: "win" })
 
-export type StateChangeHandler<T> = (newState: T) => Promise<void>
+export type StateChangeHandler<T, E> = (newState: T, event: E) => Promise<void>
 
 export class GameContext<
   Player extends PlayerStateBasic,
-  State extends GameStateBasic<Player>
+  State extends GameStateBasic<Player>,
+  Event
 > {
-  onStateChanged?: StateChangeHandler<State>
+  onStateChanged?: StateChangeHandler<State, Event>
   state: State
 
-  constructor(state: State, onStateChanged?: StateChangeHandler<State>) {
+  constructor(state: State, onStateChanged?: StateChangeHandler<State, Event>) {
     this.onStateChanged = onStateChanged
     this.state = state
   }
@@ -111,9 +112,9 @@ export class GameContext<
     throw INTERRUPT_WIN
   }
 
-  async post(): Promise<void> {
+  async post(event: Event): Promise<void> {
     if (this.onStateChanged) {
-      await this.onStateChanged(this.state)
+      await this.onStateChanged(this.state, event)
     }
   }
 

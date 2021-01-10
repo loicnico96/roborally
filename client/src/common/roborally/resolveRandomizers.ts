@@ -2,7 +2,7 @@ import update from "immutability-helper"
 
 import { isRandomizer } from "./model/CellData"
 import { isAffectedByCells } from "./model/RoborallyPlayer"
-import { RoborallyContext } from "./RoborallyContext"
+import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export async function resolveRandomizers(
   ctx: RoborallyContext,
@@ -32,6 +32,6 @@ export async function resolveRandomizers(
 
   if (updateCount > 0) {
     ctx.mergeState({ deck })
-    await ctx.post()
+    await ctx.post(RoborallyEvent.RANDOMIZE)
   }
 }

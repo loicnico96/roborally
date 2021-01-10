@@ -4,12 +4,14 @@ import { Collection } from "common/firestore/collections"
 import { GameType, getGameSettings } from "common/GameSettings"
 import { RoomId } from "common/model/RoomData"
 import { RoborallyState } from "common/roborally/model/RoborallyState"
+import { RoborallyEvent } from "common/roborally/RoborallyContext"
 import { getGameResource } from "components/roborally/hooks/useGameState"
 import { renderError } from "components/ui/PageError"
 import { renderLoader } from "components/ui/PageLoader"
 import { useFirestoreLoader } from "firestore/useFirestoreLoader"
 import { useActions } from "hooks/useActions"
 import { useStore } from "hooks/useStore"
+import { pause } from "utils/dom"
 import {
   Resource,
   isLoading,
@@ -17,9 +19,23 @@ import {
   getLoadedResource,
 } from "utils/resources"
 
+export const EVENT_DURATION_SHORT = 200
+export const EVENT_DURATION_NORMAL = 500
+
 export type GameProviderProps = {
   children: JSX.Element
   roomId: RoomId
+}
+
+function getEventDuration(event: RoborallyEvent): number {
+  switch (event) {
+    case RoborallyEvent.CHANGE_PHASE:
+      return EVENT_DURATION_SHORT
+    case RoborallyEvent.CHANGE_PLAYER:
+      return EVENT_DURATION_SHORT
+    default:
+      return EVENT_DURATION_NORMAL
+  }
 }
 
 export function useGameLoading(roomId: RoomId): boolean {
@@ -64,11 +80,13 @@ const GameProvider = ({ children, roomId }: GameProviderProps) => {
         setGameResource(getLoadedResource(roomId, state))
       }
 
-      async function onStateChanged(state: RoborallyState) {
+      async function onStateChanged(
+        state: RoborallyState,
+        event: RoborallyEvent
+      ) {
         setGameState(state)
-        await new Promise(resolve => {
-          setTimeout(resolve, 500)
-        })
+        const duration = getEventDuration(event)
+        await pause(duration)
       }
 
       async function resolveStateQueue() {

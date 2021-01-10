@@ -15,13 +15,13 @@ import { resolveRandomizers } from "./resolveRandomizers"
 import { resolveRepairs } from "./resolveRepairs"
 import { resolveTurnEnd } from "./resolveTurnEnd"
 import { resolveVirtualPlayers } from "./resolveVirtualPlayers"
-import { RoborallyContext } from "./RoborallyContext"
+import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 const SEQUENCE_COUNT = 5
 
 async function setGamePhase(ctx: RoborallyContext, phase: GamePhase) {
   ctx.mergeState({ currentPlayer: null, phase })
-  await ctx.post()
+  await ctx.post(RoborallyEvent.CHANGE_PHASE)
 }
 
 async function resolveTurnSequence(ctx: RoborallyContext, sequence: number) {

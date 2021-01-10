@@ -8,7 +8,7 @@ import {
   RoborallyPlayer,
 } from "./model/RoborallyPlayer"
 import { GamePhase } from "./model/RoborallyState"
-import { RoborallyContext } from "./RoborallyContext"
+import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 function applyPowerDown(player: RoborallyPlayer): RoborallyPlayer {
   return merge(player, {
@@ -58,5 +58,5 @@ export async function resolveTurnEnd(ctx: RoborallyContext) {
       turn: gameState.turn + 1,
     })
   })
-  await ctx.post()
+  await ctx.post(RoborallyEvent.RESPAWN)
 }

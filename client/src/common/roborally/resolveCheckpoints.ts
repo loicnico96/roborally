@@ -3,7 +3,7 @@ import {
   isAlive,
   triggerPlayerCheckpoint,
 } from "./model/RoborallyPlayer"
-import { RoborallyContext } from "./RoborallyContext"
+import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export async function checkWinCondition(ctx: RoborallyContext) {
   const winners = ctx.filterPlayers(player => {
@@ -29,7 +29,7 @@ export async function resolveCheckpoints(ctx: RoborallyContext) {
   })
 
   if (updateCount > 0) {
-    await ctx.post()
+    await ctx.post(RoborallyEvent.CHECKPOINT)
     await checkWinCondition(ctx)
   }
 }

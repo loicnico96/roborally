@@ -15,7 +15,7 @@ import {
   rotatePlayer,
   teleportPlayer,
 } from "./model/RoborallyPlayer"
-import { RoborallyContext } from "./RoborallyContext"
+import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export type Move = {
   dir: Direction
@@ -226,7 +226,7 @@ export async function checkHoles(ctx: RoborallyContext) {
   })
 
   if (updateCount > 0) {
-    await ctx.post()
+    await ctx.post(RoborallyEvent.DESTROY)
   }
 }
 
@@ -252,7 +252,7 @@ export async function checkPortals(
   })
 
   if (updateCount > 0) {
-    await ctx.post()
+    await ctx.post(RoborallyEvent.TELEPORT)
   }
 }
 
@@ -294,7 +294,7 @@ export async function resolveMovement(
   })
 
   if (updateCount > 0) {
-    await ctx.post()
+    await ctx.post(RoborallyEvent.MOVE)
     await checkHoles(ctx)
     await checkPortals(ctx, moves)
     await resolveMovement(ctx, getOilMoves(ctx, moves))
