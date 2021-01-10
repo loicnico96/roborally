@@ -5,7 +5,6 @@ import { useAuthContext } from "firestore/auth/AuthContext"
 
 import GameUiBoard from "./GameUiBoard"
 import GameUiCheckpoint from "./GameUiCheckpoint"
-import GameUiHeader from "./GameUiHeader"
 import GameUiPlayerCard from "./GameUiPlayerCard"
 import GameUiPlayerRobot from "./GameUiPlayerRobot"
 import GameUiProgram from "./GameUiProgram"
@@ -18,6 +17,7 @@ import { getViewportHeight, getViewportWidth } from "./Viewport"
 const GameUiContentWrapper = styled.div`
   background-color: lightgray;
   display: flex;
+  flex: 1 1 auto;
   flex-direction: column;
   height: 100%;
   width: 100%;
@@ -40,7 +40,6 @@ const GamePage = () => {
 
   return (
     <GameUiContentWrapper>
-      <GameUiHeader />
       <GameUiContentMain>
         <GameUiTurnPhaseSequence />
         <GameUiViewport

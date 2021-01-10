@@ -12,8 +12,7 @@ const PageLoaderContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
-  min-height: 100%;
-  min-width: 100%;
+  padding: 24px 48px;
 `
 
 const PageLoaderMessage = styled.div``

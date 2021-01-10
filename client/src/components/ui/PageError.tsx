@@ -7,8 +7,7 @@ const PageErrorContainer = styled.div`
   align-items: center;
   display: flex;
   justify-content: center;
-  min-height: 100%;
-  min-width: 100%;
+  padding: 24px 48px;
 `
 
 const PageErrorMessage = styled.div``

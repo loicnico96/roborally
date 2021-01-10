@@ -5,6 +5,7 @@ import styled from "styled-components"
 import { GameType } from "common/GameSettings"
 import { RoomData } from "common/model/RoomData"
 import AsyncButton from "components/ui/AsyncButton"
+import PageContent from "components/ui/PageContent"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { triggerRoomCreate } from "functions/triggers"
 import { ROUTES } from "utils/navigation"
@@ -36,14 +37,14 @@ const RoomListPage = ({ rooms }: RoomListPageProps) => {
   const [createRoom, isCreateRoomEnabled] = useCreateRoom()
 
   return (
-    <>
+    <PageContent>
       <RoomListPageHeader>
         <AsyncButton onClick={createRoom} disabled={!isCreateRoomEnabled}>
           Create room
         </AsyncButton>
       </RoomListPageHeader>
       <RoomList rooms={rooms} />
-    </>
+    </PageContent>
   )
 }
 
