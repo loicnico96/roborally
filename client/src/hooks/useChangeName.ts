@@ -1,6 +1,7 @@
 import { useCallback } from "react"
 
 import { useAuthContext } from "firestore/auth/AuthContext"
+import { promptUserName } from "firestore/auth/promptUserName"
 
 export function useChangeName(): [() => Promise<void>, boolean] {
   const { userInfo } = useAuthContext()
@@ -10,14 +11,13 @@ export function useChangeName(): [() => Promise<void>, boolean] {
   const changeName = useCallback(async () => {
     if (userInfo !== null) {
       const oldName = userInfo.name
-      // eslint-disable-next-line no-alert
-      const newName = window.prompt("Choose your user name", oldName)
-      if (newName !== null && newName !== "" && newName !== oldName) {
-        try {
+      try {
+        const newName = promptUserName(oldName)
+        if (newName !== oldName) {
           await userInfo.updateName(newName)
-        } catch (error) {
-          console.error(error)
         }
+      } catch (error) {
+        console.error(error)
       }
     }
   }, [userInfo])

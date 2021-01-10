@@ -1,48 +1,19 @@
-import update from "immutability-helper"
-import React, { useEffect, useState } from "react"
+import { useEffect } from "react"
+
+import { useActions } from "hooks/useActions"
 
 import Auth from "./Auth"
-import { AuthContextProvider, UNAUTHENTICATED } from "./AuthContext"
 
 export type AuthProviderProps = {
-  children: React.ReactNode
+  children: JSX.Element
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
-  const [authData, setAuthData] = useState(UNAUTHENTICATED)
+  const { setCurrentUser } = useActions()
 
-  useEffect(() => {
-    const subscription = Auth.onAuthStateChanged(user => {
-      if (user !== null) {
-        setAuthData({
-          isAnonymous: user.isAnonymous,
-          isAuthenticated: true,
-          userId: user.uid,
-          userInfo: {
-            name: user.displayName ?? "Anonymous",
-            updateName: async (name: string) => {
-              await user.updateProfile({ displayName: name })
-              setAuthData(data =>
-                update(data, {
-                  userInfo: {
-                    $merge: {
-                      name,
-                    },
-                  },
-                })
-              )
-            },
-          },
-        })
-      } else {
-        setAuthData(UNAUTHENTICATED)
-      }
-    })
+  useEffect(() => Auth.onAuthStateChanged(setCurrentUser), [setCurrentUser])
 
-    return subscription
-  }, [setAuthData])
-
-  return <AuthContextProvider value={authData}>{children}</AuthContextProvider>
+  return children
 }
 
 export default AuthProvider

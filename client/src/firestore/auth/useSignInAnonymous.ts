@@ -1,12 +1,18 @@
-import { useCallback } from "react"
+import Auth from "./Auth"
+import { promptUserName } from "./promptUserName"
+import { useSignIn } from "./useSignIn"
 
-import Auth, { FirebaseUserCredential } from "./Auth"
-import { getDefaultAuthPersistence } from "./AuthPersistence"
+export async function signInAnonymous() {
+  const displayName = promptUserName()
+  const { user } = await Auth.signInAnonymously()
 
-export function useSignInAnonymous(): () => Promise<FirebaseUserCredential> {
-  return useCallback(async () => {
-    await Auth.setPersistence(getDefaultAuthPersistence())
-    const userCredential = await Auth.signInAnonymously()
-    return userCredential
-  }, [])
+  if (user !== null) {
+    await user.updateProfile({ displayName })
+  }
+
+  return user
+}
+
+export function useSignInAnonymous() {
+  return useSignIn(signInAnonymous)
 }

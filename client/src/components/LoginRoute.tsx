@@ -7,6 +7,7 @@ import PageContent from "components/ui/PageContent"
 import PageHeader from "components/ui/PageHeader"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignInAnonymous } from "firestore/auth/useSignInAnonymous"
+import { useSignInWithGoogle } from "firestore/auth/useSignInWithGoogle"
 import { useSearchParams } from "hooks/useSearchParams"
 import { ROUTES } from "utils/navigation"
 
@@ -16,6 +17,7 @@ const LoginRoute = () => {
   const callbackRoute = useSearchParams().get("callback")
   const { isAuthenticated, userId, userInfo } = useAuthContext()
   const signInAnonymous = useSignInAnonymous()
+  const signInWithGoogle = useSignInWithGoogle()
   const history = useHistory()
 
   useEffect(() => {
@@ -33,7 +35,14 @@ const LoginRoute = () => {
             Signed in as {userId} : {JSON.stringify(userInfo)}
           </div>
         ) : (
-          <AsyncButton onClick={signInAnonymous}>Sign in as guest</AsyncButton>
+          <div>
+            <AsyncButton onClick={signInAnonymous}>
+              Sign in as guest
+            </AsyncButton>
+            <AsyncButton onClick={signInWithGoogle}>
+              Sign in with Google
+            </AsyncButton>
+          </div>
         )}
       </PageContent>
     </PageContainer>

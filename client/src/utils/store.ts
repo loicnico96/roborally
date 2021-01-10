@@ -2,17 +2,39 @@ import update from "immutability-helper"
 import { SetState } from "zustand"
 
 import { RoomData, RoomId } from "common/model/RoomData"
+import { UserId, UserInfo } from "common/model/UserInfo"
 import { RoborallyState } from "common/roborally/model/RoborallyState"
 import { merge } from "common/utils/objects"
+import { FirebaseUser } from "firestore/auth/Auth"
 
 import { Resource } from "./resources"
 
+export type AuthUser = UserInfo & {
+  updateName: (name: string) => Promise<void>
+}
+
+export type AuthData = {
+  isAnonymous: boolean
+  isAuthenticated: boolean
+  userId: UserId | null
+  userInfo: AuthUser | null
+}
+
+export const UNAUTHENTICATED: AuthData = {
+  isAnonymous: false,
+  isAuthenticated: false,
+  userId: null,
+  userInfo: null,
+}
+
 export type State = {
+  auth: AuthData
   games: Partial<Record<RoomId, Resource<RoborallyState>>>
   rooms: Partial<Record<RoomId, Resource<RoomData>>>
 }
 
 export type StoreActions = {
+  setCurrentUser: (user: FirebaseUser | null) => void
   setGameResource: (resource: Resource<RoborallyState>) => void
   setRoomResource: (resource: Resource<RoomData>) => void
 }
@@ -22,11 +44,33 @@ export type Store = State & {
 }
 
 export const INITIAL_STATE: State = {
+  auth: UNAUTHENTICATED,
   games: {},
   rooms: {},
 }
 
 export function createActions(set: SetState<State>): StoreActions {
+  function setCurrentUser(user: FirebaseUser | null) {
+    if (user !== null) {
+      set({
+        auth: {
+          isAnonymous: user.isAnonymous,
+          isAuthenticated: true,
+          userId: user.uid,
+          userInfo: {
+            name: user.displayName ?? "[Guest]",
+            updateName: async (displayName: string) => {
+              await user.updateProfile({ displayName })
+              setCurrentUser(user)
+            },
+          },
+        },
+      })
+    } else {
+      set({ auth: UNAUTHENTICATED })
+    }
+  }
+
   function setGameResource(resource: Resource<RoborallyState>) {
     set(state =>
       update(state, {
@@ -52,6 +96,7 @@ export function createActions(set: SetState<State>): StoreActions {
   }
 
   return {
+    setCurrentUser,
     setGameResource,
     setRoomResource,
   }
