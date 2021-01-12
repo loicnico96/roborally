@@ -1,7 +1,8 @@
 import { GameContext } from "common/GameContext"
+import { PlayerId } from "common/model/GameStateBasic"
 
 import { MetropolysPlayer } from "./model/MetropolysPlayer"
-import { Bid, MetropolysState } from "./model/MetropolysState"
+import { Bid, District, MetropolysState } from "./model/MetropolysState"
 
 export type MetropolysEvent = string
 
@@ -10,7 +11,20 @@ export class MetropolysContext extends GameContext<
   MetropolysState,
   MetropolysEvent
 > {
-  getHighestBid(): Bid | undefined {
-    return this.state.bids[this.state.bids.length - 1]
+  getBids(): Bid[] {
+    return this.state.bids
+  }
+
+  getCurrentPlayerId(): PlayerId {
+    return this.state.currentPlayer
+  }
+
+  getDistrict(district: number): District {
+    return this.state.districts[district]
+  }
+
+  getHighestBid(): Bid | null {
+    const bids = this.getBids()
+    return bids[bids.length - 1] ?? null
   }
 }

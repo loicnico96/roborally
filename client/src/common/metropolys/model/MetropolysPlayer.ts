@@ -1,27 +1,19 @@
 import { PlayerStateBasic } from "common/model/PlayerStateBasic"
 
+import { BoardColor, BoardShape } from "./board"
 import { TokenType } from "./TokenType"
-
-export enum MissionColor {
-  A = "a",
-  B = "b",
-  C = "c",
-  D = "d",
-  E = "e",
-}
-
-export enum MissionShape {
-  BRIDGES = "bridges",
-  DISTRICTS = "districts",
-  LAKES = "lakes",
-  LINES = "lines",
-  TOWERS = "towers",
-}
 
 export type MetropolysPlayer = PlayerStateBasic & {
   buildings: boolean[]
-  color: MissionColor
+  color: BoardColor
   pass: boolean
   tokens: Partial<Record<TokenType, number>>
-  shape: MissionShape
+  shape: BoardShape
+}
+
+export function isAvailableBuilding(
+  player: MetropolysPlayer,
+  height: number
+): boolean {
+  return player.buildings[height] === true
 }

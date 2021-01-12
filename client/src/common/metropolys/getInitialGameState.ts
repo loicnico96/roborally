@@ -3,19 +3,18 @@ import { shuffle } from "common/utils/arrays"
 import { enumValues } from "common/utils/enums"
 
 import {
-  MetropolysPlayer,
-  MissionColor,
-  MissionShape,
-} from "./model/MetropolysPlayer"
+  BUILDING_COUNT,
+  BoardColor,
+  BoardShape,
+  DISTRICT_COUNT,
+} from "./model/board"
+import { MetropolysPlayer } from "./model/MetropolysPlayer"
 import { MetropolysState } from "./model/MetropolysState"
-
-const BUILDING_COUNT = 13
-const DISTRICT_COUNT = 64 // To be determined
 
 export function getInitialPlayerState(
   isStartingPlayer: boolean,
-  color: MissionColor,
-  shape: MissionShape
+  color: BoardColor,
+  shape: BoardShape
 ): MetropolysPlayer {
   return {
     buildings: Array(BUILDING_COUNT).fill(true),
@@ -30,15 +29,18 @@ export function getInitialPlayerState(
 export async function getInitialGameState(
   playerIds: PlayerId[]
 ): Promise<MetropolysState> {
-  const colors = shuffle(enumValues(MissionColor))
-  const shapes = shuffle(enumValues(MissionShape))
+  const colors = shuffle(enumValues(BoardColor))
+  const shapes = shuffle(enumValues(BoardShape))
+
+  // TODO: Use only some sectors if less players
+  // TODO: Place tokens
 
   return {
     bids: [],
     districts: Array(DISTRICT_COUNT).fill({}),
     currentPlayer: playerIds[0],
     mostMetro: null,
-    mostRuins: null,
+    lastRuins: null,
     playerOrder: playerIds,
     players: playerIds.reduce((players, playerId, playerIndex) => {
       const isStartingPlayer = playerIndex === 0

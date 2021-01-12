@@ -1,31 +1,19 @@
 import { PlayerId } from "common/model/GameStateBasic"
-import { merge } from "common/utils/objects"
+import { findKey, merge } from "common/utils/objects"
 
 import { MetropolysContext } from "./MetropolysContext"
+import { isAdjacent, MAX_HEIGHT } from "./model/board"
 import { MetropolysPlayer } from "./model/MetropolysPlayer"
-import { Bid, MetropolysState } from "./model/MetropolysState"
+import { Bid, getScore, isAvailable } from "./model/MetropolysState"
 import { TokenType } from "./model/TokenType"
-
-const MAX_HEIGHT = 12
-
-function getBids(state: MetropolysState): Bid[] {
-  return state.bids
-}
-
-function getCurrentPlayerId(state: MetropolysState): PlayerId {
-  return state.currentPlayer
-}
-
-function getHighestBid(state: MetropolysState): Bid | null {
-  const bids = getBids(state)
-  return bids[bids.length - 1] ?? null
-}
 
 function isPlayerCanPlay(player: MetropolysPlayer, minHeight: number) {
   if (player.pass) {
     return false
   } else {
-    return player.buildings.some((available, height) => available && height >= minHeight)
+    return player.buildings.some(
+      (available, height) => available && height >= minHeight
+    )
   }
 }
 
@@ -71,8 +59,21 @@ export async function nextRound(
 }
 
 export async function finishGame(ctx: MetropolysContext) {
-  // TODO Determine winner
-  ctx.win([])
+  const scores = ctx.getPlayerOrder().reduce((result, playerId) => {
+    result[playerId] = getScore(ctx.getState(), playerId)
+    return result
+  }, {} as Record<PlayerId, number>)
+
+  const highestScore = Math.max(...Object.values(scores))
+  const highestScorePlayerId = findKey(scores, score => score === highestScore)
+
+  // TODO Tiebreaker
+
+  if (highestScorePlayerId === undefined) {
+    throw Error("Inconsistent state")
+  }
+
+  ctx.win([highestScorePlayerId])
 }
 
 export async function gainToken(
@@ -80,13 +81,46 @@ export async function gainToken(
   playerId: PlayerId,
   token: TokenType
 ) {
+  const { tokens } = ctx.getPlayer(playerId)
+  const tokenCount = tokens[token] ?? 0
+
   ctx.updatePlayer(playerId, {
     tokens: {
-      [token]: (count = 0) => count + 1,
+      [token]: {
+        $set: tokenCount + 1,
+      },
     },
   })
 
-  // TODO Check for most metro/ruins tokens
+  switch (token) {
+    case TokenType.METRO: {
+      if (ctx.getState().mostMetro !== playerId) {
+        const mostMetroPlayer = ctx.findPlayer((otherPlayer, otherPlayerId) => {
+          if (playerId !== otherPlayerId) {
+            const otherTokenCount = otherPlayer.tokens[token] ?? 0
+            return otherTokenCount > tokenCount
+          } else {
+            return false
+          }
+        })
+
+        if (mostMetroPlayer === undefined) {
+          ctx.mergeState({ mostMetro: playerId })
+        }
+      }
+      break
+    }
+
+    case TokenType.RUINS: {
+      if (ctx.getState().lastRuins !== playerId) {
+        ctx.mergeState({ lastRuins: playerId })
+      }
+      break
+    }
+
+    default:
+      break
+  }
 }
 
 export async function finishRound(ctx: MetropolysContext, highestBid: Bid) {
@@ -112,7 +146,7 @@ export async function finishRound(ctx: MetropolysContext, highestBid: Bid) {
     },
   })
 
-  const { token } = ctx.getState().districts[district]
+  const { token } = ctx.getDistrict(district)
   if (token !== undefined) {
     await gainToken(ctx, playerId, token)
   }
@@ -134,7 +168,17 @@ export async function finishTurn(
     return finishRound(ctx, highestBid)
   }
 
-  // Check if no adjacent available district
+  const isPossibleOutbid = ctx
+    .getState()
+    .districts.some(
+      (_, index) =>
+        isAdjacent(highestBid.district, index) &&
+        isAvailable(ctx.getState(), index)
+    )
+
+  if (!isPossibleOutbid) {
+    return finishRound(ctx, highestBid)
+  }
 
   const nextPlayerId = getNextPlayerId(ctx, playerId, highestBid)
 
@@ -147,9 +191,8 @@ export async function finishTurn(
 
 export async function resolveState(ctx: MetropolysContext) {
   if (ctx.allPlayersReady()) {
-    const state = ctx.getState()
-    const playerId = getCurrentPlayerId(state)
-    const highestBid = getHighestBid(state)
+    const playerId = ctx.getCurrentPlayerId()
+    const highestBid = ctx.getHighestBid()
     if (highestBid === null) {
       throw Error("Inconsistent state")
     }
