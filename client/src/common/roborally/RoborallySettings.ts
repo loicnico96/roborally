@@ -1,9 +1,9 @@
 import { Collection, DataFetcher } from "common/firestore/collections"
 import { RoborallyAction } from "common/functions/httpGameAction"
-import { StateChangeHandler } from "common/GameContext"
 import { BaseSettings } from "common/GameSettings"
 import { PlayerId } from "common/model/GameStateBasic"
 import { shuffle } from "common/utils/arrays"
+import { constructorOf } from "common/utils/types"
 
 import { BoardData, BoardId, mergeBoards } from "./model/BoardData"
 import { RoborallyPlayer } from "./model/RoborallyPlayer"
@@ -27,6 +27,8 @@ export const RoborallySettings: BaseSettings<
   RoborallyContext,
   RoborallyAction
 > = {
+  getContext: constructorOf(RoborallyContext),
+
   defaultOptions: {
     checkpoints: 3,
     boardIds: [BoardId.ISLAND],
@@ -51,13 +53,6 @@ export const RoborallySettings: BaseSettings<
     const boardData = mergeBoards(boardDatas)
     const checkpoints = shuffle(boardData.checkpoints).slice(0, numCheckpoints)
     return getInitialGameState(boardIds, boardData, checkpoints, playerIds)
-  },
-
-  getContext(
-    gameState: RoborallyState,
-    onStateChanged?: StateChangeHandler<RoborallyState, RoborallyEvent>
-  ): RoborallyContext {
-    return new RoborallyContext(gameState, onStateChanged)
   },
 
   resolvePlayerAction,
