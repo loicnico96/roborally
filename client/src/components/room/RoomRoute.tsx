@@ -14,8 +14,6 @@ import RoomPage from "./RoomPage"
 import RoomProvider from "./RoomProvider"
 import { getRoomStatus } from "./utils/getters"
 
-
-
 const NAVIGATION_PARENTS = [BREADCRUMB_HOME, BREADCRUMB_ROOM_LIST]
 
 const RoomRouteSwitch = () => {

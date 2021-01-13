@@ -65,8 +65,12 @@ async function resolveTurnSequence(ctx: RoborallyContext, sequence: number) {
   await resolvePlayerLasers(ctx)
   await checkDamage(ctx)
 
+  if (features.includes(FeatureType.REPAIR)) {
+    await setGamePhase(ctx, GamePhase.RESOLVE_REPAIRS)
+    await resolveRepairs(ctx)
+  }
+
   await setGamePhase(ctx, GamePhase.RESOLVE_CHECKPOINTS)
-  await resolveRepairs(ctx)
   await resolveCheckpoints(ctx)
 }
 

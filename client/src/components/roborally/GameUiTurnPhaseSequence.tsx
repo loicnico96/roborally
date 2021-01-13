@@ -23,6 +23,7 @@ const TURN_PHASES = [
   GamePhase.RESOLVE_CRUSHERS,
   GamePhase.RESOLVE_GEARS,
   GamePhase.RESOLVE_LASERS,
+  GamePhase.RESOLVE_REPAIRS,
   GamePhase.RESOLVE_CHECKPOINTS,
 ]
 
@@ -40,6 +41,8 @@ function isPhaseAvailable(phase: GamePhase, features: FeatureType[]): boolean {
       return features.includes(FeatureType.CRUSHER)
     case GamePhase.RESOLVE_GEARS:
       return features.includes(FeatureType.GEAR)
+    case GamePhase.RESOLVE_REPAIRS:
+      return features.includes(FeatureType.REPAIR)
     default:
       return true
   }

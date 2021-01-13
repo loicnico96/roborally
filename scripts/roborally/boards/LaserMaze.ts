@@ -143,7 +143,7 @@ builder.pos(4, 3).laserWall(Direction.SOUTH, 2)
 builder.pos(5, 3).wall(Direction.SOUTH, Direction.WEST)
 
 // Pos (6, 3)
-builder.pos(6, 3).conveyor(Direction.EAST, true).laserWall(Direction.SOUTH, 1)
+builder.pos(6, 3).conveyor(Direction.EAST, true).laserWall(Direction.NORTH, 1)
 
 // Pos (7, 3)
 builder.pos(7, 3).conveyor(Direction.NORTH, true)

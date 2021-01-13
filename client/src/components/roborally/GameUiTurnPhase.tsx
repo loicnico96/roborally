@@ -12,12 +12,13 @@ const PHASE_LABELS: Record<GamePhase, string> = {
   [GamePhase.PROGRAM]: "Program",
   [GamePhase.RESOLVE_RANDOMIZERS]: "Randomizers",
   [GamePhase.RESOLVE_PLAYERS]: "Player actions",
-  [GamePhase.RESOLVE_CONVEYORS_FAST]: "Fast conveyors",
+  [GamePhase.RESOLVE_CONVEYORS_FAST]: "Express conveyors",
   [GamePhase.RESOLVE_CONVEYORS]: "Conveyors",
   [GamePhase.RESOLVE_PUSHERS]: "Pushers",
   [GamePhase.RESOLVE_CRUSHERS]: "Crushers",
   [GamePhase.RESOLVE_GEARS]: "Gears",
   [GamePhase.RESOLVE_LASERS]: "Lasers",
+  [GamePhase.RESOLVE_REPAIRS]: "Repair sites",
   [GamePhase.RESOLVE_CHECKPOINTS]: "Checkpoints",
 }
 

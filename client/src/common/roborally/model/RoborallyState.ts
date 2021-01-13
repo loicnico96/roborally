@@ -16,6 +16,7 @@ export enum GamePhase {
   RESOLVE_CRUSHERS = "resolve_crushers",
   RESOLVE_GEARS = "resolve_gears",
   RESOLVE_LASERS = "resolve_lasers",
+  RESOLVE_REPAIRS = "resolve_repairs",
   RESOLVE_CHECKPOINTS = "resolve_checkpoints",
 }
 
