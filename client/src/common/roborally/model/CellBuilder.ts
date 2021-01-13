@@ -189,15 +189,15 @@ export class CellBuilder {
     return this
   }
 
-  // trap(sequences: number[]): this {
-  // 	this.builder.addFeature(FeatureType.TRAP)
-  // 	this.builder.updateCell(this.pos, {
-  // 		$merge: {
-  // 			trap: sequences.map(seq => seq - 1),
-  // 		},
-  // 	})
-  // 	return this
-  // }
+  trap(sequences: number[]): this {
+    this.builder.addFeature(FeatureType.TRAP)
+    this.builder.updateCell(this.pos, {
+      $merge: {
+        trap: sequences.map(seq => seq - 1),
+      },
+    })
+    return this
+  }
 
   wall(...dirs: Direction[]): this {
     dirs.forEach(dir => this.builder.addWall(this.pos, dir, WallType.NORMAL))

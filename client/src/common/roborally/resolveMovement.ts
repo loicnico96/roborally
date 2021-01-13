@@ -216,9 +216,10 @@ export function checkMoves(
 }
 
 export async function checkHoles(ctx: RoborallyContext) {
+  const sequence = ctx.getSequence()
   const updateCount = ctx.updatePlayers(player => {
     const cell = ctx.getCell(player.pos)
-    if (isHole(cell) && isAffectedByHoles(player)) {
+    if (isHole(cell, sequence) && isAffectedByHoles(player)) {
       return destroyPlayer(player)
     }
 

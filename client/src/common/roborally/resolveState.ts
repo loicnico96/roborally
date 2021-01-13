@@ -9,6 +9,7 @@ import {
   resolveBoardLasers,
   resolvePlayerLasers,
 } from "./resolveLasers"
+import { checkHoles } from "./resolveMovement"
 import { resolvePlayerActions } from "./resolvePlayerActions"
 import { resolvePushers } from "./resolvePushers"
 import { resolveRandomizers } from "./resolveRandomizers"
@@ -26,6 +27,11 @@ async function setGamePhase(ctx: RoborallyContext, phase: GamePhase) {
 
 async function resolveTurnSequence(ctx: RoborallyContext, sequence: number) {
   const { features } = ctx.getBoard()
+
+  if (features.includes(FeatureType.TRAP)) {
+    await setGamePhase(ctx, GamePhase.RESOLVE_TRAPS)
+    await checkHoles(ctx)
+  }
 
   if (features.includes(FeatureType.RANDOM)) {
     await setGamePhase(ctx, GamePhase.RESOLVE_RANDOMIZERS)

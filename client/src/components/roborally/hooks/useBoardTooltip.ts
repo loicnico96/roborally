@@ -66,7 +66,7 @@ function getConveyorTooltip(cell: CellData): string {
   const cellType = isWater(cell)
     ? "Water current"
     : isFastConveyor(cell)
-    ? "Fast conveyor"
+    ? "Express conveyor"
     : "Conveyor"
 
   if (cell.dir !== undefined) {
@@ -90,9 +90,8 @@ function getHoleTooltip(cell: CellData): string {
   return isWater(cell) ? "Water drain" : "Hole"
 }
 
-function getRepairTooltip(cell: CellData): string {
-  const cellType = "Repair site"
-  return isWater(cell) ? `${cellType} (water)` : cellType
+function getRepairTooltip(): string {
+  return "Repair site"
 }
 
 function getTeleporterTooltip(): string {
@@ -129,7 +128,7 @@ function getCellTooltip(gameState: RoborallyState, pos: Position): string {
     case CellType.GEAR:
       return getGearTooltip(cell)
     case CellType.REPAIR:
-      return getRepairTooltip(cell)
+      return getRepairTooltip()
     case CellType.TELEPORT:
       return getTeleporterTooltip()
     case CellType.RANDOM:
@@ -171,6 +170,15 @@ function getPusherTooltip(gameState: RoborallyState, pos: Position): string {
       return `Pusher (${sequences.join("-")}, ${getDir(cell.pushDir)})`
     }
     return `Pusher (${sequences.join("-")})`
+  }
+  return ""
+}
+
+function getTrapTooltip(gameState: RoborallyState, pos: Position): string {
+  const cell = getCell(gameState.board, pos)
+  if (cell.trap) {
+    const sequences = cell.trap.map(seq => seq + 1)
+    return `Trap hole (${sequences.join("-")})`
   }
   return ""
 }
@@ -235,6 +243,7 @@ function getBoardTooltip(store: Store, roomId: RoomId, pos: Position): string {
     getCheckpointTooltip(gameState, pos),
     getCrusherTooltip(gameState, pos),
     getPusherTooltip(gameState, pos),
+    getTrapTooltip(gameState, pos),
     getWallTooltip(gameState, pos),
     ...getLaserTooltips(gameState, pos),
     ...getPlayerTooltips(gameState, pos, players),

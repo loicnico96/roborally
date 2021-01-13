@@ -15,6 +15,7 @@ import {
 const TURN_PHASES = [
   GamePhase.STANDBY,
   GamePhase.PROGRAM,
+  GamePhase.RESOLVE_TRAPS,
   GamePhase.RESOLVE_RANDOMIZERS,
   GamePhase.RESOLVE_PLAYERS,
   GamePhase.RESOLVE_CONVEYORS_FAST,
@@ -29,6 +30,8 @@ const TURN_PHASES = [
 
 function isPhaseAvailable(phase: GamePhase, features: FeatureType[]): boolean {
   switch (phase) {
+    case GamePhase.RESOLVE_TRAPS:
+      return features.includes(FeatureType.TRAP)
     case GamePhase.RESOLVE_RANDOMIZERS:
       return features.includes(FeatureType.RANDOM)
     case GamePhase.RESOLVE_CONVEYORS_FAST:

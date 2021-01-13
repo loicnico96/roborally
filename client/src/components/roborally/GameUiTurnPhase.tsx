@@ -10,6 +10,7 @@ type GameUiTurnPhaseProps = {
 const PHASE_LABELS: Record<GamePhase, string> = {
   [GamePhase.STANDBY]: "New turn",
   [GamePhase.PROGRAM]: "Program",
+  [GamePhase.RESOLVE_TRAPS]: "Trap holes",
   [GamePhase.RESOLVE_RANDOMIZERS]: "Randomizers",
   [GamePhase.RESOLVE_PLAYERS]: "Player actions",
   [GamePhase.RESOLVE_CONVEYORS_FAST]: "Express conveyors",

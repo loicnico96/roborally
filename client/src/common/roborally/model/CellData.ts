@@ -22,6 +22,7 @@ export type CellData = {
   push?: number[]
   pushDir?: Direction
   rot?: Rotation
+  trap?: number[]
   turn?: boolean
   walls?: WallData
   water?: boolean
@@ -53,8 +54,12 @@ export function isGear(cell: CellData): boolean {
   return cell.type === CellType.GEAR
 }
 
-export function isHole(cell: CellData): boolean {
-  return cell.type === CellType.HOLE
+export function isHole(cell: CellData, sequence: number): boolean {
+  if (cell.trap?.includes(sequence) === true) {
+    return true
+  } else {
+    return cell.type === CellType.HOLE
+  }
 }
 
 export function isOil(cell: CellData): boolean {

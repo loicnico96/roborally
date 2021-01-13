@@ -8,6 +8,7 @@ import { RoborallyPlayer, getInitialPlayerState } from "./RoborallyPlayer"
 export enum GamePhase {
   STANDBY = "standby",
   PROGRAM = "program",
+  RESOLVE_TRAPS = "resolve_traps",
   RESOLVE_RANDOMIZERS = "resolve_randomizers",
   RESOLVE_PLAYERS = "resolve_players",
   RESOLVE_CONVEYORS_FAST = "resolve_conveyors_fast",

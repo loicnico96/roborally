@@ -67,6 +67,7 @@ export enum FeatureType {
   RANDOM = "random",
   REPAIR = "repair",
   TELEPORT = "teleport",
+  TRAP = "trap",
   WATER = "water",
 }
 
