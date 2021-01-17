@@ -27,6 +27,7 @@ function formatRoomInfo(room: RoomData): string {
   const boardNames = room.options.boardIds.map(
     boardId =>
       ({
+        [BoardId.ARKHAM_ASYLUM]: "Arkham Asylum",
         [BoardId.BLAST_FURNACE]: "Blast Furnace",
         [BoardId.CANNERY_ROW]: "Cannery Row",
         [BoardId.CHASM]: "Chasm",

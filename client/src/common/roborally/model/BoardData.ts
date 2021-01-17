@@ -35,6 +35,7 @@ export type LaserData = {
 }
 
 export enum BoardId {
+  // Official boards
   BLAST_FURNACE = "BlastFurnace",
   CANNERY_ROW = "CanneryRow",
   CHASM = "Chasm",
@@ -52,6 +53,8 @@ export enum BoardId {
   PIT_MAZE = "PitMaze",
   SPIN_ZONE = "SpinZone",
   VAULT = "Vault",
+  // Fan-made boards
+  ARKHAM_ASYLUM = "ArkhamAsylum",
 }
 
 export enum FeatureType {

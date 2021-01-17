@@ -1,5 +1,6 @@
 import React from "react"
 
+import BoardArkhamAsylum from "assets/boards/ArkhamAsylum.png"
 import BoardBlastFurnace from "assets/boards/BlastFurnace.png"
 import BoardCanneryRow from "assets/boards/CanneryRow.png"
 import BoardChasm from "assets/boards/Chasm.png"
@@ -20,6 +21,7 @@ import BoardVault from "assets/boards/Vault.png"
 import { BoardId } from "common/roborally/model/BoardData"
 
 const BOARD_IMAGES: Record<BoardId, string> = {
+  [BoardId.ARKHAM_ASYLUM]: BoardArkhamAsylum,
   [BoardId.BLAST_FURNACE]: BoardBlastFurnace,
   [BoardId.CANNERY_ROW]: BoardCanneryRow,
   [BoardId.CHASM]: BoardChasm,

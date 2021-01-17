@@ -18,6 +18,12 @@ export class CellBuilder {
     this.pos = pos
   }
 
+  chopShop(): this {
+    // TODO: For now it's just a normal repair site
+    // TODO: Could be treated differently in the future
+    return this.repair()
+  }
+
   conveyor(dir: Direction, turn: boolean = false): this {
     this.builder.addFeature(FeatureType.CONVEYOR)
     this.builder.updateCell(this.pos, {

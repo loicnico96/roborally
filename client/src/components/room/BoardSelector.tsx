@@ -18,6 +18,7 @@ enum BoardCategory {
   ORIGINAL = "Original",
   ARMED_AND_DANGEROUS = "ArmedAndDangerous",
   CRASH_AND_BURN = "CrashAndBurn",
+  CUSTOM = "Custom",
 }
 
 const SELECT_NONE = "none"
@@ -26,6 +27,7 @@ const BOARD_CATEGORY_ORDER: BoardCategory[] = [
   BoardCategory.ORIGINAL,
   BoardCategory.ARMED_AND_DANGEROUS,
   BoardCategory.CRASH_AND_BURN,
+  BoardCategory.CUSTOM,
 ]
 
 function getBoardCategoryName(category: BoardCategory): string {
@@ -33,11 +35,13 @@ function getBoardCategoryName(category: BoardCategory): string {
     [BoardCategory.ORIGINAL]: "Original",
     [BoardCategory.ARMED_AND_DANGEROUS]: "Armed and Dangerous",
     [BoardCategory.CRASH_AND_BURN]: "Crash and Burn",
+    [BoardCategory.CUSTOM]: "Custom",
   }[category]
 }
 
 function getBoardCategory(boardId: BoardId): BoardCategory {
   return {
+    [BoardId.ARKHAM_ASYLUM]: BoardCategory.CUSTOM,
     [BoardId.BLAST_FURNACE]: BoardCategory.CRASH_AND_BURN,
     [BoardId.CANNERY_ROW]: BoardCategory.ORIGINAL,
     [BoardId.CHASM]: BoardCategory.ARMED_AND_DANGEROUS,
@@ -60,6 +64,7 @@ function getBoardCategory(boardId: BoardId): BoardCategory {
 
 function getBoardName(boardId: BoardId): string {
   return {
+    [BoardId.ARKHAM_ASYLUM]: "Arkham Asylum",
     [BoardId.BLAST_FURNACE]: "Blast Furnace",
     [BoardId.CANNERY_ROW]: "Cannery Row",
     [BoardId.CHASM]: "Chasm",
