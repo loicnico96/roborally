@@ -41,6 +41,7 @@ function getNextPlayerId(
 
 export async function nextTurn(ctx: MetropolysContext, playerId: PlayerId) {
   ctx.updateState({
+    currentPlayer: { $set: playerId },
     players: {
       [playerId]: {
         ready: { $set: false },

@@ -14,7 +14,8 @@ import { SelectEvent } from "utils/dom"
 
 import BoardSelector from "./BoardSelector"
 import { useChangeRoomOptions } from "./hooks/useChangeRoomOptions"
-import { getRoomOptions } from "./utils/getters"
+import { getGameType, getRoborallyOptions } from "./utils/getters"
+import { GameType } from "common/GameSettings"
 
 const RoomOptionsContainer = styled(Box)`
   flex: 1 1 auto;
@@ -56,9 +57,9 @@ function checkCheckpoints(options: RoborallyOptions): RoborallyOptions {
   })
 }
 
-const RoomOptions = () => {
+const RoomOptionsRoborally = () => {
   const roomId = useRoomId()
-  const options = useRoomData(roomId, getRoomOptions)
+  const options = useRoomData(roomId, getRoborallyOptions)
   const [changeOptions, isEnabled] = useChangeRoomOptions(roomId)
   const [changeOptionsSafe, isChanging] = useAsyncHandler(changeOptions)
 
@@ -185,6 +186,18 @@ const RoomOptions = () => {
       </RoomOptionsBoardImageContainer>
     </RoomOptionsContainer>
   )
+}
+
+const RoomOptions = () => {
+  const roomId = useRoomId()
+  const gameType = useRoomData(roomId, getGameType)
+
+  switch (gameType) {
+    case GameType.ROBORALLY:
+      return <RoomOptionsRoborally />
+    default:
+      return null
+  }
 }
 
 export default RoomOptions

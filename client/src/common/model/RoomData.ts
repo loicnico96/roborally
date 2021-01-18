@@ -20,17 +20,17 @@ export type RoomData<T extends GameType = GameType> = {
   status: RoomStatus
 }
 
-export function getInitialRoomData(
-  game: GameType,
+export function getInitialRoomData<T extends GameType>(
+  game: T,
   ownerId: UserId,
   ownerInfo: UserInfo
-): RoomData {
+): RoomData<T> {
   const { defaultOptions } = getGameSettings(game)
 
   return {
     createdAt: Date.now(),
     game,
-    options: defaultOptions,
+    options: defaultOptions as GameOptions<T>,
     ownerId,
     playerOrder: [ownerId],
     players: { [ownerId]: ownerInfo },

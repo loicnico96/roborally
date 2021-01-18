@@ -19,6 +19,9 @@ export enum BoardShape {
 }
 
 const ADJACENCIES: number[][] = [
+  [1, 2],
+  [0, 2],
+  [0, 1],
   // Sector 1 (Center)
   // Sector 2 (North)
   // Sector 3 (East)
@@ -40,7 +43,7 @@ const SECTORS = [15, 25, 35, 45, 55]
 const SIZES = [6, 10, 13]
 
 export function getAdjacent(district: number): number[] {
-  return ADJACENCIES[district]
+  return ADJACENCIES[district] || []
 }
 
 export function getColor(district: number): BoardColor {
@@ -56,7 +59,7 @@ export function getSize(height: number): number {
 }
 
 export function isAdjacent(districtA: number, districtB: number): boolean {
-  return getAdjacent(districtA).includes(districtB)
+  return getAdjacent(districtA).includes(districtB) || true
 }
 
 export function isBridge(districtA: number, districtB: number): boolean {

@@ -3,11 +3,11 @@ import { SetState } from "zustand"
 
 import { RoomData, RoomId } from "common/model/RoomData"
 import { UserId, UserInfo } from "common/model/UserInfo"
-import { RoborallyState } from "common/roborally/model/RoborallyState"
 import { merge } from "common/utils/objects"
 import { FirebaseUser } from "firestore/auth/Auth"
 
 import { Resource } from "./resources"
+import { GameState } from "common/GameSettings"
 
 export type AuthUser = UserInfo & {
   updateName: (name: string) => Promise<void>
@@ -29,13 +29,13 @@ export const UNAUTHENTICATED: AuthData = {
 
 export type State = {
   auth: AuthData
-  games: Partial<Record<RoomId, Resource<RoborallyState>>>
+  games: Partial<Record<RoomId, Resource<GameState>>>
   rooms: Partial<Record<RoomId, Resource<RoomData>>>
 }
 
 export type StoreActions = {
   setCurrentUser: (user: FirebaseUser | null) => void
-  setGameResource: (resource: Resource<RoborallyState>) => void
+  setGameResource: (resource: Resource<GameState>) => void
   setRoomResource: (resource: Resource<RoomData>) => void
 }
 
@@ -71,7 +71,7 @@ export function createActions(set: SetState<State>): StoreActions {
     }
   }
 
-  function setGameResource(resource: Resource<RoborallyState>) {
+  function setGameResource(resource: Resource<GameState>) {
     set(state =>
       update(state, {
         games: {

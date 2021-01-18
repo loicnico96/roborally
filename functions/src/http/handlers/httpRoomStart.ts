@@ -1,7 +1,7 @@
-import { Collection } from "common/firestore/collections"
+import { Collection, DataFetcher } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
-import { getGameSettings } from "common/GameSettings"
-import { RoomStatus } from "common/model/RoomData"
+import { getGameSettings, GameType, GameState } from "common/GameSettings"
+import { RoomStatus, RoomData } from "common/model/RoomData"
 import { validateString } from "common/utils/validation"
 
 import { getCollection, getDataFetcher } from "../../utils/collections"
@@ -12,6 +12,16 @@ import { handleTrigger } from "./handleTrigger"
 
 const validationSchema = {
   roomId: validateString(),
+}
+
+async function getInitialState<T extends GameType>(room: RoomData<T>, fetchData: DataFetcher): Promise<GameState<T>> {
+  const { getInitialGameState } = getGameSettings(room.game)
+  const initialState = await getInitialGameState(
+    room.playerOrder,
+    room.options as any,
+    fetchData
+  ) as GameState<T>
+  return initialState
 }
 
 export default handleTrigger<HttpTrigger.ROOM_START>(
@@ -40,12 +50,7 @@ export default handleTrigger<HttpTrigger.ROOM_START>(
       }
 
       const fetchData = getDataFetcher(transaction)
-      const gameSettings = getGameSettings(roomData.game)
-      const initialState = await gameSettings.getInitialGameState(
-        roomData.playerOrder,
-        roomData.options,
-        fetchData
-      )
+      const initialState = await getInitialState(roomData, fetchData)
 
       const clientRef = getCollection(Collection.CLIENT).doc(data.roomId)
       const serverRef = getCollection(Collection.SERVER).doc(data.roomId)

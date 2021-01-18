@@ -22,7 +22,7 @@ export default handleTrigger<HttpTrigger.GAME_ACTION>(
       const clientRef = getCollection(Collection.CLIENT).doc(data.roomId)
       const serverRef = getCollection(Collection.SERVER).doc(data.roomId)
       const serverDoc = await transaction.get(serverRef)
-      const gameState = serverDoc.data()
+      const gameState = serverDoc.data() as any
       if (gameState === undefined) {
         throw preconditionError("Invalid game ID")
       }
@@ -37,7 +37,7 @@ export default handleTrigger<HttpTrigger.GAME_ACTION>(
       }
 
       // TODO Determine this from call/document
-      const gameType = GameType.ROBORALLY
+      const gameType = GameType.METROPOLYS
 
       const {
         getContext,
@@ -52,11 +52,11 @@ export default handleTrigger<HttpTrigger.GAME_ACTION>(
 
       const nextState = await ctx.resolve(resolvePlayerAction, playerId, action)
 
-      transaction.set(clientRef, nextState)
+      transaction.set(clientRef, nextState as any)
 
       const resolvedState = await ctx.resolve(resolveState)
 
-      transaction.set(serverRef, resolvedState)
+      transaction.set(serverRef, resolvedState as any)
 
       if (ctx.isFinished()) {
         const roomRef = getCollection(Collection.ROOM).doc(data.roomId)

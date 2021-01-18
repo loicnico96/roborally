@@ -17,11 +17,10 @@ export type RoomListPageProps = {
   rooms: LoadedResource<RoomData>[]
 }
 
-const useCreateRoom = (): [() => Promise<void>, boolean] => {
+const useCreateRoom = (): [(game: GameType) => Promise<void>, boolean] => {
   const { isAuthenticated } = useAuthContext()
   const history = useHistory()
-  const createRoom = useCallback(async () => {
-    const game = GameType.ROBORALLY
+  const createRoom = useCallback(async (game: GameType) => {
     const roomId = await triggerRoomCreate({ game })
     history.push(ROUTES.room(roomId))
   }, [history])
@@ -36,11 +35,17 @@ const RoomListPageHeader = styled.div`
 const RoomListPage = ({ rooms }: RoomListPageProps) => {
   const [createRoom, isCreateRoomEnabled] = useCreateRoom()
 
+  const createRoomMetropolys = useCallback(async () => createRoom(GameType.METROPOLYS), [createRoom])
+  const createRoomRoborally = useCallback(async () => createRoom(GameType.ROBORALLY), [createRoom])
+
   return (
     <PageContent>
       <RoomListPageHeader>
-        <AsyncButton onClick={createRoom} disabled={!isCreateRoomEnabled}>
-          Create room
+        <AsyncButton onClick={createRoomRoborally} disabled={!isCreateRoomEnabled}>
+          Create Roborally room
+        </AsyncButton>
+        <AsyncButton onClick={createRoomMetropolys} disabled={!isCreateRoomEnabled}>
+          Create Metropolys room
         </AsyncButton>
       </RoomListPageHeader>
       <RoomList rooms={rooms} />

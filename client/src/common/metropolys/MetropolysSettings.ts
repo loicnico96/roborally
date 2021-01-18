@@ -24,7 +24,7 @@ export type MetropolysActionPass = {
 export type MetropolysAction = MetropolysActionBid | MetropolysActionPass
 
 export type MetropolysOptions = {
-  // TOD
+  // TODO
 }
 
 export const MetropolysSettings: BaseSettings<

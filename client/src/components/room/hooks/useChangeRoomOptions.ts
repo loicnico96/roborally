@@ -2,10 +2,10 @@ import { useCallback } from "react"
 
 import { PlayerId } from "common/model/GameStateBasic"
 import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
-import { RoborallyOptions } from "common/roborally/RoborallySettings"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { triggerRoomOptions } from "functions/triggers"
 import { useRoomData } from "hooks/useRoomData"
+import { GameOptions } from "common/GameSettings"
 
 export function isAbleToChangeRoomOptions(
   room: RoomData,
@@ -17,7 +17,7 @@ export function isAbleToChangeRoomOptions(
 
 export function useChangeRoomOptions(
   roomId: RoomId
-): [(options: RoborallyOptions) => Promise<void>, boolean] {
+): [(options: GameOptions) => Promise<void>, boolean] {
   const { userId } = useAuthContext()
 
   const isEnabled = useRoomData(
@@ -26,7 +26,7 @@ export function useChangeRoomOptions(
   )
 
   const changeRoomOptions = useCallback(
-    async (options: RoborallyOptions) => {
+    async (options: GameOptions) => {
       if (isEnabled) {
         await triggerRoomOptions({ options, roomId })
       }

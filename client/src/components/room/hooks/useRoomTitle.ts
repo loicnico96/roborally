@@ -6,22 +6,28 @@ import { getRoomResource } from "hooks/useRoomData"
 import { useStore } from "hooks/useStore"
 import { isLoaded } from "utils/resources"
 import { Store } from "utils/store"
+import { GameType } from "common/GameSettings"
 
 export function getRoomTitle(store: Store, roomId: RoomId): string {
   const roomResource = getRoomResource(store, roomId)
   const gameResource = getGameResource(store, roomId)
 
-  if (gameResource !== undefined && isLoaded(gameResource)) {
-    const { turn } = gameResource.data
-    return `ROBORALLY - TURN ${turn}`
-  }
-
   if (roomResource !== undefined && isLoaded(roomResource)) {
+    const gameName = {
+      [GameType.METROPOLYS]: "Metropolys",
+      [GameType.ROBORALLY]: "Roborally",
+    }[roomResource.data.game]
+
+    if (gameResource !== undefined && isLoaded(gameResource)) {
+      const { turn } = gameResource.data
+      return `${gameName.toUpperCase()} - TURN ${turn}`
+    }
+
     const { status } = roomResource.data
-    return `ROBORALLY - ${status.toUpperCase()}`
+    return `${gameName.toUpperCase()} - ${status.toUpperCase()}`
   }
 
-  return "ROBORALLY"
+  return roomId
 }
 
 export function useRoomTitle(roomId: RoomId): string {

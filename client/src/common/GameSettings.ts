@@ -1,12 +1,16 @@
 import { DataFetcher } from "./firestore/collections"
 import { GameContext, StateChangeHandler } from "./GameContext"
+import { MetropolysOptions, MetropolysSettings } from "./metropolys/MetropolysSettings"
+import { MetropolysState } from "./metropolys/model/MetropolysState"
 import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
 import { PlayerStateBasic } from "./model/PlayerStateBasic"
-import { RoborallySettings } from "./roborally/RoborallySettings"
+import { RoborallyState } from "./roborally/model/RoborallyState"
+import { RoborallyOptions, RoborallySettings } from "./roborally/RoborallySettings"
 import { ObjectRecord } from "./utils/objects"
 import { Validator } from "./utils/validation"
 
 export enum GameType {
+  METROPOLYS = "metropolys",
   ROBORALLY = "roborally",
 }
 
@@ -50,23 +54,22 @@ export type BaseSettings<
   validateOptions: Validator<Options>
 }
 
+export type GameState<T extends GameType = GameType> = {
+  [GameType.METROPOLYS]: MetropolysState,
+  [GameType.ROBORALLY]: RoborallyState,
+}[T]
+
+export type GameOptions<T extends GameType = GameType> = {
+  [GameType.METROPOLYS]: MetropolysOptions,
+  [GameType.ROBORALLY]: RoborallyOptions,
+}[T]
+
 const SETTINGS = {
+  [GameType.METROPOLYS]: MetropolysSettings,
   [GameType.ROBORALLY]: RoborallySettings,
 }
 
 export type GameSettings<T extends GameType = GameType> = typeof SETTINGS[T]
-
-export type GameOptions<T extends GameType = GameType> = GameSettings<
-  T
-> extends BaseSettings<any, any, infer Options, any, any, any>
-  ? Options
-  : never
-
-export type GameState<T extends GameType = GameType> = GameSettings<
-  T
-> extends BaseSettings<any, infer State, any, any, any, any>
-  ? State
-  : never
 
 export function getGameSettings<T extends GameType>(game: T): GameSettings<T> {
   return SETTINGS[game]
