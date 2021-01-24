@@ -3,17 +3,14 @@ import update, { Spec } from "immutability-helper"
 import { merge, size } from "common/utils/objects"
 
 import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
-import { PlayerStateBasic } from "./model/PlayerStateBasic"
 
 const INTERRUPT_WIN = Object.assign(Error("interrupt"), { reason: "win" })
 
 export type StateChangeHandler<T, E> = (newState: T, event: E) => Promise<void>
 
-export class GameContext<
-  Player extends PlayerStateBasic,
-  State extends GameStateBasic<Player>,
-  Event
-> {
+type Player<State extends GameStateBasic> = State["players"][string]
+
+export class GameContext<State extends GameStateBasic, Event> {
   onStateChanged?: StateChangeHandler<State, Event>
   state: State
 
@@ -29,8 +26,8 @@ export class GameContext<
     })
   }
 
-  getPlayer(playerId: PlayerId): Player {
-    return this.state.players[playerId]
+  getPlayer(playerId: PlayerId): Player<State> {
+    return this.state.players[playerId] as Player<State>
   }
 
   getPlayerOrder(): PlayerId[] {
@@ -42,7 +39,7 @@ export class GameContext<
   }
 
   filterPlayers(
-    filterFn: (player: Player, playerId: PlayerId) => boolean
+    filterFn: (player: Player<State>, playerId: PlayerId) => boolean
   ): PlayerId[] {
     return this.getPlayerOrder().filter(playerId => {
       const player = this.getPlayer(playerId)
@@ -51,7 +48,7 @@ export class GameContext<
   }
 
   findPlayer(
-    filterFn: (player: Player, playerId: PlayerId) => boolean
+    filterFn: (player: Player<State>, playerId: PlayerId) => boolean
   ): PlayerId | undefined {
     return this.getPlayerOrder().find(playerId => {
       const player = this.getPlayer(playerId)
@@ -67,7 +64,7 @@ export class GameContext<
     this.state = merge(this.state, mergeSpec)
   }
 
-  updatePlayer(playerId: PlayerId, updateSpec: Spec<Player>): void {
+  updatePlayer(playerId: PlayerId, updateSpec: Spec<Player<State>>): void {
     this.updateState({
       players: {
         [playerId]: updateSpec,
@@ -75,11 +72,11 @@ export class GameContext<
     } as Spec<State>)
   }
 
-  // Calls an update function for each player (in player order)
-  // Returns the number of players that were updated
-  // If the update function returns false, the player is not updated
   updatePlayers(
-    updateFn: (player: Player, playerId: PlayerId) => Player | false
+    updateFn: (
+      player: Player<State>,
+      playerId: PlayerId
+    ) => Player<State> | false
   ): number {
     const updatedPlayers = this.getPlayerOrder().reduce((result, playerId) => {
       const oldPlayer = this.getPlayer(playerId)
@@ -88,7 +85,7 @@ export class GameContext<
         result[playerId] = newPlayer
       }
       return result
-    }, {} as Record<PlayerId, Player>)
+    }, {} as Record<PlayerId, Player<State>>)
 
     const updateCount = size(updatedPlayers)
 

@@ -1,9 +1,7 @@
 import { DataFetcher } from "./firestore/collections"
 import { GameContext, StateChangeHandler } from "./GameContext"
 import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
-import { PlayerStateBasic } from "./model/PlayerStateBasic"
 import { RoborallySettings } from "./roborally/RoborallySettings"
-import { ObjectRecord } from "./utils/objects"
 import { Validator } from "./utils/validation"
 
 export enum GameType {
@@ -11,12 +9,11 @@ export enum GameType {
 }
 
 export type BaseSettings<
-  Player extends PlayerStateBasic,
-  State extends GameStateBasic<Player>,
-  Options extends ObjectRecord,
+  State extends GameStateBasic,
   Event,
-  Context extends GameContext<Player, State, Event>,
-  PlayerAction
+  Context extends GameContext<State, Event>,
+  Options extends Record<string, unknown>,
+  Action
 > = {
   defaultOptions: Options
   maxPlayers: number
@@ -36,7 +33,7 @@ export type BaseSettings<
   resolvePlayerAction: (
     ctx: Context,
     playerId: PlayerId,
-    action: PlayerAction
+    action: Action
   ) => Promise<void>
 
   resolveState: (ctx: Context) => Promise<void>
@@ -45,7 +42,7 @@ export type BaseSettings<
     gameState: State,
     playerId: PlayerId,
     action: unknown
-  ) => PlayerAction
+  ) => Action
 
   validateOptions: Validator<Options>
 }
@@ -56,17 +53,20 @@ const SETTINGS = {
 
 export type GameSettings<T extends GameType = GameType> = typeof SETTINGS[T]
 
-export type GameOptions<T extends GameType = GameType> = GameSettings<
-  T
-> extends BaseSettings<any, any, infer Options, any, any, any>
-  ? Options
+type InferredTypes<T extends GameType> = GameSettings<T> extends BaseSettings<
+  infer State,
+  infer Event,
+  infer Context,
+  infer Options,
+  infer Action
+>
+  ? [State, Event, Context, Options, Action]
   : never
 
-export type GameState<T extends GameType = GameType> = GameSettings<
-  T
-> extends BaseSettings<any, infer State, any, any, any, any>
-  ? State
-  : never
+export type GameState<T extends GameType = GameType> = InferredTypes<T>[0]
+export type GameEvent<T extends GameType = GameType> = InferredTypes<T>[1]
+export type GameOptions<T extends GameType = GameType> = InferredTypes<T>[3]
+export type GameAction<T extends GameType = GameType> = InferredTypes<T>[4]
 
 export function getGameSettings<T extends GameType>(game: T): GameSettings<T> {
   return SETTINGS[game]

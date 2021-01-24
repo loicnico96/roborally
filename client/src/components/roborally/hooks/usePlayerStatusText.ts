@@ -19,10 +19,8 @@ export function getPlayerStatusText(
 ): string {
   const player = gameState.players[playerId]
 
-  if (gameState.winners !== null) {
-    if (gameState.winners.includes(playerId)) {
-      return "Winner!"
-    }
+  if (gameState.winners?.includes(playerId) ?? false) {
+    return "Winner!"
   }
 
   const readyPhases = [GamePhase.STANDBY, GamePhase.PROGRAM]

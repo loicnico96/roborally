@@ -21,11 +21,12 @@ export enum GamePhase {
   RESOLVE_CHECKPOINTS = "resolve_checkpoints",
 }
 
-export type RoborallyState = GameStateBasic<RoborallyPlayer> & {
+export type RoborallyState = GameStateBasic & {
   board: BoardData
   boardIds: BoardId[]
   checkpoints: Position[]
   currentPlayer: PlayerId | null
+  players: Record<PlayerId, RoborallyPlayer>
   deck: Card[]
   phase: GamePhase
   sequence: number
@@ -52,6 +53,5 @@ export function getInitialGameState(
     }, {} as Record<PlayerId, RoborallyPlayer>),
     sequence: 0,
     turn: 0,
-    winners: null,
   }
 }

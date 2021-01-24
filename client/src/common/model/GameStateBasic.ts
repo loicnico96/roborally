@@ -2,9 +2,9 @@ import { PlayerStateBasic } from "./PlayerStateBasic"
 
 export type PlayerId = string
 
-export type GameStateBasic<P extends PlayerStateBasic = PlayerStateBasic> = {
+export type GameStateBasic = {
   playerOrder: PlayerId[]
-  players: Record<PlayerId, P>
+  players: Record<PlayerId, PlayerStateBasic>
   turn: number
-  winners: PlayerId[] | null
+  winners?: PlayerId[]
 }

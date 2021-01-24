@@ -6,7 +6,6 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { shuffle } from "common/utils/arrays"
 
 import { BoardData, BoardId, mergeBoards } from "./model/BoardData"
-import { RoborallyPlayer } from "./model/RoborallyPlayer"
 import { getInitialGameState, RoborallyState } from "./model/RoborallyState"
 import { resolvePlayerAction } from "./resolvePlayerAction"
 import { resolveState } from "./resolveState"
@@ -20,11 +19,10 @@ export type RoborallyOptions = {
 }
 
 export const RoborallySettings: BaseSettings<
-  RoborallyPlayer,
   RoborallyState,
-  RoborallyOptions,
   RoborallyEvent,
   RoborallyContext,
+  RoborallyOptions,
   RoborallyAction
 > = {
   defaultOptions: {
