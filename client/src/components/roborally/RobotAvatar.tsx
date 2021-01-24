@@ -63,12 +63,11 @@ const RobotAvatar = ({ playerId, playerIndex }: RobotAvatarProps) => {
   return (
     <>
       <AvatarImage virtual={virtual} playerIndex={playerIndex} />
-      <DamageAnimation
-        damage={damage}
-        destroyed={destroyed}
-        duration={TRANSITION_DURATION}
-      />
-      {destroyed && <DestroyAnimation />}
+      {destroyed ? (
+        <DestroyAnimation />
+      ) : (
+        <DamageAnimation damage={damage} duration={TRANSITION_DURATION} />
+      )}
       {poweredDown && <AvatarSleepIcon />}
     </>
   )
