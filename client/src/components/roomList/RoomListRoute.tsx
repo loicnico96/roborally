@@ -11,7 +11,7 @@ const NAVIGATION_PARENTS = [BREADCRUMB_HOME]
 
 const RoomListRoute = () => (
   <PageContainer>
-    <PageHeader parents={NAVIGATION_PARENTS} title="ROOMS" />
+    <PageHeader parents={NAVIGATION_PARENTS} title="Rooms" />
     <RoomListProvider>
       {rooms => <RoomListPage rooms={rooms} />}
     </RoomListProvider>

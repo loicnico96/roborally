@@ -11,11 +11,13 @@ import { useSignInWithGoogle } from "firestore/auth/useSignInWithGoogle"
 import { useSearchParams } from "hooks/useSearchParams"
 import { ROUTES } from "utils/navigation"
 
-const NAVIGATION_PARENTS = [{ title: "HOME", path: ROUTES.home() }]
+import { BREADCRUMB_HOME } from "./ui/Breadcrumb"
+
+const NAVIGATION_PARENTS = [BREADCRUMB_HOME]
 
 const LoginRoute = () => {
   const callbackRoute = useSearchParams().get("callback")
-  const { isAuthenticated, userId, userInfo } = useAuthContext()
+  const { isAuthenticated } = useAuthContext()
   const signInAnonymous = useSignInAnonymous()
   const signInWithGoogle = useSignInWithGoogle()
   const history = useHistory()
@@ -28,22 +30,12 @@ const LoginRoute = () => {
 
   return (
     <PageContainer>
-      <PageHeader parents={NAVIGATION_PARENTS} title="LOGIN" />
+      <PageHeader parents={NAVIGATION_PARENTS} title="Login" />
       <PageContent>
-        {isAuthenticated && userId !== null && userInfo !== null ? (
-          <div>
-            Signed in as {userId} : {JSON.stringify(userInfo)}
-          </div>
-        ) : (
-          <div>
-            <AsyncButton onClick={signInAnonymous}>
-              Sign in as guest
-            </AsyncButton>
-            <AsyncButton onClick={signInWithGoogle}>
-              Sign in with Google
-            </AsyncButton>
-          </div>
-        )}
+        <AsyncButton onClick={signInAnonymous}>Sign in as guest</AsyncButton>
+        <AsyncButton onClick={signInWithGoogle}>
+          Sign in with Google
+        </AsyncButton>
       </PageContent>
     </PageContainer>
   )

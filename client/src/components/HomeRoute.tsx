@@ -11,7 +11,6 @@ import { ROUTES } from "utils/navigation"
 import { getBoardImage } from "./roborally/BoardImage"
 import Box from "./ui/Box"
 
-
 const GameContainer = styled.div`
   width: 300px;
 `
@@ -33,7 +32,7 @@ const GameTitle = styled.div`
 
 const HomeRoute = () => (
   <PageContainer>
-    <PageHeader title="HOME" />
+    <PageHeader title="Home" />
     <PageContent>
       <GameContainer>
         <Link to={ROUTES.roomList()} title="Click to open rooms">

@@ -9,12 +9,12 @@ export type BreadcrumbProps = {
 }
 
 export const BREADCRUMB_HOME: BreadcrumbProps = {
-  title: "HOME",
+  title: "Home",
   path: ROUTES.home(),
 }
 
 export const BREADCRUMB_ROOM_LIST: BreadcrumbProps = {
-  title: "ROOMS",
+  title: "Rooms",
   path: ROUTES.roomList(),
 }
 

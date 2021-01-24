@@ -1,6 +1,6 @@
 import { useCallback } from "react"
 
-import { RoomId } from "common/model/RoomData"
+import { RoomId, RoomStatus } from "common/model/RoomData"
 import { getGameResource } from "components/roborally/hooks/useGameState"
 import { getRoomResource } from "hooks/useRoomData"
 import { useStore } from "hooks/useStore"
@@ -13,15 +13,21 @@ export function getRoomTitle(store: Store, roomId: RoomId): string {
 
   if (gameResource !== undefined && isLoaded(gameResource)) {
     const { turn } = gameResource.data
-    return `ROBORALLY - TURN ${turn}`
+    return `Roborally - Turn ${turn}`
   }
 
   if (roomResource !== undefined && isLoaded(roomResource)) {
     const { status } = roomResource.data
-    return `ROBORALLY - ${status.toUpperCase()}`
+    const statusName = {
+      [RoomStatus.OPENED]: "Open",
+      [RoomStatus.ONGOING]: "Ongoing",
+      [RoomStatus.FINISHED]: "Finished",
+    }[status]
+
+    return `Roborally - ${statusName}`
   }
 
-  return "ROBORALLY"
+  return "Roborally"
 }
 
 export function useRoomTitle(roomId: RoomId): string {
