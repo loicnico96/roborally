@@ -39,7 +39,6 @@ const GameUiViewportContainer = styledDivWithProps<{
 }>()`
   background-color: black;
   cursor: ${props => (props.isDragging ? "move" : "auto")};
-  height: 100%;
   overflow: hidden;
   position: relative;
   width: 100%;
