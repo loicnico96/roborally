@@ -95,7 +95,7 @@ import {
   getCardPriority,
 } from "common/roborally/model/Card"
 
-const CARD_IMAGES = [
+export const CARD_IMAGES = [
   RotateBack_10,
   RotateBack_20,
   RotateBack_30,

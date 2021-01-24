@@ -9,7 +9,7 @@ import Robot5 from "assets/robots/Robot5.png"
 import Robot6 from "assets/robots/Robot6.png"
 import Robot7 from "assets/robots/Robot7.png"
 
-const ROBOT_IMAGES = [
+export const ROBOT_IMAGES = [
   Robot0,
   Robot1,
   Robot2,
