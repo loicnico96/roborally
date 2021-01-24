@@ -19,7 +19,6 @@ import { ROBOT_IMAGES } from "./RobotImage"
 import { getBoardIds, getCheckpoints, getPlayerIds } from "./utils/getters"
 import { getViewportHeight, getViewportWidth } from "./Viewport"
 
-
 const GameUiContentWrapper = styled.div`
   background-color: lightgray;
   display: flex;

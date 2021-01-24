@@ -64,6 +64,11 @@ const Container = styled.div`
   width: 240px;
 `
 
+const SequenceContainer = styled.div`
+  margin-bottom: 8px;
+  margin-top: 8px;
+`
+
 const GameUiTurnPhaseSequence = () => {
   const currentPhase = useGameState(getCurrentPhase)
   const currentSequence = useGameState(getCurrentSequence)
@@ -71,7 +76,9 @@ const GameUiTurnPhaseSequence = () => {
 
   return (
     <Container>
-      {isResolving(currentPhase) && <p>Sequence {currentSequence + 1}</p>}
+      {isResolving(currentPhase) && (
+        <SequenceContainer>Sequence {currentSequence + 1}</SequenceContainer>
+      )}
       {turnPhases.map(phase => (
         <GameUiTurnPhase
           key={phase}

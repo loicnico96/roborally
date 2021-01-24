@@ -138,6 +138,7 @@ export function damagePlayer(
 
 export function destroyPlayer(player: RoborallyPlayer): RoborallyPlayer {
   return merge(player, {
+    damage: 0,
     destroyed: true,
   })
 }

@@ -8,7 +8,7 @@ import { useRoomId } from "hooks/useRoomId"
 import { useGameState } from "./hooks/useGameState"
 import { usePlayerState } from "./hooks/usePlayerState"
 import { usePlayerStatusText } from "./hooks/usePlayerStatusText"
-import { getRobotImage } from "./RobotImage"
+import RobotAvatar from "./RobotAvatar"
 import {
   getPlayerCheckpoint,
   getPlayerDamage,
@@ -32,20 +32,10 @@ const PlayerCardContainer = styled.div`
   padding: 16px;
 `
 
-type PlayerCardRobotImageProps = {
-  playerIndex: number
-}
-
-function getRobotUrl({ playerIndex }: PlayerCardRobotImageProps): string {
-  return getRobotImage(playerIndex)
-}
-
-const PlayerCardRobotImage = styled.div`
-  background-image: url(${getRobotUrl});
-  background-repeat: no-repeat;
-  background-size: 100% 100%;
+const PlayerCardRobotContainer = styled.div`
   height: 80px;
   margin-right: 16px;
+  position: relative;
   width: 80px;
 `
 
@@ -87,7 +77,9 @@ const GameUiPlayerCard = ({
 
   return (
     <PlayerCardContainer>
-      <PlayerCardRobotImage playerIndex={playerIndex} />
+      <PlayerCardRobotContainer>
+        <RobotAvatar playerId={playerId} playerIndex={playerIndex} />
+      </PlayerCardRobotContainer>
       <PlayerCardContentContainer>
         <PlayerCardContextRow>
           <PlayerCardName>

@@ -70,6 +70,10 @@ export function getPlayerPositionY(player: RoborallyPlayer): number {
   return player.pos.y
 }
 
+export function getPlayerPoweredDown(player: RoborallyPlayer): boolean {
+  return player.down
+}
+
 export function getPlayerReady(player: RoborallyPlayer): boolean {
   return player.ready
 }

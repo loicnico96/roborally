@@ -5,6 +5,12 @@ import { usePrevious } from "hooks/usePrevious"
 
 export type DamageAnimationProps = {
   damage: number
+  destroyed: boolean
+  duration: number
+}
+
+type DamageAnimationContainerProps = {
+  damage: number
   duration: number
 }
 
@@ -14,7 +20,7 @@ const ANIMATION_KEYFRAMES = keyframes`
   100% { opacity: 0.0 }
 `
 
-function getAnimation({ damage, duration }: DamageAnimationProps) {
+function getAnimation({ damage, duration }: DamageAnimationContainerProps) {
   if (damage === 0) {
     return "paused"
   }
@@ -24,7 +30,7 @@ function getAnimation({ damage, duration }: DamageAnimationProps) {
   `
 }
 
-function getAnimationColor({ damage }: DamageAnimationProps) {
+function getAnimationColor({ damage }: DamageAnimationContainerProps) {
   return damage > 0 ? "red" : "green"
 }
 
@@ -39,16 +45,24 @@ const DamageAnimationContainer = styled.div`
   width: 100%;
 `
 
-const DamageAnimation = ({ damage, duration }: DamageAnimationProps) => {
+const DamageAnimation = ({
+  damage,
+  destroyed,
+  duration,
+}: DamageAnimationProps) => {
   const [damageAnimation, setDamageAnimation] = useState(0)
 
   const previousDamage = usePrevious(damage)
 
   useEffect(() => {
-    if (previousDamage !== undefined && previousDamage !== damage) {
+    if (
+      previousDamage !== undefined &&
+      previousDamage !== damage &&
+      !destroyed
+    ) {
       setDamageAnimation(damage - previousDamage)
     }
-  }, [damage, previousDamage, setDamageAnimation])
+  }, [damage, destroyed, previousDamage, setDamageAnimation])
 
   return (
     <DamageAnimationContainer
