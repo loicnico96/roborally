@@ -1,6 +1,7 @@
 import React from "react"
 
 import { GamePhase } from "common/roborally/model/RoborallyState"
+import { styledDivWithProps } from "utils/styles"
 
 type GameUiTurnPhaseProps = {
   isCurrent: boolean
@@ -23,16 +24,16 @@ const PHASE_LABELS: Record<GamePhase, string> = {
   [GamePhase.RESOLVE_CHECKPOINTS]: "Checkpoints",
 }
 
-const GameUiTurnPhase = (props: GameUiTurnPhaseProps) => {
-  if (props.isCurrent) {
-    return (
-      <p>
-        <b>{PHASE_LABELS[props.phase]}</b>
-      </p>
-    )
-  } else {
-    return <p>{PHASE_LABELS[props.phase]}</p>
-  }
-}
+const GameUiTurnPhaseContainer = styledDivWithProps<GameUiTurnPhaseProps>()`
+  ${props => (props.isCurrent ? "font-weight: bold;" : "")}
+  margin-bottom: 8px;
+  margin-top: 8px;
+`
+
+const GameUiTurnPhase = (props: GameUiTurnPhaseProps) => (
+  <GameUiTurnPhaseContainer {...props}>
+    {PHASE_LABELS[props.phase]}
+  </GameUiTurnPhaseContainer>
+)
 
 export default GameUiTurnPhase

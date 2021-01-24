@@ -61,7 +61,7 @@ function isResolving(phase: GamePhase): boolean {
 }
 
 const Container = styled.div`
-  width: 200px;
+  width: 240px;
 `
 
 const GameUiTurnPhaseSequence = () => {
