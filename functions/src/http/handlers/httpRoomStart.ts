@@ -39,11 +39,8 @@ export default handleTrigger<HttpTrigger.ROOM_START>(
         throw preconditionError("Not enough players")
       }
 
-      const initialState = await getInitialGameState(
-        roomData.playerOrder,
-        roomData.options,
-        getDataFetcher(transaction)
-      )
+      const fetchData = getDataFetcher(transaction)
+      const initialState = await getInitialGameState(roomData, fetchData)
 
       const clientRef = getCollection(Collection.CLIENT).doc(data.roomId)
       const serverRef = getCollection(Collection.SERVER).doc(data.roomId)

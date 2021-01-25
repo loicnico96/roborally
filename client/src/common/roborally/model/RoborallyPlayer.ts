@@ -25,6 +25,7 @@ export type RoborallyPlayer = PlayerStateBasic & {
 }
 
 export function getInitialPlayerState(
+  name: string,
   initialPos: Position,
   initialDir: Direction,
   initialCheckpoint = 0,
@@ -38,6 +39,7 @@ export function getInitialPlayerState(
     destroyed: false,
     down: false,
     downNext: false,
+    name,
     pos: initialPos,
     program: getEmptyProgram(),
     ready: false,
@@ -172,6 +174,7 @@ export function respawnPlayer(
   checkpoints: Position[]
 ): RoborallyPlayer {
   return getInitialPlayerState(
+    player.name,
     checkpoints[player.checkpoint],
     player.checkpointDir,
     player.checkpoint,

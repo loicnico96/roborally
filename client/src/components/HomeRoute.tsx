@@ -10,7 +10,6 @@ import PageContent from "components/ui/PageContent"
 import PageHeader from "components/ui/PageHeader"
 import { ROUTES } from "utils/navigation"
 
-
 const GameContainer = styled.div`
   width: 300px;
 `

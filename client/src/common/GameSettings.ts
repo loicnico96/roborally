@@ -1,6 +1,7 @@
 import { DataFetcher } from "./firestore/collections"
 import { StateChangeHandler } from "./model/GameContext"
 import { PlayerId } from "./model/GameStateBasic"
+import { RoomData } from "./model/RoomData"
 import { RoborallyAction } from "./roborally/model/RoborallyAction"
 import { RoborallyEvent } from "./roborally/model/RoborallyEvent"
 import { RoborallyOptions } from "./roborally/model/RoborallyOptions"
@@ -32,8 +33,7 @@ export type GameSettings<T extends GameType = GameType> = {
   maxPlayers: number
 
   getInitialGameState: (
-    playerIds: PlayerId[],
-    options: GameOptions<T>,
+    roomData: RoomData<T>,
     fetchData: DataFetcher
   ) => Promise<GameState<T>>
 

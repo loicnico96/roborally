@@ -2,8 +2,6 @@ import React from "react"
 
 import { PlayerId } from "common/model/GameStateBasic"
 import { RoborallyPlayer } from "common/roborally/model/RoborallyPlayer"
-import { usePlayerName } from "hooks/usePlayerName"
-import { useRoomId } from "hooks/useRoomId"
 
 import GameUiObject from "./GameUiObject"
 import { useRoborallyPlayer } from "./hooks/useRoborallyPlayer"
@@ -22,7 +20,7 @@ export type GameUiPlayerRobotProps = {
   playerIndex: number
 }
 
-function getPlayerTooltip(playerName: string, player: RoborallyPlayer): string {
+function getPlayerTooltip(player: RoborallyPlayer): string {
   const qualifiers: string[] = []
 
   if (player.down) {
@@ -33,24 +31,22 @@ function getPlayerTooltip(playerName: string, player: RoborallyPlayer): string {
     qualifiers.push("virtual")
   }
 
-  return qualifiers.length > 0
-    ? `${playerName} (${qualifiers.join(", ")})`
-    : playerName
+  if (qualifiers.length > 0) {
+    return `${player.name} (${qualifiers.join(", ")})`
+  } else {
+    return player.name
+  }
 }
 
 const GameUiPlayerRobot = ({
   playerId,
   playerIndex,
 }: GameUiPlayerRobotProps) => {
-  const roomId = useRoomId()
   const playerDestroyed = useRoborallyPlayer(playerId, getPlayerDestroyed)
   const playerPosX = useRoborallyPlayer(playerId, getPlayerPositionX)
   const playerPosY = useRoborallyPlayer(playerId, getPlayerPositionY)
   const playerRot = useRoborallyPlayer(playerId, getPlayerRotation)
-  const playerName = usePlayerName(roomId, playerId)
-  const playerTooltip = useRoborallyPlayer(playerId, player =>
-    getPlayerTooltip(playerName, player)
-  )
+  const playerTooltip = useRoborallyPlayer(playerId, getPlayerTooltip)
 
   return (
     <GameUiObject

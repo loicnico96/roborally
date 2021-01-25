@@ -1,4 +1,5 @@
 import { GameStateBasic, PlayerId } from "common/model/GameStateBasic"
+import { UserInfo } from "common/model/UserInfo"
 
 import { BoardData, BoardId } from "./BoardData"
 import { Card, getAllCards } from "./Card"
@@ -37,6 +38,7 @@ export function getInitialGameState(
   boardData: BoardData,
   checkpoints: Position[],
   playerIds: PlayerId[],
+  playerInfos: Record<PlayerId, UserInfo>,
   initialDir: Direction = Direction.NORTH
 ): RoborallyState {
   return {
@@ -47,10 +49,17 @@ export function getInitialGameState(
     deck: getAllCards(),
     phase: GamePhase.STANDBY,
     playerOrder: playerIds,
-    players: playerIds.reduce((players, playerId) => {
-      players[playerId] = getInitialPlayerState(checkpoints[0], initialDir)
-      return players
-    }, {} as Record<PlayerId, RoborallyPlayer>),
+    players: playerIds.reduce(
+      (players, playerId) =>
+        Object.assign(players, {
+          [playerId]: getInitialPlayerState(
+            playerInfos[playerId].name,
+            checkpoints[0],
+            initialDir
+          ),
+        }),
+      {} as Record<PlayerId, RoborallyPlayer>
+    ),
     sequence: 0,
     turn: 0,
   }

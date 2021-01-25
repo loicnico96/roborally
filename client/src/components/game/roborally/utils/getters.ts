@@ -62,6 +62,10 @@ export function getPlayerDestroyed(player: RoborallyPlayer): boolean {
   return player.destroyed
 }
 
+export function getPlayerName(player: RoborallyPlayer): string {
+  return player.name
+}
+
 export function getPlayerPositionX(player: RoborallyPlayer): number {
   return player.pos.x
 }

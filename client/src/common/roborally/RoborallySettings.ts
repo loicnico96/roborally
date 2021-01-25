@@ -19,18 +19,24 @@ export const RoborallySettings: GameSettings<"roborally"> = {
   minPlayers: 1,
   maxPlayers: 4,
 
-  async getInitialGameState(playerIds, options, fetchData) {
-    const { boardIds } = options
+  async getInitialGameState({ options, playerOrder, players }, fetchData) {
+    const { boardIds, checkpoints: numCheckpoints } = options
 
     async function fetchBoardData(boardId: BoardId): Promise<BoardData> {
       return fetchData(Collection.BOARD, boardId)
     }
 
-    const numCheckpoints = options.checkpoints + 1
     const boardDatas = await Promise.all(boardIds.map(fetchBoardData))
-    const boardData = mergeBoards(boardDatas)
-    const checkpoints = shuffle(boardData.checkpoints).slice(0, numCheckpoints)
-    return getInitialGameState(boardIds, boardData, checkpoints, playerIds)
+    const mergedBoardData = mergeBoards(boardDatas)
+    const checkpoints = shuffle(mergedBoardData.checkpoints)
+
+    return getInitialGameState(
+      boardIds,
+      mergedBoardData,
+      checkpoints.slice(0, numCheckpoints + 1),
+      playerOrder,
+      players
+    )
   },
 
   async resolvePlayerAction(gameState, playerId, action) {

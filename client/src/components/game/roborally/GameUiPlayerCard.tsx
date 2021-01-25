@@ -2,8 +2,6 @@ import React from "react"
 import styled from "styled-components"
 
 import { PlayerId } from "common/model/GameStateBasic"
-import { usePlayerName } from "hooks/usePlayerName"
-import { useRoomId } from "hooks/useRoomId"
 
 import { usePlayerStatusText } from "./hooks/usePlayerStatusText"
 import { useRoborallyPlayer } from "./hooks/useRoborallyPlayer"
@@ -12,6 +10,7 @@ import RobotAvatar from "./RobotAvatar"
 import {
   getPlayerCheckpoint,
   getPlayerDamage,
+  getPlayerName,
   getTotalCheckpoints,
 } from "./utils/getters"
 
@@ -68,10 +67,9 @@ const GameUiPlayerCard = ({
   playerId,
   playerIndex,
 }: GameUiPlayerCardProps) => {
-  const roomId = useRoomId()
   const playerCheckpoint = useRoborallyPlayer(playerId, getPlayerCheckpoint)
   const playerDamage = useRoborallyPlayer(playerId, getPlayerDamage)
-  const playerName = usePlayerName(roomId, playerId)
+  const playerName = useRoborallyPlayer(playerId, getPlayerName)
   const playerStatus = usePlayerStatusText(playerId)
   const totalCheckpoints = useRoborallyState(getTotalCheckpoints)
 

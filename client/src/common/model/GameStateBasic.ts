@@ -1,6 +1,7 @@
 export type PlayerId = string
 
 export type PlayerStateBasic = {
+  name: string
   ready: boolean
 }
 

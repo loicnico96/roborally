@@ -1,9 +1,9 @@
-import React from "react"
+import React, { useCallback } from "react"
 import styled from "styled-components"
 
 import { PlayerId } from "common/model/GameStateBasic"
+import { RoomId } from "common/model/RoomData"
 import Box from "components/ui/Box"
-import { usePlayerName } from "hooks/usePlayerName"
 import { useRoomData } from "hooks/useRoomData"
 import { useRoomId } from "hooks/useRoomId"
 
@@ -19,6 +19,13 @@ const RoomPlayerItemContainer = styled(Box)`
   margin-bottom: 24px;
   white-space: pre-line;
 `
+
+function usePlayerName(roomId: RoomId, playerId: PlayerId): string {
+  return useRoomData(
+    roomId,
+    useCallback(room => room.players[playerId].name, [playerId])
+  )
+}
 
 const RoomPlayerItem = ({ playerId }: RoomListItemProps) => {
   const roomId = useRoomId()
