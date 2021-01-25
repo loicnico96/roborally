@@ -3,16 +3,24 @@ import { useCallback } from "react"
 import { useActions } from "hooks/useActions"
 
 import Auth, { FirebaseUser } from "./Auth"
-import { getDefaultAuthPersistence } from "./AuthPersistence"
+
+export enum AuthPersistence {
+  LOCAL = "local",
+  SESSION = "session",
+}
 
 export function useSignIn(
-  signInHandler: () => Promise<FirebaseUser | null>
+  signInHandler: () => Promise<FirebaseUser | null>,
+  isPersistEnabled: boolean
 ): () => Promise<void> {
   const { setCurrentUser } = useActions()
 
   return useCallback(async () => {
-    await Auth.setPersistence(getDefaultAuthPersistence())
+    const persistence = isPersistEnabled
+      ? AuthPersistence.LOCAL
+      : AuthPersistence.SESSION
+    await Auth.setPersistence(persistence)
     const user = await signInHandler()
     setCurrentUser(user)
-  }, [setCurrentUser, signInHandler])
+  }, [isPersistEnabled, setCurrentUser, signInHandler])
 }

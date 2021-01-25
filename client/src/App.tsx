@@ -2,7 +2,7 @@ import React from "react"
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 
 import HomeRoute from "components/HomeRoute"
-import LoginRoute from "components/LoginRoute"
+import LoginRoute from "components/login/LoginRoute"
 import RoomRoute from "components/room/RoomRoute"
 import RoomListRoute from "components/roomList/RoomListRoute"
 import ToastProvider from "components/ui/ToastProvider"

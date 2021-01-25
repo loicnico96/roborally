@@ -13,6 +13,6 @@ export async function signInAnonymous() {
   return user
 }
 
-export function useSignInAnonymous() {
-  return useSignIn(signInAnonymous)
+export function useSignInAnonymous(isPersistEnabled: boolean) {
+  return useSignIn(signInAnonymous, isPersistEnabled)
 }

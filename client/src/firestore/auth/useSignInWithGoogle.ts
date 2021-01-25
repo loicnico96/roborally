@@ -7,6 +7,6 @@ export async function signInWithGoogle() {
   return user
 }
 
-export function useSignInWithGoogle() {
-  return useSignIn(signInWithGoogle)
+export function useSignInWithGoogle(isPersistEnabled: boolean) {
+  return useSignIn(signInWithGoogle, isPersistEnabled)
 }
