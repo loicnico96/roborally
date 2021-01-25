@@ -1,73 +1,81 @@
 import { DataFetcher } from "./firestore/collections"
-import { GameContext, StateChangeHandler } from "./GameContext"
-import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
+import { StateChangeHandler } from "./GameContext"
+import { MetropolysSettings } from "./metropolys/MetropolysSettings"
+import { MetropolysAction } from "./metropolys/model/MetropolysAction"
+import { MetropolysEvent } from "./metropolys/model/MetropolysEvent"
+import { MetropolysOptions } from "./metropolys/model/MetropolysOptions"
+import { MetropolysState } from "./metropolys/model/MetropolysState"
+import { RoborallyAction } from "./roborally/model/RoborallyAction"
+import { RoborallyEvent } from "./roborally/model/RoborallyEvent"
+import { RoborallyOptions } from "./roborally/model/RoborallyOptions"
+import { RoborallyState } from "./roborally/model/RoborallyState"
 import { RoborallySettings } from "./roborally/RoborallySettings"
 import { Validator } from "./utils/validation"
 
 export enum GameType {
+  METROPOLYS = "metropolys",
   ROBORALLY = "roborally",
 }
 
-export type BaseSettings<
-  State extends GameStateBasic,
-  Event,
-  Context extends GameContext<State, Event>,
-  Options extends Record<string, unknown>,
-  Action
-> = {
-  defaultOptions: Options
+export type GameAction<T extends GameType = GameType> = {
+  [GameType.METROPOLYS]: MetropolysAction
+  [GameType.ROBORALLY]: RoborallyAction
+}[T]
+
+export type GameEvent<T extends GameType = GameType> = {
+  [GameType.METROPOLYS]: MetropolysEvent
+  [GameType.ROBORALLY]: RoborallyEvent
+}[T]
+
+export type GameOptions<T extends GameType = GameType> = {
+  [GameType.METROPOLYS]: MetropolysOptions
+  [GameType.ROBORALLY]: RoborallyOptions
+}[T]
+
+export type GameState<T extends GameType = GameType> = {
+  [GameType.METROPOLYS]: MetropolysState
+  [GameType.ROBORALLY]: RoborallyState
+}[T]
+
+export type GameSettings<T extends GameType> = {
+  type: T
+  defaultOptions: GameOptions<T>
   maxPlayers: number
   minPlayers: number
 
   getInitialGameState: (
-    playerIds: PlayerId[],
-    options: Options,
+    playerOrder: string[],
+    options: GameOptions<T>,
     fetchData: DataFetcher
-  ) => Promise<State>
-
-  getContext: (
-    gameState: State,
-    onStateChanged?: StateChangeHandler<State, Event>
-  ) => Context
+  ) => Promise<GameState<T>>
 
   resolvePlayerAction: (
-    ctx: Context,
-    playerId: PlayerId,
-    action: Action
-  ) => Promise<void>
+    gameState: GameState<T>,
+    playerId: string,
+    action: GameAction<T>
+  ) => Promise<GameState<T>>
 
-  resolveState: (ctx: Context) => Promise<void>
+  resolveState: (
+    gameState: GameState<T>,
+    onStateChanged?: StateChangeHandler<GameState<T>, GameEvent<T>>
+  ) => Promise<GameState<T>>
 
   validateAction: (
-    gameState: State,
-    playerId: PlayerId,
+    gameState: GameState<T>,
+    playerId: string,
     action: unknown
-  ) => Action
+  ) => GameAction<T>
 
-  validateOptions: Validator<Options>
+  validateOptions: Validator<GameOptions<T>>
 }
 
-const SETTINGS = {
+export const SETTINGS: {
+  [T in GameType]: GameSettings<T>
+} = {
+  [GameType.METROPOLYS]: MetropolysSettings,
   [GameType.ROBORALLY]: RoborallySettings,
 }
 
-export type GameSettings<T extends GameType = GameType> = typeof SETTINGS[T]
-
-type InferredTypes<T extends GameType> = GameSettings<T> extends BaseSettings<
-  infer State,
-  infer Event,
-  infer Context,
-  infer Options,
-  infer Action
->
-  ? [State, Event, Context, Options, Action]
-  : never
-
-export type GameState<T extends GameType = GameType> = InferredTypes<T>[0]
-export type GameEvent<T extends GameType = GameType> = InferredTypes<T>[1]
-export type GameOptions<T extends GameType = GameType> = InferredTypes<T>[3]
-export type GameAction<T extends GameType = GameType> = InferredTypes<T>[4]
-
 export function getGameSettings<T extends GameType>(game: T): GameSettings<T> {
-  return SETTINGS[game]
+  return SETTINGS[game] as any
 }

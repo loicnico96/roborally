@@ -3,6 +3,7 @@ import { isEmpty } from "common/utils/objects"
 
 import { inBounds, LaserType, WallType } from "./model/BoardData"
 import { Direction, isSamePos, movePos, Position } from "./model/Position"
+import { RoborallyEvent } from "./model/RoborallyEvent"
 import {
   damagePlayer,
   destroyPlayer,
@@ -13,7 +14,7 @@ import {
   isDestroyedByDamage,
   RoborallyPlayer,
 } from "./model/RoborallyPlayer"
-import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
+import { RoborallyContext } from "./RoborallyContext"
 
 export type Laser = {
   damage: number

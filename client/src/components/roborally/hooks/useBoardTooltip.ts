@@ -29,8 +29,8 @@ import { getRoomData } from "hooks/useRoomData"
 import { useRoomId } from "hooks/useRoomId"
 import { useStore } from "hooks/useStore"
 import { Store } from "utils/store"
-
-import { getGameState } from "./useGameState"
+import { getGameState } from "hooks/useGameState"
+import { GameType } from "common/GameSettings"
 
 const DIRS = [Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST]
 
@@ -235,7 +235,7 @@ function getPlayerTooltips(
 }
 
 function getBoardTooltip(store: Store, roomId: RoomId, pos: Position): string {
-  const gameState = getGameState(store, roomId)
+  const gameState = getGameState(store, GameType.ROBORALLY, roomId)
   const { players } = getRoomData(store, roomId)
 
   return [

@@ -1,4 +1,5 @@
 import { FeatureType } from "./model/BoardData"
+import { RoborallyEvent } from "./model/RoborallyEvent"
 import { GamePhase } from "./model/RoborallyState"
 import { resolveCheckpoints } from "./resolveCheckpoints"
 import { resolveConveyors } from "./resolveConveyors"
@@ -16,7 +17,7 @@ import { resolveRandomizers } from "./resolveRandomizers"
 import { resolveRepairs } from "./resolveRepairs"
 import { resolveTurnEnd } from "./resolveTurnEnd"
 import { resolveVirtualPlayers } from "./resolveVirtualPlayers"
-import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
+import { RoborallyContext } from "./RoborallyContext"
 
 const SEQUENCE_COUNT = 5
 

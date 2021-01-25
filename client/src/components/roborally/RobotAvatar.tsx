@@ -6,7 +6,7 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { EVENT_DURATION_NORMAL } from "components/room/GameProvider"
 
 import DamageAnimation from "./DamageAnimation"
-import { usePlayerState } from "./hooks/usePlayerState"
+import { useRoborallyPlayer } from "./hooks/useRoborallyPlayer"
 import RobotImage from "./RobotImage"
 import {
   getPlayerDamage,
@@ -55,10 +55,10 @@ const DestroyAnimation = styled.div`
 `
 
 const RobotAvatar = ({ playerId, playerIndex }: RobotAvatarProps) => {
-  const damage = usePlayerState(playerId, getPlayerDamage)
-  const destroyed = usePlayerState(playerId, getPlayerDestroyed)
-  const poweredDown = usePlayerState(playerId, getPlayerPoweredDown)
-  const virtual = usePlayerState(playerId, getPlayerVirtual)
+  const damage = useRoborallyPlayer(playerId, getPlayerDamage)
+  const destroyed = useRoborallyPlayer(playerId, getPlayerDestroyed)
+  const poweredDown = useRoborallyPlayer(playerId, getPlayerPoweredDown)
+  const virtual = useRoborallyPlayer(playerId, getPlayerVirtual)
 
   return (
     <>

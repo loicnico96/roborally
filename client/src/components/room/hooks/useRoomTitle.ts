@@ -1,11 +1,11 @@
 import { useCallback } from "react"
 
 import { RoomId, RoomStatus } from "common/model/RoomData"
-import { getGameResource } from "components/roborally/hooks/useGameState"
 import { getRoomResource } from "hooks/useRoomData"
 import { useStore } from "hooks/useStore"
 import { isLoaded } from "utils/resources"
 import { Store } from "utils/store"
+import { getGameResource } from "hooks/useGameState"
 
 export function getRoomTitle(store: Store, roomId: RoomId): string {
   const roomResource = getRoomResource(store, roomId)

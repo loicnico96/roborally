@@ -14,8 +14,8 @@ import { GamePhase } from "common/roborally/model/RoborallyState"
 import GameUiCard from "./GameUiCard"
 import GameUiPowerDownButton from "./GameUiPowerDownButton"
 import GameUiReadyButton from "./GameUiReadyButton"
-import { useGameState } from "./hooks/useGameState"
-import { usePlayerState } from "./hooks/usePlayerState"
+import { useRoborallyState } from "./hooks/useRoborallyState"
+import { useRoborallyPlayer } from "./hooks/useRoborallyPlayer"
 
 type GameUiProgramProps = {
   playerId: PlayerId
@@ -68,16 +68,16 @@ function getWarningText(phase: GamePhase, powerDown: boolean): string {
 }
 
 const GameUiProgram = ({ playerId }: GameUiProgramProps) => {
-  const currentPhase = useGameState(state => state.phase)
-  const sequence = useGameState(state => state.sequence)
+  const currentPhase = useRoborallyState(state => state.phase)
+  const sequence = useRoborallyState(state => state.sequence)
 
-  const playerCards = usePlayerState(playerId, player => player.cards)
-  const playerDown = usePlayerState(playerId, player => player.down)
-  const playerDownNext = usePlayerState(playerId, player => player.downNext)
-  const playerProgram = usePlayerState(playerId, player => player.program)
-  const lockedProgram = usePlayerState(playerId, getLockedProgram)
-  const playerStatusText = usePlayerState(playerId, getPlayerStatusText)
-  const playerAbleToMove = usePlayerState(playerId, isAbleToMove)
+  const playerCards = useRoborallyPlayer(playerId, player => player.cards)
+  const playerDown = useRoborallyPlayer(playerId, player => player.down)
+  const playerDownNext = useRoborallyPlayer(playerId, player => player.downNext)
+  const playerProgram = useRoborallyPlayer(playerId, player => player.program)
+  const lockedProgram = useRoborallyPlayer(playerId, getLockedProgram)
+  const playerStatusText = useRoborallyPlayer(playerId, getPlayerStatusText)
+  const playerAbleToMove = useRoborallyPlayer(playerId, isAbleToMove)
 
   const [program, setProgram] = useState(getEmptyProgram())
   const [downNext, setDownNext] = useState(false)

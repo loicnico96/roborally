@@ -4,23 +4,8 @@ import { BoardData, getCell, getWall, WallType } from "./model/BoardData"
 import { Card } from "./model/Card"
 import { CellData } from "./model/CellData"
 import { Direction, isSamePos, Position } from "./model/Position"
+import { RoborallyEvent } from "./model/RoborallyEvent"
 import { GamePhase, RoborallyState } from "./model/RoborallyState"
-import { resolveState } from "./resolveState"
-
-export enum RoborallyEvent {
-  CHANGE_PHASE = "change_phase",
-  CHANGE_PLAYER = "change_player",
-  CHECKPOINT = "checkpoint",
-  DAMAGE = "damage",
-  DESTROY = "destroy",
-  MATERIALIZE = "materialize",
-  MOVE = "move",
-  RANDOMIZE = "randomize",
-  REPAIR = "repair",
-  RESPAWN = "respawn",
-  ROTATE = "rotate",
-  TELEPORT = "teleport",
-}
 
 export class RoborallyContext extends GameContext<
   RoborallyState,
@@ -67,9 +52,5 @@ export class RoborallyContext extends GameContext<
 
   getWall(pos: Position, dir: Direction): WallType {
     return getWall(this.getBoard(), pos, dir)
-  }
-
-  async resolveInternal(): Promise<void> {
-    await resolveState(this)
   }
 }

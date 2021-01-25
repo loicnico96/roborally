@@ -1,11 +1,8 @@
 import { useCallback, useRef } from "react"
 
 import { Collection } from "common/firestore/collections"
-import { GameType, getGameSettings } from "common/GameSettings"
+import { GameEvent, GameState, getGameSettings } from "common/GameSettings"
 import { RoomId } from "common/model/RoomData"
-import { RoborallyState } from "common/roborally/model/RoborallyState"
-import { RoborallyEvent } from "common/roborally/RoborallyContext"
-import { getGameResource } from "components/roborally/hooks/useGameState"
 import { renderError } from "components/ui/PageError"
 import { renderLoader } from "components/ui/PageLoader"
 import { useFirestoreLoader } from "firestore/useFirestoreLoader"
@@ -18,6 +15,10 @@ import {
   isLoaded,
   getLoadedResource,
 } from "utils/resources"
+import { RoborallyEvent } from "common/roborally/model/RoborallyEvent"
+import { useRoomData } from "hooks/useRoomData"
+import { getGameType } from "./utils/getters"
+import { getGameResource } from "hooks/useGameState"
 
 export const EVENT_DURATION_SHORT = 200
 export const EVENT_DURATION_NORMAL = 500
@@ -27,7 +28,7 @@ export type GameProviderProps = {
   roomId: RoomId
 }
 
-function getEventDuration(event: RoborallyEvent): number {
+function getEventDuration(event: GameEvent): number {
   switch (event) {
     case RoborallyEvent.CHANGE_PHASE:
       return EVENT_DURATION_SHORT
@@ -66,24 +67,21 @@ const GameProvider = ({ children, roomId }: GameProviderProps) => {
   const { setGameResource } = useActions()
 
   const isResolving = useRef(false)
-  const stateQueue = useRef<RoborallyState[]>([])
+  const stateQueue = useRef<GameState[]>([])
 
   const gameLoading = useGameLoading(roomId)
   const gameError = useGameError(roomId)
-  const gameType = GameType.ROBORALLY
+  const gameType = useRoomData(roomId, getGameType)
 
   const handleGameResource = useCallback(
-    (resource: Resource<RoborallyState>) => {
-      const { getContext, resolveState } = getGameSettings(gameType)
+    (resource: Resource<GameState>) => {
+      const { resolveState } = getGameSettings(gameType)
 
-      function setGameState(state: RoborallyState) {
+      function setGameState(state: GameState) {
         setGameResource(getLoadedResource(roomId, state))
       }
 
-      async function onStateChanged(
-        state: RoborallyState,
-        event: RoborallyEvent
-      ) {
+      async function onStateChanged(state: GameState, event: GameEvent) {
         setGameState(state)
         const duration = getEventDuration(event)
         await pause(duration)
@@ -95,9 +93,11 @@ const GameProvider = ({ children, roomId }: GameProviderProps) => {
           while (stateQueue.current.length > 0) {
             const nextState = stateQueue.current.shift()
             if (nextState !== undefined) {
-              const ctx = getContext(nextState, onStateChanged)
-              await ctx.resolve(resolveState)
-              setGameState(ctx.getState())
+              const resolvedState = await resolveState(
+                nextState,
+                onStateChanged
+              )
+              setGameState(resolvedState)
             }
           }
         } catch (error) {

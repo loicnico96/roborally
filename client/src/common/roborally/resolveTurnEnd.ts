@@ -1,6 +1,7 @@
 import { mapValues, merge } from "common/utils/objects"
 
 import { Position } from "./model/Position"
+import { RoborallyEvent } from "./model/RoborallyEvent"
 import {
   getLockedProgram,
   isAbleToRespawn,
@@ -8,7 +9,7 @@ import {
   RoborallyPlayer,
 } from "./model/RoborallyPlayer"
 import { GamePhase } from "./model/RoborallyState"
-import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
+import { RoborallyContext } from "./RoborallyContext"
 
 function applyPowerDown(player: RoborallyPlayer): RoborallyPlayer {
   return merge(player, {

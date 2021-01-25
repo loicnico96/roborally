@@ -1,6 +1,7 @@
 import { isSamePos } from "./model/Position"
+import { RoborallyEvent } from "./model/RoborallyEvent"
 import { isAlive, isVirtual, materializePlayer } from "./model/RoborallyPlayer"
-import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
+import { RoborallyContext } from "./RoborallyContext"
 
 export async function resolveVirtualPlayers(ctx: RoborallyContext) {
   const updateCount = ctx.updatePlayers((player, playerId) => {

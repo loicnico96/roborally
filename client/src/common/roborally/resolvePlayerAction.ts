@@ -1,8 +1,8 @@
-import { RoborallyAction } from "common/functions/httpGameAction"
 import { PlayerId } from "common/model/GameStateBasic"
 import { shuffle } from "common/utils/arrays"
 
 import { confirmPlayerProgram } from "./confirmPlayerProgram"
+import { RoborallyAction } from "./model/RoborallyAction"
 import { GamePhase } from "./model/RoborallyState"
 import { readyPlayerForTurn } from "./readyPlayerForTurn"
 import { RoborallyContext } from "./RoborallyContext"
