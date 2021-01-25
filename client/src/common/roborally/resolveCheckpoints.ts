@@ -1,9 +1,10 @@
+import { RoborallyContext } from "./model/RoborallyContext"
+import { RoborallyEvent } from "./model/RoborallyEvent"
 import {
   isAffectedByCheckpoint,
   isAlive,
   triggerPlayerCheckpoint,
 } from "./model/RoborallyPlayer"
-import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export async function checkWinCondition(ctx: RoborallyContext) {
   const winners = ctx.filterPlayers(player => {

@@ -6,7 +6,7 @@ import {
 } from "common/utils/validation"
 
 import { BoardId, getMaxCheckpoints } from "./model/BoardData"
-import { RoborallyOptions } from "./RoborallySettings"
+import { RoborallyOptions } from "./model/RoborallyOptions"
 
 export function validateOptions(options: unknown): RoborallyOptions {
   const typedOptions = validateObject({

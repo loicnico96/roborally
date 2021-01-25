@@ -1,4 +1,3 @@
-import { RoborallyAction } from "common/functions/httpGameAction"
 import { PlayerId } from "common/model/GameStateBasic"
 import {
   validateBoolean,
@@ -8,6 +7,7 @@ import {
 
 import { isValidProgram } from "./isValidProgram"
 import { Program } from "./model/Program"
+import { RoborallyAction } from "./model/RoborallyAction"
 import { GamePhase, RoborallyState } from "./model/RoborallyState"
 
 function validateProgram(): Validator<Program> {

@@ -3,7 +3,7 @@ import React, { useCallback } from "react"
 import styled from "styled-components"
 
 import { BoardId, getMaxCheckpoints } from "common/roborally/model/BoardData"
-import { RoborallyOptions } from "common/roborally/RoborallySettings"
+import { RoborallyOptions } from "common/roborally/model/RoborallyOptions"
 import { clamp, range } from "common/utils/math"
 import { getBoardImage } from "components/roborally/BoardImage"
 import Box from "components/ui/Box"

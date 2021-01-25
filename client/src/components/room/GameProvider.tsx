@@ -1,10 +1,10 @@
 import { useCallback, useRef } from "react"
 
 import { Collection } from "common/firestore/collections"
-import { GameType, getGameSettings } from "common/GameSettings"
+import { getGameSettings } from "common/GameSettings"
 import { RoomId } from "common/model/RoomData"
+import { RoborallyEvent } from "common/roborally/model/RoborallyEvent"
 import { RoborallyState } from "common/roborally/model/RoborallyState"
-import { RoborallyEvent } from "common/roborally/RoborallyContext"
 import { getGameResource } from "components/roborally/hooks/useGameState"
 import { renderError } from "components/ui/PageError"
 import { renderLoader } from "components/ui/PageLoader"
@@ -70,11 +70,10 @@ const GameProvider = ({ children, roomId }: GameProviderProps) => {
 
   const gameLoading = useGameLoading(roomId)
   const gameError = useGameError(roomId)
-  const gameType = GameType.ROBORALLY
 
   const handleGameResource = useCallback(
     (resource: Resource<RoborallyState>) => {
-      const { getContext, resolveState } = getGameSettings(gameType)
+      const { resolveState } = getGameSettings("roborally")
 
       function setGameState(state: RoborallyState) {
         setGameResource(getLoadedResource(roomId, state))
@@ -95,9 +94,7 @@ const GameProvider = ({ children, roomId }: GameProviderProps) => {
           while (stateQueue.current.length > 0) {
             const nextState = stateQueue.current.shift()
             if (nextState !== undefined) {
-              const ctx = getContext(nextState, onStateChanged)
-              await ctx.resolve(resolveState)
-              setGameState(ctx.getState())
+              setGameState(await resolveState(nextState, onStateChanged))
             }
           }
         } catch (error) {
@@ -116,7 +113,7 @@ const GameProvider = ({ children, roomId }: GameProviderProps) => {
         setGameResource(resource)
       }
     },
-    [gameType, isResolving, roomId, setGameResource, stateQueue]
+    [isResolving, roomId, setGameResource, stateQueue]
   )
 
   useFirestoreLoader(Collection.CLIENT, roomId, handleGameResource)

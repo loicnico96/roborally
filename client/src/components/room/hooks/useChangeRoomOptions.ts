@@ -2,7 +2,7 @@ import { useCallback } from "react"
 
 import { PlayerId } from "common/model/GameStateBasic"
 import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
-import { RoborallyOptions } from "common/roborally/RoborallySettings"
+import { RoborallyOptions } from "common/roborally/model/RoborallyOptions"
 import { useAuthContext } from "firestore/auth/AuthContext"
 import { triggerRoomOptions } from "functions/triggers"
 import { useRoomData } from "hooks/useRoomData"

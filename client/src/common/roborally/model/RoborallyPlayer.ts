@@ -1,4 +1,4 @@
-import { PlayerStateBasic } from "common/model/PlayerStateBasic"
+import { PlayerStateBasic } from "common/model/GameStateBasic"
 import { clamp } from "common/utils/math"
 import { merge } from "common/utils/objects"
 

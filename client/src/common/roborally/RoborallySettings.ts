@@ -1,43 +1,25 @@
-import { Collection, DataFetcher } from "common/firestore/collections"
-import { RoborallyAction } from "common/functions/httpGameAction"
-import { StateChangeHandler } from "common/GameContext"
-import { BaseSettings } from "common/GameSettings"
-import { PlayerId } from "common/model/GameStateBasic"
+import { Collection } from "common/firestore/collections"
+import { GameSettings } from "common/GameSettings"
 import { shuffle } from "common/utils/arrays"
 
 import { BoardData, BoardId, mergeBoards } from "./model/BoardData"
-import { getInitialGameState, RoborallyState } from "./model/RoborallyState"
+import { RoborallyContext } from "./model/RoborallyContext"
+import { getInitialGameState } from "./model/RoborallyState"
 import { resolvePlayerAction } from "./resolvePlayerAction"
 import { resolveState } from "./resolveState"
-import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 import { validateAction } from "./validateAction"
 import { validateOptions } from "./validateOptions"
 
-export type RoborallyOptions = {
-  checkpoints: number
-  boardIds: BoardId[]
-}
-
-export const RoborallySettings: BaseSettings<
-  RoborallyState,
-  RoborallyEvent,
-  RoborallyContext,
-  RoborallyOptions,
-  RoborallyAction
-> = {
+export const RoborallySettings: GameSettings<"roborally"> = {
   defaultOptions: {
     checkpoints: 3,
     boardIds: [BoardId.ISLAND],
   },
 
-  maxPlayers: 4,
   minPlayers: 1,
+  maxPlayers: 4,
 
-  async getInitialGameState(
-    playerIds: PlayerId[],
-    options: RoborallyOptions,
-    fetchData: DataFetcher
-  ): Promise<RoborallyState> {
+  async getInitialGameState(playerIds, options, fetchData) {
     const { boardIds } = options
 
     async function fetchBoardData(boardId: BoardId): Promise<BoardData> {
@@ -51,15 +33,18 @@ export const RoborallySettings: BaseSettings<
     return getInitialGameState(boardIds, boardData, checkpoints, playerIds)
   },
 
-  getContext(
-    gameState: RoborallyState,
-    onStateChanged?: StateChangeHandler<RoborallyState, RoborallyEvent>
-  ): RoborallyContext {
-    return new RoborallyContext(gameState, onStateChanged)
+  async resolvePlayerAction(gameState, playerId, action) {
+    const ctx = new RoborallyContext(gameState)
+    ctx.resolve(resolvePlayerAction, playerId, action)
+    return ctx.getState()
   },
 
-  resolvePlayerAction,
-  resolveState,
+  async resolveState(gameState, onStateChanged) {
+    const ctx = new RoborallyContext(gameState, onStateChanged)
+    ctx.resolve(resolveState)
+    return ctx.getState()
+  },
+
   validateAction,
   validateOptions,
 }

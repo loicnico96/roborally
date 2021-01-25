@@ -1,73 +1,68 @@
 import { DataFetcher } from "./firestore/collections"
-import { GameContext, StateChangeHandler } from "./GameContext"
-import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
+import { StateChangeHandler } from "./model/GameContext"
+import { PlayerId } from "./model/GameStateBasic"
+import { RoborallyAction } from "./roborally/model/RoborallyAction"
+import { RoborallyEvent } from "./roborally/model/RoborallyEvent"
+import { RoborallyOptions } from "./roborally/model/RoborallyOptions"
+import { RoborallyState } from "./roborally/model/RoborallyState"
 import { RoborallySettings } from "./roborally/RoborallySettings"
 import { Validator } from "./utils/validation"
 
-export enum GameType {
-  ROBORALLY = "roborally",
-}
+export type GameType = "roborally"
 
-export type BaseSettings<
-  State extends GameStateBasic,
-  Event,
-  Context extends GameContext<State, Event>,
-  Options extends Record<string, unknown>,
-  Action
-> = {
-  defaultOptions: Options
-  maxPlayers: number
+export type GameAction<T extends GameType = GameType> = {
+  roborally: RoborallyAction
+}[T]
+
+export type GameEvent<T extends GameType = GameType> = {
+  roborally: RoborallyEvent
+}[T]
+
+export type GameOptions<T extends GameType = GameType> = {
+  roborally: RoborallyOptions
+}[T]
+
+export type GameState<T extends GameType = GameType> = {
+  roborally: RoborallyState
+}[T]
+
+export type GameSettings<T extends GameType = GameType> = {
+  defaultOptions: GameOptions<T>
   minPlayers: number
+  maxPlayers: number
 
   getInitialGameState: (
     playerIds: PlayerId[],
-    options: Options,
+    options: GameOptions<T>,
     fetchData: DataFetcher
-  ) => Promise<State>
-
-  getContext: (
-    gameState: State,
-    onStateChanged?: StateChangeHandler<State, Event>
-  ) => Context
+  ) => Promise<GameState<T>>
 
   resolvePlayerAction: (
-    ctx: Context,
+    gameState: GameState<T>,
     playerId: PlayerId,
-    action: Action
-  ) => Promise<void>
+    action: GameAction<T>
+  ) => Promise<GameState<T>>
 
-  resolveState: (ctx: Context) => Promise<void>
+  resolveState: (
+    gameState: GameState<T>,
+    onStateChanged?: StateChangeHandler<GameState<T>, GameEvent<T>>
+  ) => Promise<GameState<T>>
 
   validateAction: (
-    gameState: State,
+    gameState: GameState<T>,
     playerId: PlayerId,
     action: unknown
-  ) => Action
+  ) => GameAction<T>
 
-  validateOptions: Validator<Options>
+  validateOptions: Validator<GameOptions<T>>
 }
 
-const SETTINGS = {
-  [GameType.ROBORALLY]: RoborallySettings,
+const SETTINGS: {
+  [T in GameType]: GameSettings<T>
+} = {
+  roborally: RoborallySettings,
 }
 
-export type GameSettings<T extends GameType = GameType> = typeof SETTINGS[T]
-
-type InferredTypes<T extends GameType> = GameSettings<T> extends BaseSettings<
-  infer State,
-  infer Event,
-  infer Context,
-  infer Options,
-  infer Action
->
-  ? [State, Event, Context, Options, Action]
-  : never
-
-export type GameState<T extends GameType = GameType> = InferredTypes<T>[0]
-export type GameEvent<T extends GameType = GameType> = InferredTypes<T>[1]
-export type GameOptions<T extends GameType = GameType> = InferredTypes<T>[3]
-export type GameAction<T extends GameType = GameType> = InferredTypes<T>[4]
-
-export function getGameSettings<T extends GameType>(game: T): GameSettings<T> {
+export function getGameSettings(game: GameType): GameSettings {
   return SETTINGS[game]
 }

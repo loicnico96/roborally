@@ -1,7 +1,8 @@
 import { CellData, isGear } from "./model/CellData"
 import { Rotation } from "./model/Position"
+import { RoborallyContext } from "./model/RoborallyContext"
+import { RoborallyEvent } from "./model/RoborallyEvent"
 import { isAffectedByCells, rotatePlayer } from "./model/RoborallyPlayer"
-import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export function getGearRot(cell: CellData): Rotation {
   return cell.rot ?? Rotation.NONE

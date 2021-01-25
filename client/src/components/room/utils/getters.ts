@@ -1,6 +1,6 @@
 import { PlayerId } from "common/model/GameStateBasic"
 import { RoomData, RoomStatus } from "common/model/RoomData"
-import { RoborallyOptions } from "common/roborally/RoborallySettings"
+import { RoborallyOptions } from "common/roborally/model/RoborallyOptions"
 
 export function getOwnerId(data: RoomData): PlayerId {
   return data.ownerId

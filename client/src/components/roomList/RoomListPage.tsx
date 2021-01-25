@@ -2,7 +2,6 @@ import React, { useCallback } from "react"
 import { useHistory } from "react-router-dom"
 import styled from "styled-components"
 
-import { GameType } from "common/GameSettings"
 import { RoomData } from "common/model/RoomData"
 import AsyncButton from "components/ui/AsyncButton"
 import PageContent from "components/ui/PageContent"
@@ -21,8 +20,7 @@ const useCreateRoom = (): [() => Promise<void>, boolean] => {
   const { isAuthenticated } = useAuthContext()
   const history = useHistory()
   const createRoom = useCallback(async () => {
-    const game = GameType.ROBORALLY
-    const roomId = await triggerRoomCreate({ game })
+    const roomId = await triggerRoomCreate({ game: "roborally" })
     history.push(ROUTES.room(roomId))
   }, [history])
 

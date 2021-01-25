@@ -121,6 +121,18 @@ export function validateObject<T extends ObjectRecord>(
   }
 }
 
+export function validateOneOf<T extends boolean | null | number | string>(
+  values: T[]
+): Validator<T> {
+  return (data: unknown) => {
+    if (!values.includes(data as T)) {
+      throw Error("Not an enum")
+    }
+
+    return data as T
+  }
+}
+
 export function validateRecord(): Validator<ObjectRecord>
 export function validateRecord<T>(
   validator: Validator<T>

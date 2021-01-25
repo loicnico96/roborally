@@ -1,6 +1,8 @@
-import { PlayerStateBasic } from "./PlayerStateBasic"
-
 export type PlayerId = string
+
+export type PlayerStateBasic = {
+  ready: boolean
+}
 
 export type GameStateBasic = {
   playerOrder: PlayerId[]

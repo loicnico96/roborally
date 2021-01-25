@@ -4,6 +4,8 @@ import { filter, reduce, size } from "common/utils/objects"
 import { WallType } from "./model/BoardData"
 import { isHole, isOil, isPortal } from "./model/CellData"
 import { Direction, isSamePos, Position, Rotation } from "./model/Position"
+import { RoborallyContext } from "./model/RoborallyContext"
+import { RoborallyEvent } from "./model/RoborallyEvent"
 import {
   destroyPlayer,
   isAffectedByCells,
@@ -15,7 +17,6 @@ import {
   rotatePlayer,
   teleportPlayer,
 } from "./model/RoborallyPlayer"
-import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export type Move = {
   dir: Direction

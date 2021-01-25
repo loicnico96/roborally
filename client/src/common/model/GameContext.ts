@@ -2,7 +2,7 @@ import update, { Spec } from "immutability-helper"
 
 import { merge, size } from "common/utils/objects"
 
-import { GameStateBasic, PlayerId } from "./model/GameStateBasic"
+import { GameStateBasic, PlayerId } from "./GameStateBasic"
 
 const INTERRUPT_WIN = Object.assign(Error("interrupt"), { reason: "win" })
 
@@ -54,10 +54,6 @@ export class GameContext<State extends GameStateBasic, Event> {
       const player = this.getPlayer(playerId)
       return filterFn(player, playerId)
     })
-  }
-
-  isFinished(): boolean {
-    return this.state.winners !== null
   }
 
   mergeState(mergeSpec: Partial<State>) {

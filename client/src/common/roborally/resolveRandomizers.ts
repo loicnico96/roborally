@@ -1,8 +1,9 @@
 import update from "immutability-helper"
 
 import { isRandomizer } from "./model/CellData"
+import { RoborallyContext } from "./model/RoborallyContext"
+import { RoborallyEvent } from "./model/RoborallyEvent"
 import { isAffectedByCells } from "./model/RoborallyPlayer"
-import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export async function resolveRandomizers(
   ctx: RoborallyContext,

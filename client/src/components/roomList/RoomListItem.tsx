@@ -2,7 +2,6 @@ import React from "react"
 import { Link } from "react-router-dom"
 import styled from "styled-components"
 
-import { GameType } from "common/GameSettings"
 import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
 import { BoardId } from "common/roborally/model/BoardData"
 import Box from "components/ui/Box"
@@ -15,7 +14,7 @@ export type RoomListItemProps = {
 
 function formatRoomInfo(room: RoomData): string {
   const gameName = {
-    [GameType.ROBORALLY]: "Roborally",
+    roborally: "Roborally",
   }[room.game]
 
   const statusName = {

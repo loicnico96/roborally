@@ -1,6 +1,6 @@
 import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
-import { getGameSettings, GameType } from "common/GameSettings"
+import { getGameSettings } from "common/GameSettings"
 import { RoomStatus } from "common/model/RoomData"
 import { validateAny, validateString } from "common/utils/validation"
 
@@ -36,29 +36,23 @@ export default handleTrigger<HttpTrigger.GAME_ACTION>(
         return false
       }
 
-      // TODO Determine this from call/document
-      const gameType = GameType.ROBORALLY
-
       const {
-        getContext,
         resolvePlayerAction,
         resolveState,
         validateAction,
-      } = getGameSettings(gameType)
+      } = getGameSettings("roborally")
 
       const action = validateAction(gameState, playerId, data.action)
 
-      const ctx = getContext(gameState)
-
-      const nextState = await ctx.resolve(resolvePlayerAction, playerId, action)
+      const nextState = await resolvePlayerAction(gameState, playerId, action)
 
       transaction.set(clientRef, nextState)
 
-      const resolvedState = await ctx.resolve(resolveState)
+      const resolvedState = await resolveState(nextState)
 
       transaction.set(serverRef, resolvedState)
 
-      if (ctx.isFinished()) {
+      if (resolvedState.winners) {
         const roomRef = getCollection(Collection.ROOM).doc(data.roomId)
         transaction.update(roomRef, { status: RoomStatus.FINISHED })
       }

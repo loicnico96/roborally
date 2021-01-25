@@ -2,9 +2,9 @@ import { PlayerId } from "common/model/GameStateBasic"
 
 import { CellData, isPusher } from "./model/CellData"
 import { Direction, Position } from "./model/Position"
+import { RoborallyContext } from "./model/RoborallyContext"
 import { isAffectedByCells } from "./model/RoborallyPlayer"
 import { Move, resolveMovement } from "./resolveMovement"
-import { RoborallyContext } from "./RoborallyContext"
 
 export function getPusherDir(cell: CellData): Direction | undefined {
   return cell.pushDir

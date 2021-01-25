@@ -13,9 +13,9 @@ import {
   Position,
   Rotation,
 } from "./model/Position"
+import { RoborallyContext } from "./model/RoborallyContext"
 import { isAffectedByCells } from "./model/RoborallyPlayer"
 import { Move, resolveMovement } from "./resolveMovement"
-import { RoborallyContext } from "./RoborallyContext"
 
 export function getConveyorDir(cell: CellData): Direction | undefined {
   return cell.dir

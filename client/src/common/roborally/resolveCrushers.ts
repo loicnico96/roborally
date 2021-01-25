@@ -1,6 +1,7 @@
 import { isCrusher } from "./model/CellData"
+import { RoborallyContext } from "./model/RoborallyContext"
+import { RoborallyEvent } from "./model/RoborallyEvent"
 import { isAffectedByCells, destroyPlayer } from "./model/RoborallyPlayer"
-import { RoborallyContext, RoborallyEvent } from "./RoborallyContext"
 
 export async function resolveCrushers(ctx: RoborallyContext, sequence: number) {
   const updateCount = ctx.updatePlayers(player => {

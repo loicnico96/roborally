@@ -1,8 +1,7 @@
 import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
-import { GameType } from "common/GameSettings"
 import { getInitialRoomData } from "common/model/RoomData"
-import { validateEnum } from "common/utils/validation"
+import { validateOneOf } from "common/utils/validation"
 
 import { getCollection } from "../../utils/collections"
 import { firestore } from "../../utils/firestore"
@@ -10,7 +9,7 @@ import { firestore } from "../../utils/firestore"
 import { handleTrigger } from "./handleTrigger"
 
 const validationSchema = {
-  game: validateEnum(GameType),
+  game: validateOneOf(["roborally"]),
 }
 
 export default handleTrigger<HttpTrigger.ROOM_CREATE>(
