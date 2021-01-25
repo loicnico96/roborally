@@ -1,11 +1,11 @@
-import { useEffect } from "react"
+import React, { ReactNode, useEffect } from "react"
 
 import { useActions } from "hooks/useActions"
 
 import Auth from "./Auth"
 
 export type AuthProviderProps = {
-  children: JSX.Element
+  children: ReactNode
 }
 
 const AuthProvider = ({ children }: AuthProviderProps) => {
@@ -13,7 +13,7 @@ const AuthProvider = ({ children }: AuthProviderProps) => {
 
   useEffect(() => Auth.onAuthStateChanged(setCurrentUser), [setCurrentUser])
 
-  return children
+  return <>{children}</>
 }
 
 export default AuthProvider

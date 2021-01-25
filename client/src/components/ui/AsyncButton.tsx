@@ -2,10 +2,11 @@ import React from "react"
 
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 
+export type ButtonClickEvent = React.MouseEvent<HTMLButtonElement>
 export type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement>
 
 export type AsyncButtonProps = Omit<ButtonProps, "onClick" | "onError"> & {
-  onClick: (event: React.MouseEvent<HTMLButtonElement>) => Promise<any>
+  onClick: (event: ButtonClickEvent) => Promise<any>
   onError?: (error: Error) => void
 }
 

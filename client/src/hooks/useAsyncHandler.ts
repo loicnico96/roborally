@@ -1,29 +1,33 @@
 import { useState, useCallback } from "react"
+import { toast } from "react-toastify"
 
 export type Params = any[]
-export type Fn<P extends Params, T = any> = (...args: P) => T
 export type AsyncFn<P extends Params, T = any> = (...args: P) => Promise<T>
-export type ErrorHandler = (error: Error) => any
+
+export function handleGenericError(error: Error) {
+  console.error(error)
+  toast.error(error.message)
+}
 
 export function useAsyncHandler<P extends Params>(
   handler: AsyncFn<P>,
-  onError: ErrorHandler = console.error
+  onError: (error: Error) => void = handleGenericError
 ): [AsyncFn<P, void>, boolean] {
-  const [running, setRunning] = useState(false)
+  const [isRunning, setIsRunning] = useState(false)
   const safeHandler = useCallback(
     async (...args: P) => {
-      if (!running) {
+      if (!isRunning) {
         try {
-          setRunning(true)
+          setIsRunning(true)
           await handler(...args)
         } catch (error) {
           onError(error)
         } finally {
-          setRunning(false)
+          setIsRunning(false)
         }
       }
     },
-    [handler, running, onError]
+    [handler, isRunning, onError]
   )
-  return [safeHandler, running]
+  return [safeHandler, isRunning]
 }
