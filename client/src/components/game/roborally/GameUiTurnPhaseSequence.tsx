@@ -5,7 +5,7 @@ import { FeatureType } from "common/roborally/model/BoardData"
 import { GamePhase } from "common/roborally/model/RoborallyState"
 
 import GameUiTurnPhase from "./GameUiTurnPhase"
-import { useGameState } from "./hooks/useGameState"
+import { useRoborallyState } from "./hooks/useRoborallyState"
 import {
   getBoardFeatures,
   getCurrentPhase,
@@ -52,7 +52,7 @@ function isPhaseAvailable(phase: GamePhase, features: FeatureType[]): boolean {
 }
 
 function useTurnPhases(): GamePhase[] {
-  const features = useGameState(getBoardFeatures)
+  const features = useRoborallyState(getBoardFeatures)
   return TURN_PHASES.filter(phase => isPhaseAvailable(phase, features))
 }
 
@@ -70,8 +70,8 @@ const SequenceContainer = styled.div`
 `
 
 const GameUiTurnPhaseSequence = () => {
-  const currentPhase = useGameState(getCurrentPhase)
-  const currentSequence = useGameState(getCurrentSequence)
+  const currentPhase = useRoborallyState(getCurrentPhase)
+  const currentSequence = useRoborallyState(getCurrentSequence)
   const turnPhases = useTurnPhases()
 
   return (

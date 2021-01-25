@@ -5,9 +5,9 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { usePlayerName } from "hooks/usePlayerName"
 import { useRoomId } from "hooks/useRoomId"
 
-import { useGameState } from "./hooks/useGameState"
-import { usePlayerState } from "./hooks/usePlayerState"
 import { usePlayerStatusText } from "./hooks/usePlayerStatusText"
+import { useRoborallyPlayer } from "./hooks/useRoborallyPlayer"
+import { useRoborallyState } from "./hooks/useRoborallyState"
 import RobotAvatar from "./RobotAvatar"
 import {
   getPlayerCheckpoint,
@@ -69,11 +69,11 @@ const GameUiPlayerCard = ({
   playerIndex,
 }: GameUiPlayerCardProps) => {
   const roomId = useRoomId()
-  const playerCheckpoint = usePlayerState(playerId, getPlayerCheckpoint)
-  const playerDamage = usePlayerState(playerId, getPlayerDamage)
+  const playerCheckpoint = useRoborallyPlayer(playerId, getPlayerCheckpoint)
+  const playerDamage = useRoborallyPlayer(playerId, getPlayerDamage)
   const playerName = usePlayerName(roomId, playerId)
   const playerStatus = usePlayerStatusText(playerId)
-  const totalCheckpoints = useGameState(getTotalCheckpoints)
+  const totalCheckpoints = useRoborallyState(getTotalCheckpoints)
 
   return (
     <PlayerCardContainer>

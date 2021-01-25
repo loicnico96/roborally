@@ -14,7 +14,7 @@ import GameUiPlayerRobot from "./GameUiPlayerRobot"
 import GameUiProgram from "./GameUiProgram"
 import GameUiTurnPhaseSequence from "./GameUiTurnPhaseSequence"
 import GameUiViewport from "./GameUiViewport"
-import { useGameState } from "./hooks/useGameState"
+import { useRoborallyState } from "./hooks/useRoborallyState"
 import { ROBOT_IMAGES } from "./RobotImage"
 import { getBoardIds, getCheckpoints, getPlayerIds } from "./utils/getters"
 import { getViewportHeight, getViewportWidth } from "./Viewport"
@@ -40,11 +40,11 @@ function getPreloadUrls(boardIds: BoardId[]): string[] {
 }
 
 const GamePage = () => {
-  const checkpoints = useGameState(getCheckpoints)
-  const playerIds = useGameState(getPlayerIds)
-  const viewportHeight = useGameState(getViewportHeight)
-  const viewportWidth = useGameState(getViewportWidth)
-  const boardIds = useGameState(getBoardIds)
+  const checkpoints = useRoborallyState(getCheckpoints)
+  const playerIds = useRoborallyState(getPlayerIds)
+  const viewportHeight = useRoborallyState(getViewportHeight)
+  const viewportWidth = useRoborallyState(getViewportWidth)
+  const boardIds = useRoborallyState(getBoardIds)
 
   const imageUrls = useMemo(() => getPreloadUrls(boardIds), [boardIds])
 

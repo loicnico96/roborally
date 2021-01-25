@@ -1,29 +1,30 @@
 import React from "react"
 
 import { RoomStatus } from "common/model/RoomData"
-import GamePage from "components/roborally/GamePage"
+import GameProvider from "components/game/GameProvider"
+import GamePageRoborally from "components/game/roborally/GamePage"
 import { BREADCRUMB_HOME, BREADCRUMB_ROOM_LIST } from "components/ui/Breadcrumb"
 import PageContainer from "components/ui/PageContainer"
 import PageHeader from "components/ui/PageHeader"
 import { useRoomData } from "hooks/useRoomData"
 import { useRoomId } from "hooks/useRoomId"
 
-import GameProvider from "./GameProvider"
 import { useRoomTitle } from "./hooks/useRoomTitle"
 import RoomPage from "./RoomPage"
 import RoomProvider from "./RoomProvider"
-import { getRoomStatus } from "./utils/getters"
+import { getGameType, getRoomStatus } from "./utils/getters"
 
 const NAVIGATION_PARENTS = [BREADCRUMB_HOME, BREADCRUMB_ROOM_LIST]
 
 const RoomRouteSwitch = () => {
   const roomId = useRoomId()
   const roomStatus = useRoomData(roomId, getRoomStatus)
+  const gameType = useRoomData(roomId, getGameType)
 
   if (roomStatus !== RoomStatus.OPENED) {
     return (
-      <GameProvider roomId={roomId}>
-        <GamePage />
+      <GameProvider gameType={gameType} roomId={roomId}>
+        <GamePageRoborally />
       </GameProvider>
     )
   }

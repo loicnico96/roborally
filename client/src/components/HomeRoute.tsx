@@ -3,13 +3,13 @@ import { Link } from "react-router-dom"
 import styled from "styled-components"
 
 import { BoardId } from "common/roborally/model/BoardData"
+import { getBoardImage } from "components/game/roborally/BoardImage"
+import Box from "components/ui/Box"
 import PageContainer from "components/ui/PageContainer"
 import PageContent from "components/ui/PageContent"
 import PageHeader from "components/ui/PageHeader"
 import { ROUTES } from "utils/navigation"
 
-import { getBoardImage } from "./roborally/BoardImage"
-import Box from "./ui/Box"
 
 const GameContainer = styled.div`
   width: 300px;

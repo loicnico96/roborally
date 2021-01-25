@@ -1,11 +1,14 @@
-import { useCallback, useRef } from "react"
+import React, { ReactNode, useCallback, useRef } from "react"
 
 import { Collection } from "common/firestore/collections"
-import { getGameSettings } from "common/GameSettings"
+import {
+  GameEvent,
+  GameState,
+  GameType,
+  getGameSettings,
+} from "common/GameSettings"
 import { RoomId } from "common/model/RoomData"
 import { RoborallyEvent } from "common/roborally/model/RoborallyEvent"
-import { RoborallyState } from "common/roborally/model/RoborallyState"
-import { getGameResource } from "components/roborally/hooks/useGameState"
 import { renderError } from "components/ui/PageError"
 import { renderLoader } from "components/ui/PageLoader"
 import { useFirestoreLoader } from "firestore/useFirestoreLoader"
@@ -19,15 +22,18 @@ import {
   getLoadedResource,
 } from "utils/resources"
 
+import { getGameResource } from "./hooks/useGameState"
+
 export const EVENT_DURATION_SHORT = 200
 export const EVENT_DURATION_NORMAL = 500
 
-export type GameProviderProps = {
-  children: JSX.Element
+export type GameProviderProps<T extends GameType> = {
+  children: ReactNode
+  gameType: T
   roomId: RoomId
 }
 
-function getEventDuration(event: RoborallyEvent): number {
+function getEventDuration(event: GameEvent): number {
   switch (event) {
     case RoborallyEvent.CHANGE_PHASE:
       return EVENT_DURATION_SHORT
@@ -38,51 +44,52 @@ function getEventDuration(event: RoborallyEvent): number {
   }
 }
 
-export function useGameLoading(roomId: RoomId): boolean {
+export function useGameLoading(gameType: GameType, roomId: RoomId): boolean {
   return useStore(
     useCallback(
       store => {
-        const resource = getGameResource(store, roomId)
-        return resource === undefined || isLoading(resource)
+        const resource = getGameResource(store, gameType, roomId)
+        return !resource || isLoading(resource)
       },
-      [roomId]
+      [gameType, roomId]
     )
   )
 }
 
-export function useGameError(roomId: RoomId): Error | null {
+export function useGameError(gameType: GameType, roomId: RoomId): Error | null {
   return useStore(
     useCallback(
       store => {
-        const resource = getGameResource(store, roomId)
+        const resource = getGameResource(store, gameType, roomId)
         return resource?.error ?? null
       },
-      [roomId]
+      [gameType, roomId]
     )
   )
 }
 
-const GameProvider = ({ children, roomId }: GameProviderProps) => {
+const GameProvider = <T extends GameType>({
+  children,
+  gameType,
+  roomId,
+}: GameProviderProps<T>) => {
   const { setGameResource } = useActions()
 
   const isResolving = useRef(false)
-  const stateQueue = useRef<RoborallyState[]>([])
+  const stateQueue = useRef<GameState<T>[]>([])
 
-  const gameLoading = useGameLoading(roomId)
-  const gameError = useGameError(roomId)
+  const gameLoading = useGameLoading(gameType, roomId)
+  const gameError = useGameError(gameType, roomId)
 
   const handleGameResource = useCallback(
-    (resource: Resource<RoborallyState>) => {
-      const { resolveState } = getGameSettings("roborally")
+    (resource: Resource<GameState>) => {
+      const { resolveState } = getGameSettings(gameType)
 
-      function setGameState(state: RoborallyState) {
+      function setGameState(state: GameState<T>) {
         setGameResource(getLoadedResource(roomId, state))
       }
 
-      async function onStateChanged(
-        state: RoborallyState,
-        event: RoborallyEvent
-      ) {
+      async function onStateChanged(state: GameState<T>, event: GameEvent<T>) {
         setGameState(state)
         const duration = getEventDuration(event)
         await pause(duration)
@@ -113,7 +120,7 @@ const GameProvider = ({ children, roomId }: GameProviderProps) => {
         setGameResource(resource)
       }
     },
-    [isResolving, roomId, setGameResource, stateQueue]
+    [gameType, isResolving, roomId, setGameResource, stateQueue]
   )
 
   useFirestoreLoader(Collection.CLIENT, roomId, handleGameResource)
@@ -123,7 +130,7 @@ const GameProvider = ({ children, roomId }: GameProviderProps) => {
   } else if (gameError !== null) {
     return renderError(gameError)
   } else {
-    return children
+    return <>{children}</>
   }
 }
 

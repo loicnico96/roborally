@@ -13,7 +13,7 @@ import { useRoomId } from "hooks/useRoomId"
 
 import { getCurrentPhase, getPlayer } from "../utils/getters"
 
-import { useGameState } from "./useGameState"
+import { useRoborallyState } from "./useRoborallyState"
 
 export function isAbleToReady(
   gameState: RoborallyState,
@@ -45,7 +45,7 @@ export function usePlayerReady(
 
   const { userId } = useAuthContext()
 
-  const isEnabled = useGameState(
+  const isEnabled = useRoborallyState(
     useCallback(state => isAbleToReady(state, userId, program), [
       program,
       userId,

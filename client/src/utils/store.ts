@@ -1,6 +1,7 @@
 import update from "immutability-helper"
 import { SetState } from "zustand"
 
+import { GameState, GameType } from "common/GameSettings"
 import { RoomData, RoomId } from "common/model/RoomData"
 import { UserId, UserInfo } from "common/model/UserInfo"
 import { RoborallyState } from "common/roborally/model/RoborallyState"
@@ -29,7 +30,7 @@ export const UNAUTHENTICATED: AuthData = {
 
 export type State = {
   auth: AuthData
-  games: Partial<Record<RoomId, Resource<RoborallyState>>>
+  games: { [T in GameType]?: Partial<Record<RoomId, Resource<GameState<T>>>> }
   rooms: Partial<Record<RoomId, Resource<RoomData>>>
 }
 
@@ -76,7 +77,9 @@ export function createActions(set: SetState<State>): StoreActions {
       update(state, {
         games: {
           $set: {
-            [resource.id]: resource,
+            roborally: {
+              [resource.id]: resource,
+            },
           },
         },
       })

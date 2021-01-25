@@ -11,7 +11,7 @@ import {
   RoborallyState,
 } from "common/roborally/model/RoborallyState"
 
-import { useGameState } from "./useGameState"
+import { useRoborallyState } from "./useRoborallyState"
 
 export function getPlayerStatusText(
   gameState: RoborallyState,
@@ -55,7 +55,7 @@ export function getPlayerStatusText(
 }
 
 export function usePlayerStatusText(playerId: PlayerId): string {
-  return useGameState(
+  return useRoborallyState(
     useCallback(state => getPlayerStatusText(state, playerId), [playerId])
   )
 }

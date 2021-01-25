@@ -5,7 +5,7 @@ import BoardImage from "./BoardImage"
 import GameUiObject from "./GameUiObject"
 import { useViewport } from "./GameUiViewport"
 import { useBoardTooltip } from "./hooks/useBoardTooltip"
-import { useGameState } from "./hooks/useGameState"
+import { useRoborallyState } from "./hooks/useRoborallyState"
 import { getBoardHeight, getBoardIds, getBoardWidth } from "./utils/getters"
 import { fromViewportCoord } from "./Viewport"
 
@@ -17,9 +17,9 @@ const GameUiBoardImage = styled(BoardImage)`
 `
 
 const GameUiBoard = () => {
-  const boardSizeX = useGameState(getBoardWidth)
-  const boardSizeY = useGameState(getBoardHeight)
-  const boardIds = useGameState(getBoardIds)
+  const boardSizeX = useRoborallyState(getBoardWidth)
+  const boardSizeY = useRoborallyState(getBoardHeight)
+  const boardIds = useRoborallyState(getBoardIds)
 
   const { mousePos } = useViewport()
 

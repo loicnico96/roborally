@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 
-import { EVENT_DURATION_NORMAL } from "components/room/GameProvider"
+import { EVENT_DURATION_NORMAL } from "../GameProvider"
 
 import { useViewport } from "./GameUiViewport"
 

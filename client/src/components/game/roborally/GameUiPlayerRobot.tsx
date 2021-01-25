@@ -6,7 +6,7 @@ import { usePlayerName } from "hooks/usePlayerName"
 import { useRoomId } from "hooks/useRoomId"
 
 import GameUiObject from "./GameUiObject"
-import { usePlayerState } from "./hooks/usePlayerState"
+import { useRoborallyPlayer } from "./hooks/useRoborallyPlayer"
 import RobotAvatar from "./RobotAvatar"
 import {
   getPlayerDestroyed,
@@ -43,12 +43,12 @@ const GameUiPlayerRobot = ({
   playerIndex,
 }: GameUiPlayerRobotProps) => {
   const roomId = useRoomId()
-  const playerDestroyed = usePlayerState(playerId, getPlayerDestroyed)
-  const playerPosX = usePlayerState(playerId, getPlayerPositionX)
-  const playerPosY = usePlayerState(playerId, getPlayerPositionY)
-  const playerRot = usePlayerState(playerId, getPlayerRotation)
+  const playerDestroyed = useRoborallyPlayer(playerId, getPlayerDestroyed)
+  const playerPosX = useRoborallyPlayer(playerId, getPlayerPositionX)
+  const playerPosY = useRoborallyPlayer(playerId, getPlayerPositionY)
+  const playerRot = useRoborallyPlayer(playerId, getPlayerRotation)
   const playerName = usePlayerName(roomId, playerId)
-  const playerTooltip = usePlayerState(playerId, player =>
+  const playerTooltip = useRoborallyPlayer(playerId, player =>
     getPlayerTooltip(playerName, player)
   )
 
