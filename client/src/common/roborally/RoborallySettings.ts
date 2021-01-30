@@ -41,13 +41,13 @@ export const RoborallySettings: GameSettings<"roborally"> = {
 
   async resolvePlayerAction(gameState, playerId, action) {
     const ctx = new RoborallyContext(gameState)
-    ctx.resolve(resolvePlayerAction, playerId, action)
+    await ctx.resolve(resolvePlayerAction, playerId, action)
     return ctx.getState()
   },
 
   async resolveState(gameState, onStateChanged) {
     const ctx = new RoborallyContext(gameState, onStateChanged)
-    ctx.resolve(resolveState)
+    await ctx.resolve(resolveState)
     return ctx.getState()
   },
 
