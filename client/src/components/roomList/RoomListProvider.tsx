@@ -14,6 +14,8 @@ import {
   LoadedResource,
 } from "utils/resources"
 
+import { useRoomCollection } from "./hooks/useRoomCollection"
+
 export type RoomListProviderProps = {
   children: (rooms: LoadedResource<RoomData>[]) => JSX.Element
 }
@@ -23,7 +25,8 @@ const RoomListProvider = ({ children }: RoomListProviderProps) => {
     Resource<LoadedResource<RoomData>[]>
   >(getLoadingResource(Collection.ROOM))
 
-  useCollectionLoader(Collection.ROOM, setRoomsResource, {
+  const collectionRef = useRoomCollection()
+  useCollectionLoader(collectionRef, setRoomsResource, {
     sortDirection: SortDirection.DESC,
     sortField: "createdAt",
   })

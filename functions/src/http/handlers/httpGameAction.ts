@@ -1,16 +1,20 @@
-import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
-import { getGameSettings } from "common/GameSettings"
+import { getGameSettings, GameType } from "common/GameSettings"
 import { RoomStatus } from "common/model/RoomData"
-import { validateAny, validateString } from "common/utils/validation"
+import {
+  validateAny,
+  validateString,
+  validateEnum,
+} from "common/utils/validation"
 
-import { getCollection } from "../../utils/collections"
+import { getClientRef, getServerRef, getRoomRef } from "../../utils/collections"
 import { preconditionError } from "../../utils/errors"
 import { firestore } from "../../utils/firestore"
 
 import { handleTrigger } from "./handleTrigger"
 
 const validationSchema = {
+  game: validateEnum(GameType),
   roomId: validateString(),
   action: validateAny(),
 }
@@ -19,15 +23,17 @@ export default handleTrigger<HttpTrigger.GAME_ACTION>(
   validationSchema,
   async (data, playerId) => {
     const success = await firestore.runTransaction(async transaction => {
-      const clientRef = getCollection(Collection.CLIENT).doc(data.roomId)
-      const serverRef = getCollection(Collection.SERVER).doc(data.roomId)
+      const clientRef = getClientRef(data.game, data.roomId)
+      const serverRef = getServerRef(data.game, data.roomId)
       const serverDoc = await transaction.get(serverRef)
-      const gameState = serverDoc.data()
-      if (gameState === undefined) {
+      const gameData = serverDoc.data()
+      if (gameData === undefined) {
         throw preconditionError("Invalid game ID")
       }
 
-      const player = gameState.players[playerId]
+      const { game, state } = gameData
+
+      const player = state.players[playerId]
       if (player === undefined) {
         throw preconditionError("Not a player")
       }
@@ -40,20 +46,26 @@ export default handleTrigger<HttpTrigger.GAME_ACTION>(
         resolvePlayerAction,
         resolveState,
         validateAction,
-      } = getGameSettings("roborally")
+      } = getGameSettings(game)
 
-      const action = validateAction(gameState, playerId, data.action)
+      const action = validateAction(state, playerId, data.action)
 
-      const nextState = await resolvePlayerAction(gameState, playerId, action)
+      const nextState = await resolvePlayerAction(state, playerId, action)
 
-      transaction.set(clientRef, nextState)
+      transaction.set(clientRef, {
+        state: nextState,
+        game,
+      })
 
       const resolvedState = await resolveState(nextState)
 
-      transaction.set(serverRef, resolvedState)
+      transaction.set(serverRef, {
+        state: resolvedState,
+        game,
+      })
 
       if (resolvedState.winners) {
-        const roomRef = getCollection(Collection.ROOM).doc(data.roomId)
+        const roomRef = getRoomRef(data.roomId)
         transaction.update(roomRef, { status: RoomStatus.FINISHED })
       }
 

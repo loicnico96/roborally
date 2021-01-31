@@ -1,38 +1,34 @@
 import { useMemo } from "react"
 
-import { Collection } from "common/firestore/collections"
 import { SortDirection } from "common/utils/arrays"
 
-import { Query } from "./types"
-import { useFirestore } from "./useFirestore"
+import { CollectionRef, DocumentData, Query } from "./types"
 
 export type QueryOptions = {
   sortDirection: SortDirection
   sortField: string
 }
 
-export function sortQuery(
-  query: Query,
+export function sortQuery<T extends DocumentData>(
+  query: Query<T>,
   sortField: string,
   sortDirection: SortDirection
-): Query {
+): Query<T> {
   const directionStr = sortDirection === SortDirection.DESC ? "desc" : "asc"
   return query.orderBy(sortField, directionStr)
 }
 
-export function useQuery(
-  collectionId: Collection,
+export function useQuery<T extends DocumentData>(
+  collectionRef: CollectionRef<T>,
   options: QueryOptions
-): Query {
-  const firestore = useFirestore()
-
+): Query<T> {
   const { sortDirection, sortField } = options
 
   return useMemo(() => {
-    let query: Query = firestore.collection(collectionId)
+    let query: Query<T> = collectionRef
 
     query = sortQuery(query, sortField, sortDirection)
 
     return query
-  }, [collectionId, firestore, sortDirection, sortField])
+  }, [collectionRef, sortDirection, sortField])
 }

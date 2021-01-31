@@ -4,7 +4,6 @@ import { SetState } from "zustand"
 import { GameState, GameType } from "common/GameSettings"
 import { RoomData, RoomId } from "common/model/RoomData"
 import { UserId, UserInfo } from "common/model/UserInfo"
-import { RoborallyState } from "common/roborally/model/RoborallyState"
 import { merge } from "common/utils/objects"
 import { FirebaseUser } from "firestore/auth/Auth"
 
@@ -36,7 +35,10 @@ export type State = {
 
 export type StoreActions = {
   setCurrentUser: (user: FirebaseUser | null) => void
-  setGameResource: (resource: Resource<RoborallyState>) => void
+  setGameResource: <T extends GameType>(
+    gameType: T,
+    resource: Resource<GameState<T>>
+  ) => void
   setRoomResource: (resource: Resource<RoomData>) => void
 }
 
@@ -72,12 +74,15 @@ export function createActions(set: SetState<State>): StoreActions {
     }
   }
 
-  function setGameResource(resource: Resource<RoborallyState>) {
+  function setGameResource<T extends GameType>(
+    gameType: T,
+    resource: Resource<GameState<T>>
+  ) {
     set(state =>
       update(state, {
         games: {
           $set: {
-            roborally: {
+            [gameType]: {
               [resource.id]: resource,
             },
           },

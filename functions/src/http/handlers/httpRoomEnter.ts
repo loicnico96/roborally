@@ -1,12 +1,11 @@
 import update from "immutability-helper"
 
-import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
 import { getGameSettings } from "common/GameSettings"
 import { RoomStatus } from "common/model/RoomData"
 import { validateString } from "common/utils/validation"
 
-import { getCollection } from "../../utils/collections"
+import { getRoomRef } from "../../utils/collections"
 import { preconditionError } from "../../utils/errors"
 import { firestore } from "../../utils/firestore"
 
@@ -20,7 +19,7 @@ export default handleTrigger<HttpTrigger.ROOM_ENTER>(
   validationSchema,
   async (data, userId, userInfo) => {
     const success = await firestore.runTransaction(async transaction => {
-      const roomRef = getCollection(Collection.ROOM).doc(data.roomId)
+      const roomRef = getRoomRef(data.roomId)
       const roomDoc = await transaction.get(roomRef)
       const roomData = roomDoc.data()
       if (roomData === undefined) {

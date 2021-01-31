@@ -12,10 +12,15 @@ export function getRoomTitle(store: Store, roomId: RoomId): string {
   if (roomResource && isLoaded(roomResource)) {
     const { game, status } = roomResource.data
 
+    const gameName = {
+      metropolys: "Metropolys",
+      roborally: "Roborally",
+    }[game]
+
     const gameResource = getGameResource(store, game, roomId)
     if (gameResource && isLoaded(gameResource)) {
       const { turn } = gameResource.data
-      return `Roborally - Turn ${turn}`
+      return `${gameName} - Turn ${turn}`
     }
 
     const statusName = {
@@ -24,10 +29,10 @@ export function getRoomTitle(store: Store, roomId: RoomId): string {
       [RoomStatus.FINISHED]: "Finished",
     }[status]
 
-    return `Roborally - ${statusName}`
+    return `${gameName} - ${statusName}`
   }
 
-  return "Roborally"
+  return `Room ${roomId}`
 }
 
 export function useRoomTitle(roomId: RoomId): string {

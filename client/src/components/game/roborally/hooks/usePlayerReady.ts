@@ -1,5 +1,6 @@
 import { useCallback } from "react"
 
+import { GameType } from "common/GameSettings"
 import { PlayerId } from "common/model/GameStateBasic"
 import { isValidProgram } from "common/roborally/isValidProgram"
 import { Program } from "common/roborally/model/Program"
@@ -55,6 +56,7 @@ export function usePlayerReady(
   const onReady = useCallback(async () => {
     if (isEnabled) {
       await triggerGameAction({
+        game: GameType.ROBORALLY,
         roomId,
         action: {
           program,

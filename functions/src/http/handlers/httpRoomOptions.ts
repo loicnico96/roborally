@@ -1,10 +1,9 @@
-import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
 import { getGameSettings, GameOptions } from "common/GameSettings"
 import { RoomStatus } from "common/model/RoomData"
 import { validateRecord, validateString } from "common/utils/validation"
 
-import { getCollection } from "../../utils/collections"
+import { getRoomRef } from "../../utils/collections"
 import {
   preconditionError,
   permissionError,
@@ -23,7 +22,7 @@ export default handleTrigger<HttpTrigger.ROOM_OPTIONS>(
   validationSchema,
   async (data, userId) => {
     const success = await firestore.runTransaction(async transaction => {
-      const roomRef = getCollection(Collection.ROOM).doc(data.roomId)
+      const roomRef = getRoomRef(data.roomId)
       const roomDoc = await transaction.get(roomRef)
       const roomData = roomDoc.data()
       if (roomData === undefined) {

@@ -1,12 +1,12 @@
 import React, { ReactNode, useCallback, useRef } from "react"
 
-import { Collection } from "common/firestore/collections"
 import {
   GameEvent,
   GameState,
   GameType,
   getGameSettings,
 } from "common/GameSettings"
+import { GameData } from "common/model/GameData"
 import { RoomId } from "common/model/RoomData"
 import { RoborallyEvent } from "common/roborally/model/RoborallyEvent"
 import { renderError } from "components/ui/PageError"
@@ -22,6 +22,7 @@ import {
   getLoadedResource,
 } from "utils/resources"
 
+import { useClientRef } from "./hooks/useClientRef"
 import { getGameResource } from "./hooks/useGameState"
 
 export const EVENT_DURATION_SHORT = 200
@@ -82,11 +83,11 @@ const GameProvider = <T extends GameType>({
   const gameError = useGameError(gameType, roomId)
 
   const handleGameResource = useCallback(
-    (resource: Resource<GameState>) => {
+    (resource: Resource<GameData<T>>) => {
       const { resolveState } = getGameSettings(gameType)
 
       function setGameState(state: GameState<T>) {
-        setGameResource(getLoadedResource(roomId, state))
+        setGameResource(gameType, getLoadedResource(roomId, state))
       }
 
       async function onStateChanged(state: GameState<T>, event: GameEvent<T>) {
@@ -112,18 +113,19 @@ const GameProvider = <T extends GameType>({
       }
 
       if (isLoaded(resource)) {
-        stateQueue.current.push(resource.data)
+        stateQueue.current.push(resource.data.state)
         if (isResolving.current === false) {
           resolveStateQueue()
         }
       } else {
-        setGameResource(resource)
+        setGameResource(gameType, resource)
       }
     },
     [gameType, isResolving, roomId, setGameResource, stateQueue]
   )
 
-  useFirestoreLoader(Collection.CLIENT, roomId, handleGameResource)
+  const clientRef = useClientRef(gameType, roomId)
+  useFirestoreLoader(clientRef, handleGameResource)
 
   if (gameLoading) {
     return renderLoader("Loading game...")

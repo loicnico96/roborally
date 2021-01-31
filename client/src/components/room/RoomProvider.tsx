@@ -1,6 +1,5 @@
 import { useCallback } from "react"
 
-import { Collection } from "common/firestore/collections"
 import { RoomId } from "common/model/RoomData"
 import { renderError } from "components/ui/PageError"
 import { renderLoader } from "components/ui/PageLoader"
@@ -9,6 +8,8 @@ import { useActions } from "hooks/useActions"
 import { getRoomResource } from "hooks/useRoomData"
 import { useStore } from "hooks/useStore"
 import { isLoading } from "utils/resources"
+
+import { useRoomRef } from "./hooks/useRoomRef"
 
 export type RoomProviderProps = {
   children: JSX.Element
@@ -45,7 +46,8 @@ const RoomProvider = ({ children, roomId }: RoomProviderProps) => {
   const roomLoading = useRoomLoading(roomId)
   const roomError = useRoomError(roomId)
 
-  useFirestoreLoader(Collection.ROOM, roomId, setRoomResource)
+  const roomRef = useRoomRef(roomId)
+  useFirestoreLoader(roomRef, setRoomResource)
 
   if (roomLoading) {
     return renderLoader("Loading room...")

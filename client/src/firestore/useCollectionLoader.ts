@@ -1,6 +1,5 @@
 import { useCallback, useEffect } from "react"
 
-import { Collection, CollectionData } from "common/firestore/collections"
 import {
   Resource,
   getLoadingResource,
@@ -9,33 +8,34 @@ import {
   LoadedResource,
 } from "utils/resources"
 
+import { CollectionRef, DocumentData } from "./types"
 import { QueryOptions, useQuery } from "./useQuery"
 
-export type CollectionResult<T extends Collection> = LoadedResource<
-  CollectionData<T>
->[]
+export type CollectionResult<T extends DocumentData> = LoadedResource<T>[]
 
-export function useCollectionLoader<T extends Collection>(
-  collectionId: T,
+export function useCollectionLoader<T extends DocumentData>(
+  collectionRef: CollectionRef<T>,
   handler: (state: Resource<CollectionResult<T>>) => any,
   options: QueryOptions
 ): () => Promise<void> {
-  const query = useQuery(collectionId, options)
+  const query = useQuery(collectionRef, options)
 
   const refresh = useCallback(async () => {
+    const collectionId = collectionRef.id
+
     handler(getLoadingResource(collectionId))
 
     try {
       const snapshot = await query.get()
       const data = snapshot.docs.map(doc =>
-        getLoadedResource(doc.id, doc.data() as CollectionData<T>)
+        getLoadedResource(doc.id, doc.data())
       )
       handler(getLoadedResource(collectionId, data))
     } catch (error) {
       console.error(error.message)
       handler(getErrorResource(collectionId, error))
     }
-  }, [collectionId, handler, query])
+  }, [collectionRef, handler, query])
 
   useEffect(() => {
     refresh()

@@ -24,7 +24,12 @@ const RoomRouteSwitch = () => {
   if (roomStatus !== RoomStatus.OPENED) {
     return (
       <GameProvider gameType={gameType} roomId={roomId}>
-        <GamePageRoborally />
+        {
+          {
+            metropolys: <>Metropolys</>,
+            roborally: <GamePageRoborally />,
+          }[gameType]
+        }
       </GameProvider>
     )
   }

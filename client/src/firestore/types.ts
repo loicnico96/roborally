@@ -1,7 +1,14 @@
 import firebase from "../firebase"
 
-export type DocumentData = firebase.firestore.DocumentData
-export type DocumentReference = firebase.firestore.DocumentReference
-export type DocumentSnapshot = firebase.firestore.DocumentSnapshot
 export type Firestore = firebase.firestore.Firestore
-export type Query = firebase.firestore.Query
+export type DocumentData = firebase.firestore.DocumentData
+export type CollectionRef<
+  T extends DocumentData
+> = firebase.firestore.CollectionReference<T>
+export type DocumentRef<
+  T extends DocumentData
+> = firebase.firestore.DocumentReference<T>
+export type DocumentSnapshot<
+  T extends DocumentData
+> = firebase.firestore.DocumentSnapshot<T>
+export type Query<T extends DocumentData> = firebase.firestore.Query<T>

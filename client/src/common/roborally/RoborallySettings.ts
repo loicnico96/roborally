@@ -1,5 +1,5 @@
-import { Collection } from "common/firestore/collections"
-import { GameSettings } from "common/GameSettings"
+import { GameCollection } from "common/firestore/collections"
+import { GameSettings, GameType } from "common/GameSettings"
 import { shuffle } from "common/utils/arrays"
 
 import { BoardData, BoardId, mergeBoards } from "./model/BoardData"
@@ -10,7 +10,7 @@ import { resolveState } from "./resolveState"
 import { validateAction } from "./validateAction"
 import { validateOptions } from "./validateOptions"
 
-export const RoborallySettings: GameSettings<"roborally"> = {
+export const RoborallySettings: GameSettings<GameType.ROBORALLY> = {
   defaultOptions: {
     checkpoints: 3,
     boardIds: [BoardId.ISLAND],
@@ -23,7 +23,7 @@ export const RoborallySettings: GameSettings<"roborally"> = {
     const { boardIds, checkpoints: numCheckpoints } = options
 
     async function fetchBoardData(boardId: BoardId): Promise<BoardData> {
-      return fetchData(Collection.BOARD, boardId)
+      return fetchData(GameCollection.BOARD, boardId)
     }
 
     const boardDatas = await Promise.all(boardIds.map(fetchBoardData))

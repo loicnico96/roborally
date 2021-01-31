@@ -1,9 +1,8 @@
-import { Collection } from "common/firestore/collections"
 import { HttpTrigger } from "common/functions"
 import { RoomStatus } from "common/model/RoomData"
 import { validateString } from "common/utils/validation"
 
-import { getCollection } from "../../utils/collections"
+import { getRoomRef, getServerRef, getClientRef } from "../../utils/collections"
 import { preconditionError, permissionError } from "../../utils/errors"
 import { firestore } from "../../utils/firestore"
 
@@ -17,7 +16,7 @@ export default handleTrigger<HttpTrigger.ROOM_CLOSE>(
   validationSchema,
   async (data, userId) => {
     const success = await firestore.runTransaction(async transaction => {
-      const roomRef = getCollection(Collection.ROOM).doc(data.roomId)
+      const roomRef = getRoomRef(data.roomId)
       const roomDoc = await transaction.get(roomRef)
       const roomData = roomDoc.data()
       if (roomData === undefined) {
@@ -35,8 +34,8 @@ export default handleTrigger<HttpTrigger.ROOM_CLOSE>(
       transaction.delete(roomRef)
 
       if (roomData.status === RoomStatus.FINISHED) {
-        const clientRef = getCollection(Collection.CLIENT).doc(data.roomId)
-        const serverRef = getCollection(Collection.SERVER).doc(data.roomId)
+        const clientRef = getClientRef(roomData.game, data.roomId)
+        const serverRef = getServerRef(roomData.game, data.roomId)
 
         transaction.delete(clientRef)
         transaction.delete(serverRef)

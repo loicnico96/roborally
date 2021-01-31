@@ -1,22 +1,38 @@
-import { RoomData } from "../model/RoomData"
-import { BoardData } from "../roborally/model/BoardData"
-import { RoborallyState } from "../roborally/model/RoborallyState"
+import { GameType } from "common/GameSettings"
+import { GameData } from "common/model/GameData"
+import { RoomData } from "common/model/RoomData"
+import { BoardData } from "common/roborally/model/BoardData"
 
 export enum Collection {
+  GAME = "game",
+  ROOM = "room",
+}
+
+export type GameInfo<T extends GameType = GameType> = {
+  game: T
+}
+
+export type CollectionData<C extends Collection> = {
+  [Collection.GAME]: GameInfo
+  [Collection.ROOM]: RoomData
+}[C]
+
+export enum GameCollection {
   BOARD = "board",
   CLIENT = "client",
-  ROOM = "room",
   SERVER = "server",
 }
 
-export type CollectionData<T extends Collection = Collection> = {
-  [Collection.BOARD]: BoardData
-  [Collection.CLIENT]: RoborallyState
-  [Collection.ROOM]: RoomData
-  [Collection.SERVER]: RoborallyState
-}[T]
+export type GameCollectionData<T extends GameType, C extends GameCollection> = {
+  [GameCollection.BOARD]: {
+    [GameType.METROPOLYS]: never
+    [GameType.ROBORALLY]: BoardData
+  }[T]
+  [GameCollection.CLIENT]: GameData<T>
+  [GameCollection.SERVER]: GameData<T>
+}[C]
 
-export type DataFetcher = <T extends Collection>(
-  collection: T,
+export type DataFetcher<T extends GameType> = <C extends GameCollection>(
+  collection: C,
   documentId: string
-) => Promise<CollectionData<T>>
+) => Promise<GameCollectionData<T, C>>

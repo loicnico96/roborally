@@ -1,47 +1,38 @@
 import { useEffect } from "react"
 
-import { Collection, CollectionData } from "common/firestore/collections"
 import {
   Resource,
-  ResourceId,
   getLoadingResource,
   getErrorResource,
   getLoadedResource,
 } from "utils/resources"
 
-import { useFirestore } from "./useFirestore"
+import { DocumentData, DocumentRef } from "./types"
 
-export function useFirestoreLoader<T extends Collection>(
-  collectionId: T,
-  documentId: ResourceId,
-  handler: (state: Resource<CollectionData<T>>) => any
+export function useFirestoreLoader<T extends DocumentData>(
+  documentRef: DocumentRef<T>,
+  handler: (state: Resource<T>) => any
 ) {
-  const firestore = useFirestore()
-
   useEffect(() => {
+    const documentId = documentRef.id
+
     handler(getLoadingResource(documentId))
 
-    const subscription = firestore
-      .collection(collectionId)
-      .doc(documentId)
-      .onSnapshot(
-        snapshot => {
-          const data = snapshot.data()
-          if (data) {
-            // TODO: Validation?
-            handler(getLoadedResource(documentId, data as CollectionData<T>))
-          } else {
-            // TODO: Remove
-            console.warn("This document does not exist or has been removed.")
-            handler(getErrorResource(documentId, Error("not-found")))
-          }
-        },
-        error => {
-          console.error(error.message)
-          handler(getErrorResource(documentId, error))
+    const subscription = documentRef.onSnapshot(
+      snapshot => {
+        const data = snapshot.data()
+        if (data) {
+          handler(getLoadedResource(documentId, data))
+        } else {
+          handler(getErrorResource(documentId, Error("not-found")))
         }
-      )
+      },
+      error => {
+        console.error(error.message)
+        handler(getErrorResource(documentId, error))
+      }
+    )
 
     return subscription
-  }, [firestore, collectionId, documentId, handler])
+  }, [documentRef, handler])
 }

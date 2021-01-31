@@ -12,11 +12,8 @@ export function getGameResource<T extends GameType>(
   gameType: T,
   roomId: RoomId
 ): Resource<GameState<T>> | undefined {
-  const {
-    games: { [gameType]: { [roomId]: resource } = {} },
-  } = store
-
-  return resource
+  const resources = store.games[gameType]
+  return resources?.[roomId] as Resource<GameState<T>> | undefined
 }
 
 export function getGameState<T extends GameType>(
