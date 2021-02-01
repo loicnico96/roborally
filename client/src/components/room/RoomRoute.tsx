@@ -1,8 +1,8 @@
 import React from "react"
 
 import { RoomStatus } from "common/model/RoomData"
+import GamePage from "components/game/GamePage"
 import GameProvider from "components/game/GameProvider"
-import GamePageRoborally from "components/game/roborally/GamePage"
 import { BREADCRUMB_HOME, BREADCRUMB_ROOM_LIST } from "components/ui/Breadcrumb"
 import PageContainer from "components/ui/PageContainer"
 import PageHeader from "components/ui/PageHeader"
@@ -24,12 +24,7 @@ const RoomRouteSwitch = () => {
   if (roomStatus !== RoomStatus.OPENED) {
     return (
       <GameProvider gameType={gameType} roomId={roomId}>
-        {
-          {
-            metropolys: <>Metropolys</>,
-            roborally: <GamePageRoborally />,
-          }[gameType]
-        }
+        <GamePage gameType={gameType} />
       </GameProvider>
     )
   }
