@@ -17,7 +17,7 @@ export type District = {
 }
 
 export type Bid = {
-  building: number
+  district: number
   height: number
   playerId: PlayerId
 }
@@ -26,6 +26,8 @@ export type MetropolysState = GameStateBasic & {
   bids: Bid[]
   currentPlayer: PlayerId
   districts: District[]
+  lastRuins: PlayerId | null
+  mostMetro: PlayerId | null
   players: Record<PlayerId, MetropolysPlayer>
 }
 
@@ -39,6 +41,8 @@ export function getInitialGameState(
     bids: [],
     currentPlayer: startingPlayerId,
     districts: Array<District>(DISTRICT_COUNT).fill({}),
+    lastRuins: null,
+    mostMetro: null,
     playerOrder,
     players: playerOrder.reduce(
       (players, playerId) =>
@@ -52,4 +56,20 @@ export function getInitialGameState(
     ),
     turn: 0,
   }
+}
+
+export function getBids(state: MetropolysState): Bid[] {
+  return state.bids
+}
+
+export function getHighestBid(state: MetropolysState): Bid | undefined {
+  const bids = getBids(state)
+  return bids[bids.length - 1]
+}
+
+export function getPlayer(
+  state: MetropolysState,
+  playerId: PlayerId
+): MetropolysPlayer {
+  return state.players[playerId]
 }

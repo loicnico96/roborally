@@ -16,9 +16,9 @@ export const MetropolysSettings: GameSettings<GameType.METROPOLYS> = {
     return getInitialGameState(playerOrder, players)
   },
 
-  async resolvePlayerAction(gameState) {
+  async resolvePlayerAction(gameState, playerId, action) {
     const ctx = new MetropolysContext(gameState)
-    ctx.resolve(resolvePlayerAction)
+    ctx.resolve(resolvePlayerAction, playerId, action)
     return ctx.getState()
   },
 
