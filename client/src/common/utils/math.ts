@@ -19,3 +19,9 @@ export function range(start: number, end: number): number[] {
     .fill(start)
     .map((_, index) => start + index)
 }
+
+export function repeat(times: number, fn: (index: number) => void): void {
+  for (let index = 0; index < times; index++) {
+    fn(index)
+  }
+}

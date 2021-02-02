@@ -12,18 +12,18 @@ import {
 } from "./model/MetropolysState"
 import { Token } from "./model/Token"
 
-function getPlayerScores(ctx: MetropolysContext): Record<PlayerId, number> {
-  return ctx.getPlayerOrder().reduce((scores, playerId) => {
-    scores[playerId] = getPlayerScore(ctx.getState(), playerId)
-    return scores
-  }, {} as Record<PlayerId, number>)
-}
-
 async function endGame(ctx: MetropolysContext) {
-  const playerScores = getPlayerScores(ctx)
+  const playerScores = ctx.getPlayerOrder().reduce(
+    (scores, playerId) =>
+      Object.assign(scores, {
+        [playerId]: getPlayerScore(ctx.getState(), playerId, true),
+      }),
+    {} as Record<PlayerId, number>
+  )
+
   const highestScore = Math.max(...Object.values(playerScores))
-  const winners = ctx.getPlayerOrder().filter(playerId => 
-     playerScores[playerId] === highestScore
+  const winners = ctx.getPlayerOrder().filter(
+    playerId => playerScores[playerId] === highestScore
     // TODO: Tiebreaker rules
   )
 

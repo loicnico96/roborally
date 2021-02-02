@@ -1,14 +1,7 @@
 import { GameStateBasic, PlayerId } from "common/model/GameStateBasic"
-import { UserInfo } from "common/model/UserInfo"
 
-import {
-  getInitialPlayerState,
-  getTokenCount,
-  MetropolysPlayer,
-} from "./MetropolysPlayer"
+import { getTokenCount, MetropolysPlayer } from "./MetropolysPlayer"
 import { Token } from "./Token"
-
-export const DISTRICT_COUNT = 55
 
 export type DistrictBuilding = {
   height: number
@@ -33,33 +26,6 @@ export type MetropolysState = GameStateBasic & {
   lastRuins: PlayerId | null
   mostMetro: PlayerId | null
   players: Record<PlayerId, MetropolysPlayer>
-}
-
-export function getInitialGameState(
-  playerOrder: PlayerId[],
-  playerInfos: Record<PlayerId, UserInfo>
-): MetropolysState {
-  const startingPlayerId = playerOrder[0]
-
-  return {
-    bids: [],
-    currentPlayer: startingPlayerId,
-    districts: Array<District>(DISTRICT_COUNT).fill({}),
-    lastRuins: null,
-    mostMetro: null,
-    playerOrder,
-    players: playerOrder.reduce(
-      (players, playerId) =>
-        Object.assign(players, {
-          [playerId]: getInitialPlayerState(
-            playerInfos[playerId].name,
-            playerId === startingPlayerId
-          ),
-        }),
-      {} as Record<PlayerId, MetropolysPlayer>
-    ),
-    turn: 0,
-  }
 }
 
 export function getBids(state: MetropolysState): Bid[] {
