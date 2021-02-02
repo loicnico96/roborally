@@ -1,7 +1,11 @@
 import { GameStateBasic, PlayerId } from "common/model/GameStateBasic"
 import { UserInfo } from "common/model/UserInfo"
 
-import { getInitialPlayerState, MetropolysPlayer } from "./MetropolysPlayer"
+import {
+  getInitialPlayerState,
+  getTokenCount,
+  MetropolysPlayer,
+} from "./MetropolysPlayer"
 import { Token } from "./Token"
 
 export const DISTRICT_COUNT = 55
@@ -62,6 +66,13 @@ export function getBids(state: MetropolysState): Bid[] {
   return state.bids
 }
 
+export function getDistrict(
+  state: MetropolysState,
+  district: number
+): District {
+  return state.districts[district]
+}
+
 export function getHighestBid(state: MetropolysState): Bid | undefined {
   const bids = getBids(state)
   return bids[bids.length - 1]
@@ -72,4 +83,27 @@ export function getPlayer(
   playerId: PlayerId
 ): MetropolysPlayer {
   return state.players[playerId]
+}
+
+export function getMostMetroCount(state: MetropolysState): number {
+  const { mostMetro } = state
+  if (mostMetro !== null) {
+    return getTokenCount(getPlayer(state, mostMetro), Token.METRO)
+  } else {
+    return 0
+  }
+}
+
+export function isLastRuinsPlayer(
+  state: MetropolysState,
+  playerId: PlayerId
+): boolean {
+  return state.lastRuins === playerId
+}
+
+export function isMostMetroPlayer(
+  state: MetropolysState,
+  playerId: PlayerId
+): boolean {
+  return state.mostMetro === playerId
 }

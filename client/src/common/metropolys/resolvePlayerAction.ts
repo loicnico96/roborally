@@ -1,7 +1,7 @@
 import { PlayerId } from "common/model/GameStateBasic"
 
-import { MetropolysContext } from "./MetropolysContext"
 import { MetropolysAction } from "./model/MetropolysAction"
+import { MetropolysContext } from "./model/MetropolysContext"
 
 function resolvePlayerBid(
   ctx: MetropolysContext,

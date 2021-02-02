@@ -1,6 +1,6 @@
 import { GameSettings, GameType } from "common/GameSettings"
 
-import { MetropolysContext } from "./MetropolysContext"
+import { MetropolysContext } from "./model/MetropolysContext"
 import { getInitialGameState } from "./model/MetropolysState"
 import { resolvePlayerAction } from "./resolvePlayerAction"
 import { resolveState } from "./resolveState"

@@ -1,72 +1,49 @@
 import { PlayerId } from "common/model/GameStateBasic"
 import { merge } from "common/utils/objects"
 
-import { MetropolysContext } from "./MetropolysContext"
-import { Bid, getHighestBid, MetropolysState } from "./model/MetropolysState"
+import { getPlayerScore } from "./model/getPlayerScore"
+import { MetropolysContext } from "./model/MetropolysContext"
+import { getTokenCount } from "./model/MetropolysPlayer"
+import {
+  Bid,
+  getMostMetroCount,
+  isLastRuinsPlayer,
+  isMostMetroPlayer,
+} from "./model/MetropolysState"
 import { Token } from "./model/Token"
 
-function canBeNextPlayer(
-  gameState: MetropolysState,
-  playerId: PlayerId,
-  highestBid: Bid
-): boolean {
-  const player = gameState.players[playerId]
-  if (player.pass) {
-    return false
-  }
+function getPlayerScores(ctx: MetropolysContext): Record<PlayerId, number> {
+  return ctx.getPlayerOrder().reduce((scores, playerId) => {
+    scores[playerId] = getPlayerScore(ctx.getState(), playerId)
+    return scores
+  }, {} as Record<PlayerId, number>)
+}
 
-  return player.buildings.some(
-    (available, height) => available && height > highestBid.height
+async function endGame(ctx: MetropolysContext) {
+  const playerScores = getPlayerScores(ctx)
+  const highestScore = Math.max(...Object.values(playerScores))
+  const winners = ctx.getPlayerOrder().filter(playerId => 
+     playerScores[playerId] === highestScore
+    // TODO: Tiebreaker rules
   )
+
+  ctx.win(winners)
 }
 
-function getNextPlayer(
-  gameState: MetropolysState,
-  playerId: PlayerId,
-  highestBid: Bid
-): PlayerId | undefined {
-  if (highestBid.height === 12) {
-    return undefined
-  }
-
-  // District adjacency check
-
-  const { playerOrder } = gameState
-  const currentPlayerIndex = playerOrder.indexOf(playerId)
-  for (let i = 1; i < playerOrder.length; i++) {
-    const nextPlayerIndex = (currentPlayerIndex + i) % playerOrder.length
-    const nextPlayerId = playerOrder[nextPlayerIndex]
-    if (canBeNextPlayer(gameState, playerId, highestBid)) {
-      return nextPlayerId
-    }
-  }
-
-  return undefined
+async function nextPlayerTurn(ctx: MetropolysContext, playerId: PlayerId) {
+  // Change turn player
+  ctx.updateState({ currentPlayer: { $set: playerId } })
+  // Set next player to make an action
+  ctx.updatePlayer(playerId, { ready: { $set: false } })
 }
 
-async function nextPlayerTurn(ctx: MetropolysContext, nextPlayerId: PlayerId) {
-  ctx.updateState({
-    currentPlayer: {
-      $set: nextPlayerId,
-    },
-  })
-  ctx.updatePlayer(nextPlayerId, {
-    ready: {
-      $set: false,
-    },
-  })
-}
-
-async function nextRound(ctx: MetropolysContext, startingPlayerId: PlayerId) {
-  ctx.updateState({
-    turn: turn => turn + 1,
-  })
-  ctx.updatePlayers((player, playerId) =>
-    merge(player, {
-      pass: false,
-      ready: playerId !== startingPlayerId,
-    })
-  )
+async function nextRound(ctx: MetropolysContext, playerId: PlayerId) {
+  // Increase turn counter
+  ctx.updateState({ turn: turn => turn + 1 })
+  // Clear the "passed" status from all players
+  ctx.updatePlayers(player => merge(player, { pass: false }))
+  // Set next player to make an action
+  ctx.updatePlayer(playerId, { ready: { $set: false } })
 }
 
 async function gainToken(
@@ -74,36 +51,49 @@ async function gainToken(
   playerId: PlayerId,
   token: Token
 ) {
+  const player = ctx.getPlayer(playerId)
+  const state = ctx.getState()
+
+  const newCount = getTokenCount(player, token) + 1
+
+  // Increase token count
   ctx.updatePlayer(playerId, {
     tokens: {
-      [token]: (count = 0) => count + 1,
+      [token]: {
+        $set: newCount,
+      },
     },
   })
 
-  if (token === Token.RUINS) {
+  // Check if the "Metro" card should move
+  if (token === Token.METRO && !isMostMetroPlayer(state, playerId)) {
+    const mostMetroCount = getMostMetroCount(state)
+    if (newCount > mostMetroCount) {
+      ctx.updateState({
+        mostMetro: {
+          $set: playerId,
+        },
+      })
+    }
+  }
+
+  // Check if the "Ruins" card should move
+  if (token === Token.RUINS && !isLastRuinsPlayer(state, playerId)) {
     ctx.updateState({
       lastRuins: {
         $set: playerId,
       },
     })
   }
-
-  if (token === Token.METRO) {
-    // Check most metro token
-  }
 }
 
 async function winBid(ctx: MetropolysContext, bid: Bid) {
   const { district, height, playerId } = bid
 
-  ctx.updatePlayer(playerId, {
-    buildings: {
-      [height]: {
-        $set: false,
-      },
-    },
-  })
-
+  // Resolve the bid:
+  // - Clear all other bids
+  // - Mark the corresponding district as built
+  // - Mark the corresponding building as used for that player
   ctx.updateState({
     bids: {
       $set: [],
@@ -118,35 +108,48 @@ async function winBid(ctx: MetropolysContext, bid: Bid) {
         },
       },
     },
+    players: {
+      [playerId]: {
+        buildings: {
+          [height]: {
+            $set: false,
+          },
+        },
+      },
+    },
   })
 
-  const {token} = ctx.getState().districts[district]
+  // Check if there is a token on the district
+  const { token } = ctx.getDistrict(district)
   if (token !== undefined) {
     await gainToken(ctx, playerId, token)
   }
 
-  if (ctx.getState().players[playerId].buildings.some(Boolean)) {
-    await nextRound(ctx, playerId)
+  // Check end-of-game trigger
+  if (ctx.isEndOfGame(playerId)) {
+    // End the game (calculate scores and determine winner)
+    await endGame(ctx)
   } else {
-    // End of the game
-    // Calculate scores and determine correct winner
-    ctx.win([playerId])
+    // End the round
+    await nextRound(ctx, playerId)
   }
 }
 
 export async function resolveState(ctx: MetropolysContext) {
-  const gameState = ctx.getState()
-  const turnPlayerId = gameState.currentPlayer
-  if (gameState.players[turnPlayerId].ready) {
-    const highestBid = getHighestBid(gameState)
+  if (ctx.allPlayersReady()) {
+    const highestBid = ctx.getHighestBid()
+
+    // First round action should always be a bid
     if (highestBid === undefined) {
       throw Error("Inconsistent game state")
     }
 
-    const nextPlayerId = getNextPlayer(gameState, turnPlayerId, highestBid)
+    const nextPlayerId = ctx.getNextPlayerId(highestBid)
     if (nextPlayerId !== undefined) {
+      // Another player is able to outbid, switch to their turn
       await nextPlayerTurn(ctx, nextPlayerId)
     } else {
+      // Otherwise, current player wins the bid
       await winBid(ctx, highestBid)
     }
   }

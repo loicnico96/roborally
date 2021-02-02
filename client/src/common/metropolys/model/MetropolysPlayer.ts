@@ -22,3 +22,7 @@ export function getInitialPlayerState(
     tokens: {},
   }
 }
+
+export function getTokenCount(player: MetropolysPlayer, token: Token): number {
+  return player.tokens[token] ?? 0
+}

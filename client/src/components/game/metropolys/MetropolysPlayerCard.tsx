@@ -1,8 +1,12 @@
-import React from "react"
+import React, { useCallback } from "react"
 import styled, { ThemedStyledFunction } from "styled-components"
 
+import { getPlayerScore } from "common/metropolys/model/getPlayerScore"
 import { MetropolysPlayer } from "common/metropolys/model/MetropolysPlayer"
-import { MetropolysState } from "common/metropolys/model/MetropolysState"
+import {
+  getHighestBid,
+  MetropolysState,
+} from "common/metropolys/model/MetropolysState"
 import { PlayerId } from "common/model/GameStateBasic"
 
 import { useMetropolysContext } from "./hooks/useMetropolysContext"
@@ -112,11 +116,14 @@ function getPlayerBuildings(player: MetropolysPlayer): boolean[] {
 }
 
 function getMinimumHeight(state: MetropolysState): number {
-  if (state.bids.length > 0) {
-    return state.bids[state.bids.length - 1].height + 1
-  } else {
-    return 0
-  }
+  const highestBid = getHighestBid(state)
+  return highestBid ? highestBid.height + 1 : 0
+}
+
+function usePlayerScore(playerId: PlayerId): number {
+  return useMetropolysState(
+    useCallback(state => getPlayerScore(state, playerId), [playerId])
+  )
 }
 
 const MetropolysPlayerCard = ({
@@ -129,7 +136,7 @@ const MetropolysPlayerCard = ({
   const playerStatus = useMetropolysPlayer(playerId, getPlayerStatus)
   const buildings = useMetropolysPlayer(playerId, getPlayerBuildings)
   const minimumHeight = useMetropolysState(getMinimumHeight)
-  const playerScore = 0
+  const playerScore = usePlayerScore(playerId)
 
   return (
     <PlayerCardContainer>
