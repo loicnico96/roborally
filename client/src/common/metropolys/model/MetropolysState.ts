@@ -32,6 +32,13 @@ export function getBids(state: MetropolysState): Bid[] {
   return state.bids
 }
 
+export function getBidForDistrict(
+  state: MetropolysState,
+  district: number
+): Bid | undefined {
+  return getBids(state).find(bid => bid.district === district)
+}
+
 export function getDistrict(
   state: MetropolysState,
   district: number
@@ -58,6 +65,13 @@ export function getMostMetroCount(state: MetropolysState): number {
   } else {
     return 0
   }
+}
+
+export function isAvailable(state: MetropolysState, district: number): boolean {
+  return (
+    getDistrict(state, district).building === undefined &&
+    getBidForDistrict(state, district) === undefined
+  )
 }
 
 export function isLastRuinsPlayer(

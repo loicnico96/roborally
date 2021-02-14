@@ -98,6 +98,7 @@ export class GameContext<State extends GameStateBasic, Event> {
 
   updateState(updateSpec: Spec<State>): void {
     this.state = update(this.state, updateSpec)
+    console.log("updateState", updateSpec, this.state)
   }
 
   win(winners: PlayerId[]): never {

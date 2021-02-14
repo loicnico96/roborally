@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useCallback, useState } from "react"
 
 import { MetropolysContext } from "./hooks/useMetropolysContext"
 
@@ -10,7 +10,13 @@ const MetropolysContextProvider = ({ children }: ProviderProps) => {
   const [selectedDistrict, selectDistrict] = useState<number | null>(null)
   const [selectedHeight, selectHeight] = useState<number | null>(null)
 
+  const resetSelection = useCallback(() => {
+    selectDistrict(null)
+    selectHeight(null)
+  }, [selectDistrict, selectHeight])
+
   const context: MetropolysContext = {
+    resetSelection,
     selectDistrict,
     selectHeight,
     selectedDistrict,

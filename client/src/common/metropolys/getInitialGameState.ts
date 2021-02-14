@@ -30,7 +30,7 @@ function getInitialDistricts(playerCount: PlayerCount): District[] {
 
   // Assign tokens randomly
   availableTokens.forEach((token, index) => {
-    districts[assignableDistricts[index]].token = token
+    districts[assignableDistricts[index]] = { token }
   })
 
   return districts

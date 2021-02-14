@@ -1,5 +1,5 @@
 import { HttpTrigger } from "common/functions"
-import { getGameSettings, GameType } from "common/GameSettings"
+import { getGameSettings, GameType, GameAction } from "common/GameSettings"
 import { RoomStatus } from "common/model/RoomData"
 import {
   validateAny,
@@ -8,7 +8,7 @@ import {
 } from "common/utils/validation"
 
 import { getClientRef, getServerRef, getRoomRef } from "../../utils/collections"
-import { preconditionError } from "../../utils/errors"
+import { preconditionError, validationError } from "../../utils/errors"
 import { firestore } from "../../utils/firestore"
 
 import { handleTrigger } from "./handleTrigger"
@@ -48,7 +48,13 @@ export default handleTrigger<HttpTrigger.GAME_ACTION>(
         validateAction,
       } = getGameSettings(game)
 
-      const action = validateAction(state, playerId, data.action)
+      let action: GameAction
+
+      try {
+        action = validateAction(state, playerId, data.action)
+      } catch (error) {
+        throw validationError(error.message)
+      }
 
       const nextState = await resolvePlayerAction(state, playerId, action)
 

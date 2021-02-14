@@ -5,6 +5,7 @@ import {
   validateObject,
 } from "common/utils/validation"
 
+import { isAdjacent } from "./model/constants"
 import {
   MetropolysAction,
   MetropolysBidAction,
@@ -48,7 +49,9 @@ export function checkPlayerCanBid(
     throw Error("District is not available")
   }
 
-  // Highest bid adjacency check
+  if (highestBid !== undefined && !isAdjacent(district, highestBid.district)) {
+    throw Error("District is not adjacent")
+  }
 }
 
 export function validateAction(

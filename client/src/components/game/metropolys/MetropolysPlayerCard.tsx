@@ -1,5 +1,5 @@
 import React, { useCallback } from "react"
-import styled, { ThemedStyledFunction } from "styled-components"
+import styled from "styled-components"
 
 import { getPlayerScore } from "common/metropolys/model/getPlayerScore"
 import { MetropolysPlayer } from "common/metropolys/model/MetropolysPlayer"
@@ -8,6 +8,7 @@ import {
   MetropolysState,
 } from "common/metropolys/model/MetropolysState"
 import { PlayerId } from "common/model/GameStateBasic"
+import { styledDivWithProps } from "utils/styles"
 
 import { useMetropolysContext } from "./hooks/useMetropolysContext"
 import { useMetropolysPlayer } from "./hooks/useMetropolysPlayer"
@@ -57,43 +58,29 @@ const PlayerCardName = styled.div`
   white-space: nowrap;
 `
 
-export function styledWithProps<
-  Tag extends keyof JSX.IntrinsicElements,
-  Props extends Record<string, unknown>
->(tag: Tag): ThemedStyledFunction<Tag, any, Props, never> {
-  return (styled[tag] as ThemedStyledFunction<
-    any,
-    any,
-    Props,
-    never
-  >) as ThemedStyledFunction<Tag, any, Props, never>
-}
-
-const PlayerBuilding = styledWithProps<
-  "div",
-  {
-    color: string
-    height: BuildingHeight
-    isAvailable: boolean
-    isPlayable: boolean
-    isSelectable: boolean
-    isSelected: boolean
-  }
->("div")`
+const PlayerBuilding = styledDivWithProps<{
+  color: string
+  height: BuildingHeight
+  isAvailable: boolean
+  isPlayable: boolean
+  isSelectable: boolean
+  isSelected: boolean
+}>()`
   align-items: center;
   align-self: end;
-  background-color: ${({ color, isAvailable }) =>
-    isAvailable ? color : "transparent"};
+  background-color: ${props =>
+    props.isAvailable ? props.color : "transparent"};
   border-color: black;
   border-style: solid;
-  border-width: ${({ isSelected }) => (isSelected ? 2 : 1)}px;
+  border-width: ${props => (props.isSelected ? 3 : 1)}px;
+  box-sizing: border-box;
   color: black;
-  ${({ isSelectable }) => (isSelectable ? "cursor: pointer;" : "")}
+  cursor: ${props => (props.isSelectable ? "pointer" : "not-allowed")};
   display: flex;
-  font-weight: ${({ isSelected }) => (isSelected ? "bold" : "normal")};
-  height: ${({ height }) => [24, 36, 48][height]}px;
+  font-weight: ${props => (props.isSelected ? "bold" : "normal")};
+  height: ${props => [24, 36, 48][props.height]}px;
   justify-content: center;
-  opacity: ${({ isPlayable }) => (isPlayable ? 1.0 : 0.3)};
+  opacity: ${props => (props.isPlayable ? 1.0 : 0.3)};
   width: 24px;
 `
 

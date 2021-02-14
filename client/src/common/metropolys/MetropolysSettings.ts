@@ -18,13 +18,13 @@ export const MetropolysSettings: GameSettings<GameType.METROPOLYS> = {
 
   async resolvePlayerAction(gameState, playerId, action) {
     const ctx = new MetropolysContext(gameState)
-    ctx.resolve(resolvePlayerAction, playerId, action)
+    await ctx.resolve(resolvePlayerAction, playerId, action)
     return ctx.getState()
   },
 
   async resolveState(gameState, onStateChanged) {
     const ctx = new MetropolysContext(gameState, onStateChanged)
-    ctx.resolve(resolveState)
+    await ctx.resolve(resolveState)
     return ctx.getState()
   },
 
