@@ -116,7 +116,7 @@ async function winBid(ctx: MetropolysContext, bid: Bid) {
     },
   })
 
-  const { token } = ctx.getDistrict(district)
+  const token = ctx.getDistrict(district)?.token
   if (token !== undefined) {
     await gainToken(ctx, playerId, district, token)
   }

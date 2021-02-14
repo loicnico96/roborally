@@ -2,8 +2,9 @@ import React, { useCallback } from "react"
 import styled from "styled-components"
 
 import {
-  getColorObjectiveCount,
+  getColorMissionCount,
   getPlayerScore,
+  getShapeMissionCount,
 } from "common/metropolys/model/getPlayerScore"
 import { MetropolysPlayer } from "common/metropolys/model/MetropolysPlayer"
 import {
@@ -20,10 +21,10 @@ import { useMetropolysState } from "./hooks/useMetropolysState"
 import MetropolysBuilding from "./MetropolysBuilding"
 import MetropolysMetroCard from "./MetropolysMetroCard"
 import MetropolysMissionColorCard from "./MetropolysMissionColorCard"
+import MetropolysMissionShapeCard from "./MetropolysMissionShapeCard"
 import MetropolysRuinsCard from "./MetropolysRuinsCard"
 import MetropolysToken from "./MetropolysToken"
 import { getPlayerColor, getPlayerName } from "./utils/getters"
-
 
 export type MetropolysPlayerCardProps = {
   isCurrentUser: boolean
@@ -81,6 +82,13 @@ const PlayerCardCounter = styled.div`
 `
 
 const PlayerCardColorImage = styled(MetropolysMissionColorCard)`
+  cursor: help;
+  height: 72px;
+  margin-right: 4px;
+  width: 48px;
+`
+
+const PlayerCardShapeImage = styled(MetropolysMissionShapeCard)`
   cursor: help;
   height: 72px;
   margin-right: 4px;
@@ -146,9 +154,15 @@ function usePlayerScore(playerId: PlayerId): number {
   )
 }
 
-function useColorObjectiveCount(playerId: PlayerId): number {
+function useColorMissionCount(playerId: PlayerId): number {
   return useMetropolysState(
-    useCallback(state => getColorObjectiveCount(state, playerId), [playerId])
+    useCallback(state => getColorMissionCount(state, playerId), [playerId])
+  )
+}
+
+function useShapeMissionCount(playerId: PlayerId): number {
+  return useMetropolysState(
+    useCallback(state => getShapeMissionCount(state, playerId), [playerId])
   )
 }
 
@@ -159,13 +173,15 @@ const MetropolysPlayerCard = ({
   const { selectHeight, selectedHeight } = useMetropolysContext()
   const playerName = useMetropolysPlayer(playerId, getPlayerName)
   const playerColor = useMetropolysPlayer(playerId, getPlayerColor)
+  const playerShape = useMetropolysPlayer(playerId, player => player.shape)
   const playerStatus = useMetropolysPlayer(playerId, getPlayerStatus)
   const playerTokens = useMetropolysPlayer(playerId, player => player.tokens)
   const buildings = useMetropolysPlayer(playerId, getPlayerBuildings)
   const minimumHeight = useMetropolysState(getMinimumHeight)
   const playerScore = usePlayerScore(playerId)
 
-  const colorObjectiveCount = useColorObjectiveCount(playerId)
+  const colorMissionCount = useColorMissionCount(playerId)
+  const shapeMissionCount = useShapeMissionCount(playerId)
 
   const isLastRuins = useMetropolysState(state => state.lastRuins) === playerId
   const isMostMetro = useMetropolysState(state => state.mostMetro) === playerId
@@ -210,7 +226,14 @@ const MetropolysPlayerCard = ({
               color={playerColor}
               isHidden={!isCurrentUser}
             />
-            {isCurrentUser ? colorObjectiveCount : "??"}
+            {isCurrentUser ? colorMissionCount : "??"}
+          </PlayerCardCounter>
+          <PlayerCardCounter>
+            <PlayerCardShapeImage
+              shape={playerShape}
+              isHidden={!isCurrentUser}
+            />
+            {isCurrentUser ? shapeMissionCount : "??"}
           </PlayerCardCounter>
           <PlayerCardCounter>
             <PlayerCardTokenImage token={Token.FANCY} />

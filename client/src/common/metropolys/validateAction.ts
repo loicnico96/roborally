@@ -1,11 +1,12 @@
 import { PlayerId } from "common/model/GameStateBasic"
+import { size } from "common/utils/objects"
 import {
   validateBoolean,
   validateNumber,
   validateObject,
 } from "common/utils/validation"
 
-import { isAdjacent } from "./model/constants"
+import { BUILDINGS, DistrictId, DISTRICTS, isAdjacent } from "./model/constants"
 import {
   MetropolysAction,
   MetropolysBidAction,
@@ -14,6 +15,7 @@ import {
 import {
   getHighestBid,
   getPlayer,
+  isAvailable,
   MetropolysState,
 } from "./model/MetropolysState"
 
@@ -27,7 +29,7 @@ export function checkPlayerCanPass(gameState: MetropolysState) {
 export function checkPlayerCanBid(
   gameState: MetropolysState,
   playerId: PlayerId,
-  district: number,
+  district: DistrictId,
   height: number
 ) {
   const highestBid = getHighestBid(gameState)
@@ -41,11 +43,7 @@ export function checkPlayerCanBid(
     throw Error("Building is not high enough")
   }
 
-  if (gameState.districts[district].building !== undefined) {
-    throw Error("District is not available")
-  }
-
-  if (gameState.bids.some(bid => bid.district === district)) {
+  if (!isAvailable(gameState, district)) {
     throw Error("District is not available")
   }
 
@@ -71,12 +69,12 @@ export function validateAction(
   const bidAction = validateObject({
     district: validateNumber({
       integer: true,
-      max: 54,
+      max: size(DISTRICTS) - 1,
       min: 0,
     }),
     height: validateNumber({
       integer: true,
-      max: 12,
+      max: BUILDINGS.length - 1,
       min: 0,
     }),
     pass: validateBoolean(),

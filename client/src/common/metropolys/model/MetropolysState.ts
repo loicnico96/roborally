@@ -1,5 +1,6 @@
 import { GameStateBasic, PlayerId } from "common/model/GameStateBasic"
 
+import { DistrictId } from "./constants"
 import { getTokenCount, MetropolysPlayer } from "./MetropolysPlayer"
 import { Token } from "./Token"
 
@@ -14,7 +15,7 @@ export type District = {
 }
 
 export type Bid = {
-  district: number
+  district: DistrictId
   height: number
   playerId: PlayerId
 }
@@ -34,15 +35,15 @@ export function getBids(state: MetropolysState): Bid[] {
 
 export function getBidForDistrict(
   state: MetropolysState,
-  district: number
+  district: DistrictId
 ): Bid | undefined {
   return getBids(state).find(bid => bid.district === district)
 }
 
 export function getDistrict(
   state: MetropolysState,
-  district: number
-): District {
+  district: DistrictId
+): District | undefined {
   return state.districts[district]
 }
 
@@ -67,9 +68,15 @@ export function getMostMetroCount(state: MetropolysState): number {
   }
 }
 
-export function isAvailable(state: MetropolysState, district: number): boolean {
+export function isAvailable(
+  state: MetropolysState,
+  district: DistrictId
+): boolean {
+  const stateDistrict = getDistrict(state, district)
+
   return (
-    getDistrict(state, district).building === undefined &&
+    stateDistrict !== undefined &&
+    stateDistrict.building === undefined &&
     getBidForDistrict(state, district) === undefined
   )
 }

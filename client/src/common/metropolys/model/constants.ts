@@ -4,15 +4,6 @@ import { filter, keys } from "common/utils/objects"
 
 import { Token } from "./Token"
 
-export const COLOR_MISSION_SCORE = 2
-
-export const FANCY_TOKEN_SCORE = 3
-export const METRO_TOKEN_SCORE = 1
-export const RUINS_TOKEN_SCORE = -1
-
-export const METRO_CARD_SCORE = 3
-export const RUINS_CARD_SCORE = -2
-
 export enum BuildingSize {
   SMALL = 0,
   MEDIUM = 1,
@@ -26,6 +17,31 @@ export enum DistrictColor {
   ORANGE = "orange",
   RED = "red",
 }
+
+export enum MissionShape {
+  BRIDGES = "bridges",
+  CHAINS = "chains",
+  LAKES = "lakes",
+  SECTORS = "sectors",
+  TOWERS = "towers",
+}
+
+export const COLOR_MISSION_SCORE = 2
+
+export const SHAPE_MISSION_SCORE = {
+  [MissionShape.BRIDGES]: 4,
+  [MissionShape.CHAINS]: 4,
+  [MissionShape.LAKES]: 5,
+  [MissionShape.SECTORS]: 4,
+  [MissionShape.TOWERS]: 7,
+}
+
+export const FANCY_TOKEN_SCORE = 3
+export const METRO_TOKEN_SCORE = 1
+export const RUINS_TOKEN_SCORE = -1
+
+export const METRO_CARD_SCORE = 3
+export const RUINS_CARD_SCORE = -2
 
 export type DistrictId = number
 

@@ -1,12 +1,13 @@
 import { PlayerStateBasic } from "common/model/GameStateBasic"
 
-import { DistrictColor } from "./constants"
+import { DistrictColor, MissionShape } from "./constants"
 import { Token } from "./Token"
 
 export type MetropolysPlayer = PlayerStateBasic & {
   buildings: boolean[]
   color: DistrictColor
   pass: boolean
+  shape: MissionShape
   tokens: Record<Token, number>
 }
 

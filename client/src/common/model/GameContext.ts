@@ -121,6 +121,7 @@ export class GameContext<State extends GameStateBasic, Event> {
     } catch (error) {
       if (error !== INTERRUPT_WIN) {
         console.error(error)
+        throw error
       }
     }
 

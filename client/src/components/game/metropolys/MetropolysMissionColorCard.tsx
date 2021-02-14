@@ -33,7 +33,7 @@ export function getCardImage(color: DistrictColor, isHidden: boolean): string {
 
 export function getCardLabel(color: DistrictColor, isHidden: boolean): string {
   if (isHidden) {
-    return `Neighborhood card (hidden)\nThis players gains ${COLOR_MISSION_SCORE} Prestige Points for each neighborhood of the appropriate type.`
+    return `Neighborhood card (hidden)\nAt the end of the game, this player scores ${COLOR_MISSION_SCORE} Prestige Points for each neighborhood of the appropriate type.`
   }
 
   const colorLabel = {
@@ -44,7 +44,7 @@ export function getCardLabel(color: DistrictColor, isHidden: boolean): string {
     [DistrictColor.RED]: "Mall",
   }[color]
 
-  return `Neighborhood card - ${colorLabel}\nYou gain ${COLOR_MISSION_SCORE} Prestige Points for each '${colorLabel}' neighborhood you build on.`
+  return `Neighborhood card - ${colorLabel}\nAt the end of the game, you score ${COLOR_MISSION_SCORE} Prestige Points for each '${colorLabel}' neighborhood you have constructed on.`
 }
 
 const MetropolysMissionColorCard = ({

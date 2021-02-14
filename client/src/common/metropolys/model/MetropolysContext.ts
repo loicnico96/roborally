@@ -2,7 +2,7 @@ import { GameContext } from "common/model/GameContext"
 import { PlayerId } from "common/model/GameStateBasic"
 import { range } from "common/utils/math"
 
-import { getAdjacentDistricts } from "./constants"
+import { DistrictId, getAdjacentDistricts } from "./constants"
 import { MetropolysEvent } from "./MetropolysEvent"
 import {
   Bid,
@@ -17,7 +17,7 @@ export class MetropolysContext extends GameContext<
   MetropolysState,
   MetropolysEvent
 > {
-  getDistrict(district: number): District {
+  getDistrict(district: DistrictId): District | undefined {
     return getDistrict(this.getState(), district)
   }
 

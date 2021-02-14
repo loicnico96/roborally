@@ -10,6 +10,7 @@ import {
   isTokenAssignable,
   getBuildingCount,
   DistrictColor,
+  MissionShape,
 } from "./model/constants"
 import { MetropolysPlayer } from "./model/MetropolysPlayer"
 import { District, MetropolysState } from "./model/MetropolysState"
@@ -39,6 +40,7 @@ function getInitialDistricts(playerCount: PlayerCount): District[] {
 export function getInitialPlayerState(
   playerName: string,
   playerColor: DistrictColor,
+  missionShape: MissionShape,
   isStartingPlayer: boolean
 ): MetropolysPlayer {
   return {
@@ -47,6 +49,7 @@ export function getInitialPlayerState(
     name: playerName,
     pass: false,
     ready: !isStartingPlayer,
+    shape: missionShape,
     tokens: enumValues(Token).reduce(
       (result, token) =>
         Object.assign(result, {
@@ -64,6 +67,7 @@ export function getInitialGameState(
   const startingPlayerId = playerOrder[0]
   const playerCount = playerOrder.length as PlayerCount
   const playerColors = shuffle(enumValues(DistrictColor))
+  const missionShapes = shuffle(enumValues(MissionShape))
 
   return {
     bids: [],
@@ -78,6 +82,7 @@ export function getInitialGameState(
           [playerId]: getInitialPlayerState(
             playerInfos[playerId].name,
             playerColors[playerIndex],
+            missionShapes[playerIndex],
             playerId === startingPlayerId
           ),
         }),
