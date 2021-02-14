@@ -1,3 +1,4 @@
+import { DistrictColor } from "common/metropolys/model/constants"
 import { MetropolysPlayer } from "common/metropolys/model/MetropolysPlayer"
 import { MetropolysState } from "common/metropolys/model/MetropolysState"
 import { PlayerId } from "common/model/GameStateBasic"
@@ -15,6 +16,10 @@ export function getPlayer(
 
 export function getPlayerOrder(state: MetropolysState): PlayerId[] {
   return state.playerOrder
+}
+
+export function getPlayerColor(player: MetropolysPlayer): DistrictColor {
+  return player.color
 }
 
 export function getPlayerName(player: MetropolysPlayer): string {

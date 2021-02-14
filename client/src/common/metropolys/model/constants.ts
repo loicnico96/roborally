@@ -4,6 +4,15 @@ import { filter, keys } from "common/utils/objects"
 
 import { Token } from "./Token"
 
+export const COLOR_MISSION_SCORE = 2
+
+export const FANCY_TOKEN_SCORE = 3
+export const METRO_TOKEN_SCORE = 1
+export const RUINS_TOKEN_SCORE = -1
+
+export const METRO_CARD_SCORE = 3
+export const RUINS_CARD_SCORE = -2
+
 export enum BuildingSize {
   SMALL = 0,
   MEDIUM = 1,

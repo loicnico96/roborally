@@ -1,9 +1,14 @@
 import React from "react"
 
+import {
+  BuildingSize,
+  getBuildingSize,
+} from "common/metropolys/model/constants"
 import { PlayerId } from "common/model/GameStateBasic"
-import { styledDivWithProps } from "utils/styles"
+import { styledWithProps } from "utils/styles"
 
 import { useMetropolysState } from "./hooks/useMetropolysState"
+import { Selectable } from "./utils/Selectable"
 
 export type DivProps = React.HTMLAttributes<HTMLDivElement>
 
@@ -11,41 +16,39 @@ export type PlayerBuildingProps = DivProps & {
   height: number
   isSelectable?: boolean
   isSelected?: boolean
-  onClick?: () => void
   opacity?: number
   playerId: PlayerId
   showHeight?: boolean
   transparent?: boolean
 }
 
-const BUILDING_COLORS = ["red", "lightblue", "white", "gray"]
+export const BUILDING_COLORS = ["red", "lightblue", "white", "gray"]
+export const BUILDING_WIDTH = 24
+export const BUILDING_HEIGHT = {
+  [BuildingSize.SMALL]: BUILDING_WIDTH * 1.0,
+  [BuildingSize.MEDIUM]: BUILDING_WIDTH * 1.5,
+  [BuildingSize.LARGE]: BUILDING_WIDTH * 2.0,
+}
 
-const MetropolysBuildingContainer = styledDivWithProps<{
-  color: string
-  isSelectable: boolean
-  isSelected: boolean
-  onClick?: () => void
-  opacity: number
-}>()`
+const MetropolysBuildingContainer = Selectable(styledWithProps<
+  "div",
+  {
+    color: string
+    opacity: number
+    size: BuildingSize
+  }
+>("div")`
   align-items: center;
-  align-self: end;
   background-color: ${props => props.color};
   border-color: black;
   border-style: solid;
-  border-width: ${props => (props.isSelected ? 3 : 1)}px;
-  box-sizing: border-box;
   color: black;
-  cursor: ${props =>
-    props.onClick
-      ? props.isSelectable
-        ? "pointer"
-        : "not-allowed"
-      : "default"};
   display: flex;
-  font-weight: ${props => (props.isSelected ? "bold" : "normal")};
+  height: ${props => BUILDING_HEIGHT[props.size]}px;
   justify-content: center;
   opacity: ${props => props.opacity};
-`
+  width: ${BUILDING_WIDTH}px;
+`)
 
 function getHeightLabel(height: number): string {
   return String(height + 1)
@@ -55,7 +58,6 @@ const MetropolysBuilding = ({
   height,
   isSelectable = false,
   isSelected = false,
-  onClick,
   opacity = 1.0,
   playerId,
   showHeight = true,
@@ -70,8 +72,8 @@ const MetropolysBuilding = ({
       color={transparent ? "transparent" : BUILDING_COLORS[playerIndex]}
       isSelectable={isSelectable}
       isSelected={isSelected}
-      onClick={onClick}
       opacity={opacity}
+      size={getBuildingSize(height)}
       {...props}
     >
       {showHeight ? getHeightLabel(height) : null}

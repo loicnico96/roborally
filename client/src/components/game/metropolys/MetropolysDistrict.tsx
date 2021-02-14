@@ -2,85 +2,46 @@ import React, { useCallback } from "react"
 import styled from "styled-components"
 
 import {
-  BuildingSize,
-  DistrictId,
-  getBuildingSize,
   getDistrictPosition,
   isAdjacent,
 } from "common/metropolys/model/constants"
 import { getHighestBid } from "common/metropolys/model/MetropolysState"
 import { useAuthContext } from "firestore/auth/AuthContext"
-import { styledDivWithProps } from "utils/styles"
 
 import { useMetropolysContext } from "./hooks/useMetropolysContext"
 import { useMetropolysState } from "./hooks/useMetropolysState"
 import MetropolysBuilding from "./MetropolysBuilding"
 import MetropolysToken from "./MetropolysToken"
+import { Positioned } from "./utils/Positioned"
+import { Selectable } from "./utils/Selectable"
 
 export type MetropolysDistrictProps = {
-  district: DistrictId
+  district: number
 }
 
 const DISTRICT_SIZE = 40
-const BUILDING_WIDTH = 24
-const BUILDING_HEIGHT = {
-  [BuildingSize.SMALL]: BUILDING_WIDTH * 1.0,
-  [BuildingSize.MEDIUM]: BUILDING_WIDTH * 1.5,
-  [BuildingSize.LARGE]: BUILDING_WIDTH * 2.0,
-}
-
-type PositionedProps = {
-  h: number
-  w: number
-  x: number
-  y: number
-}
-
-function Positioned<P>(Component: React.ComponentType<P>) {
-  return styled(Component)`
-    position: absolute;
-    top: ${({ y }: PositionedProps) => y}%;
-    left: ${({ x }: PositionedProps) => x}%;
-    margin-top: -${({ h }) => h / 2}px;
-    margin-left: -${({ w }) => w / 2}px;
-    height: ${({ h }) => h}px;
-    width: ${({ w }) => w}px;
-  `
-}
-
-const BoardToken = styled(Positioned(MetropolysToken))`
-  background-color: white;
-  border-color: black;
-  border-radius: 50%;
-  border-style: solid;
-  border-width: ${(props: { isSelectable: boolean; isSelected: boolean }) =>
-    props.isSelected ? 3 : 1}px;
-  box-sizing: border-box;
-  cursor: ${props => (props.isSelectable ? "pointer" : "not-allowed")};
-  font-weight: ${props => (props.isSelected ? "bold" : "normal")};
-  opacity: ${props => (props.isSelectable ? 1.0 : 0.6)};
-`
 
 const BoardBuilding = Positioned(MetropolysBuilding)
 
-const BoardDistrict = Positioned(styledDivWithProps<{
-  isSelectable: boolean
-  isSelected: boolean
-}>()`
-  align-items: center;
+const BoardDistrict = styled(Selectable(Positioned("div")))`
   background-color: white;
   border-color: black;
   border-radius: 50%;
   border-style: solid;
-  border-width: ${props => (props.isSelected ? 3 : 1)}px;
-  box-sizing: border-box;
-  color: black;
-  cursor: ${props => (props.isSelectable ? "pointer" : "not-allowed")};
-  display: flex;
-  font-weight: ${props => (props.isSelected ? "bold" : "normal")};
-  justify-content: center;
+  height: ${DISTRICT_SIZE}px;
   opacity: ${props => (props.isSelectable ? 0.8 : 0.4)};
-`)
+  width: ${DISTRICT_SIZE}px;
+`
+
+const BoardToken = styled(Selectable(Positioned(MetropolysToken)))`
+  background-color: white;
+  border-color: black;
+  border-radius: 50%;
+  border-style: solid;
+  height: ${DISTRICT_SIZE}px;
+  opacity: ${props => (props.isSelectable ? 1.0 : 0.6)};
+  width: ${DISTRICT_SIZE}px;
+`
 
 const MetropolysDistrict = ({ district }: MetropolysDistrictProps) => {
   const { building, token } = useMetropolysState(
@@ -116,8 +77,6 @@ const MetropolysDistrict = ({ district }: MetropolysDistrictProps) => {
           isSelectable={isSelectable}
           isSelected={isSelected}
           onClick={onClick}
-          h={DISTRICT_SIZE}
-          w={DISTRICT_SIZE}
           x={x}
           y={y}
         />
@@ -128,8 +87,6 @@ const MetropolysDistrict = ({ district }: MetropolysDistrictProps) => {
           isSelectable={isSelectable}
           isSelected={isSelected}
           onClick={onClick}
-          h={DISTRICT_SIZE}
-          w={DISTRICT_SIZE}
           x={x}
           y={y}
         />
@@ -139,8 +96,6 @@ const MetropolysDistrict = ({ district }: MetropolysDistrictProps) => {
           height={building.height}
           playerId={building.playerId}
           showHeight={false}
-          h={BUILDING_HEIGHT[getBuildingSize(building.height)]}
-          w={BUILDING_WIDTH}
           x={x}
           y={y}
         />
@@ -149,8 +104,6 @@ const MetropolysDistrict = ({ district }: MetropolysDistrictProps) => {
         <BoardBuilding
           height={bid.height}
           playerId={bid.playerId}
-          h={BUILDING_HEIGHT[getBuildingSize(bid.height)]}
-          w={BUILDING_WIDTH}
           x={x}
           y={y}
         />

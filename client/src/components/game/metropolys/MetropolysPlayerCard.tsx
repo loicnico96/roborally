@@ -1,29 +1,35 @@
 import React, { useCallback } from "react"
 import styled from "styled-components"
 
-import { getPlayerScore } from "common/metropolys/model/getPlayerScore"
+import {
+  getColorObjectiveCount,
+  getPlayerScore,
+} from "common/metropolys/model/getPlayerScore"
 import { MetropolysPlayer } from "common/metropolys/model/MetropolysPlayer"
 import {
   getHighestBid,
   MetropolysState,
 } from "common/metropolys/model/MetropolysState"
+import { Token } from "common/metropolys/model/Token"
 import { PlayerId } from "common/model/GameStateBasic"
-import { styledDivWithProps } from "utils/styles"
+import { styledWithProps } from "utils/styles"
 
 import { useMetropolysContext } from "./hooks/useMetropolysContext"
 import { useMetropolysPlayer } from "./hooks/useMetropolysPlayer"
 import { useMetropolysState } from "./hooks/useMetropolysState"
-import { getPlayerName } from "./utils/getters"
+import MetropolysBuilding from "./MetropolysBuilding"
+import MetropolysMetroCard from "./MetropolysMetroCard"
+import MetropolysMissionColorCard from "./MetropolysMissionColorCard"
+import MetropolysRuinsCard from "./MetropolysRuinsCard"
+import MetropolysToken from "./MetropolysToken"
+import { getPlayerColor, getPlayerName } from "./utils/getters"
+
 
 export type MetropolysPlayerCardProps = {
   isCurrentUser: boolean
   playerId: PlayerId
   playerIndex: number
 }
-
-export type BuildingHeight = 0 | 1 | 2
-const COLORS = ["red", "lightblue", "white", "gray"]
-const HEIGHTS: BuildingHeight[] = [0, 0, 0, 0, 0, 1, 1, 1, 1, 2, 2, 2, 2]
 
 const PlayerCardContainer = styled.div`
   align-items: center;
@@ -42,12 +48,16 @@ const PlayerCardContentContainer = styled.div`
   flex-direction: column;
 `
 
-const PlayerCardContextRow = styled.div`
+const PlayerCardContentRow = styled.div`
+  align-items: center;
   display: flex;
   flex: 1 1 auto;
   flex-direction: row;
-  gap: 16px;
   margin: 4px 0px;
+`
+
+const PlayerCardContentRowBuildings = styled(PlayerCardContentRow)`
+  gap: 16px;
 `
 
 const PlayerCardName = styled.div`
@@ -58,43 +68,66 @@ const PlayerCardName = styled.div`
   white-space: nowrap;
 `
 
-const PlayerBuilding = styledDivWithProps<{
-  color: string
-  height: BuildingHeight
-  isAvailable: boolean
-  isPlayable: boolean
-  isSelectable: boolean
-  isSelected: boolean
-}>()`
-  align-items: center;
+const PlayerBuilding = styled(MetropolysBuilding)`
   align-self: end;
-  background-color: ${props =>
-    props.isAvailable ? props.color : "transparent"};
-  border-color: black;
-  border-style: solid;
-  border-width: ${props => (props.isSelected ? 3 : 1)}px;
-  box-sizing: border-box;
-  color: black;
-  cursor: ${props => (props.isSelectable ? "pointer" : "not-allowed")};
-  display: flex;
-  font-weight: ${props => (props.isSelected ? "bold" : "normal")};
-  height: ${props => [24, 36, 48][props.height]}px;
-  justify-content: center;
-  opacity: ${props => (props.isPlayable ? 1.0 : 0.3)};
-  width: 24px;
 `
 
 const PlayerCardScore = styled.div``
 
+const PlayerCardCounter = styled.div`
+  align-items: center;
+  display: flex;
+  width: 80px;
+`
+
+const PlayerCardColorImage = styled(MetropolysMissionColorCard)`
+  cursor: help;
+  height: 72px;
+  margin-right: 4px;
+  width: 48px;
+`
+
+const PlayerCardTokenImage = styled(MetropolysToken)`
+  cursor: help;
+  height: 48px;
+  margin-right: 4px;
+  width: 48px;
+`
+
+const PlayerCardMetroImage = styledWithProps<
+  typeof MetropolysMetroCard,
+  {
+    isMostMetro: boolean
+  }
+>(MetropolysMetroCard)`
+  cursor: help;
+  height: 72px;
+  margin-right: 8px;
+  opacity: ${props => (props.isMostMetro ? 1.0 : 0.3)};
+  width: 48px;
+`
+
+const PlayerCardRuinsImage = styledWithProps<
+  typeof MetropolysRuinsCard,
+  {
+    isLastRuins: boolean
+  }
+>(MetropolysRuinsCard)`
+  cursor: help;
+  height: 72px;
+  opacity: ${props => (props.isLastRuins ? 1.0 : 0.3)};
+  width: 48px;
+`
+
 function getPlayerStatus(player: MetropolysPlayer): string {
   if (player.ready) {
     if (player.pass) {
-      return "Passed"
+      return " (passed)"
     } else {
-      return "-"
+      return ""
     }
   } else {
-    return "Bidding..."
+    return " (bidding...)"
   }
 }
 
@@ -113,50 +146,87 @@ function usePlayerScore(playerId: PlayerId): number {
   )
 }
 
+function useColorObjectiveCount(playerId: PlayerId): number {
+  return useMetropolysState(
+    useCallback(state => getColorObjectiveCount(state, playerId), [playerId])
+  )
+}
+
 const MetropolysPlayerCard = ({
   isCurrentUser,
   playerId,
-  playerIndex,
 }: MetropolysPlayerCardProps) => {
   const { selectHeight, selectedHeight } = useMetropolysContext()
   const playerName = useMetropolysPlayer(playerId, getPlayerName)
+  const playerColor = useMetropolysPlayer(playerId, getPlayerColor)
   const playerStatus = useMetropolysPlayer(playerId, getPlayerStatus)
+  const playerTokens = useMetropolysPlayer(playerId, player => player.tokens)
   const buildings = useMetropolysPlayer(playerId, getPlayerBuildings)
   const minimumHeight = useMetropolysState(getMinimumHeight)
   const playerScore = usePlayerScore(playerId)
 
+  const colorObjectiveCount = useColorObjectiveCount(playerId)
+
+  const isLastRuins = useMetropolysState(state => state.lastRuins) === playerId
+  const isMostMetro = useMetropolysState(state => state.mostMetro) === playerId
+
   return (
     <PlayerCardContainer>
       <PlayerCardContentContainer>
-        <PlayerCardContextRow>
+        <PlayerCardContentRow>
           <PlayerCardName>
-            {isCurrentUser ? `${playerName} (you)` : playerName}
+            {playerName}
+            {playerStatus}
           </PlayerCardName>
-          <PlayerCardScore>Score: {playerScore}</PlayerCardScore>
-        </PlayerCardContextRow>
-        <PlayerCardContextRow>
-          {buildings.map((available, height) => (
-            <PlayerBuilding
-              color={COLORS[playerIndex]}
-              height={HEIGHTS[height]}
-              isAvailable={available}
-              isPlayable={height >= minimumHeight}
-              isSelectable={
-                isCurrentUser && height >= minimumHeight && available
-              }
-              isSelected={isCurrentUser && height === selectedHeight}
-              key={height}
-              onClick={() => {
-                if (isCurrentUser && available && height >= minimumHeight) {
-                  selectHeight(height)
-                }
-              }}
-            >
-              {height + 1}
-            </PlayerBuilding>
-          ))}
-        </PlayerCardContextRow>
-        <PlayerCardContextRow>{playerStatus}</PlayerCardContextRow>
+          <PlayerCardScore>
+            Score: {isCurrentUser ? playerScore : "??"}
+          </PlayerCardScore>
+        </PlayerCardContentRow>
+        <PlayerCardContentRowBuildings>
+          {buildings.map((isAvailable, height) => {
+            const isPlayable = height >= minimumHeight
+
+            return (
+              <PlayerBuilding
+                key={height}
+                height={height}
+                isSelectable={isCurrentUser && isAvailable && isPlayable}
+                isSelected={isCurrentUser && height === selectedHeight}
+                playerId={playerId}
+                onClick={() => {
+                  if (isCurrentUser && isAvailable && isPlayable) {
+                    selectHeight(height)
+                  }
+                }}
+                opacity={height >= minimumHeight ? 1.0 : 0.3}
+                transparent={!isAvailable}
+              />
+            )
+          })}
+        </PlayerCardContentRowBuildings>
+        <PlayerCardContentRow>
+          <PlayerCardCounter>
+            <PlayerCardColorImage
+              color={playerColor}
+              isHidden={!isCurrentUser}
+            />
+            {isCurrentUser ? colorObjectiveCount : "??"}
+          </PlayerCardCounter>
+          <PlayerCardCounter>
+            <PlayerCardTokenImage token={Token.FANCY} />
+            {playerTokens[Token.FANCY]}
+          </PlayerCardCounter>
+          <PlayerCardCounter>
+            <PlayerCardTokenImage token={Token.METRO} />
+            {playerTokens[Token.METRO]}
+          </PlayerCardCounter>
+          <PlayerCardCounter>
+            <PlayerCardTokenImage token={Token.RUINS} />
+            {playerTokens[Token.RUINS]}
+          </PlayerCardCounter>
+          <PlayerCardMetroImage isMostMetro={isMostMetro} />
+          <PlayerCardRuinsImage isLastRuins={isLastRuins} />
+        </PlayerCardContentRow>
       </PlayerCardContentContainer>
     </PlayerCardContainer>
   )

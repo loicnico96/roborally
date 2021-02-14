@@ -5,6 +5,8 @@ export type Dimensions = {
   y: number
 }
 
+export type ImageProps = React.ImgHTMLAttributes<HTMLImageElement>
+
 export type SelectEvent = React.ChangeEvent<HTMLSelectElement>
 
 export function getDimensions(ref: ElementRef): Dimensions {

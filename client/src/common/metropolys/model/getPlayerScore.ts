@@ -1,18 +1,17 @@
 import { PlayerId } from "common/model/GameStateBasic"
 
-import { getDistrictColor } from "./constants"
+import {
+  COLOR_MISSION_SCORE,
+  FANCY_TOKEN_SCORE,
+  getDistrictColor,
+  METRO_CARD_SCORE,
+  METRO_TOKEN_SCORE,
+  RUINS_CARD_SCORE,
+  RUINS_TOKEN_SCORE,
+} from "./constants"
 import { getTokenCount } from "./MetropolysPlayer"
 import { getPlayer, MetropolysState } from "./MetropolysState"
 import { Token } from "./Token"
-
-const COLOR_OBJECTIVE_SCORE = 2
-
-const FANCY_TOKEN_SCORE = 3
-const METRO_TOKEN_SCORE = 1
-const RUINS_TOKEN_SCORE = -1
-
-const METRO_CARD_SCORE = 3
-const RUINS_CARD_SCORE = -2
 
 export function getBuildDistricts(
   gameState: MetropolysState,
@@ -47,7 +46,7 @@ export function getPlayerScore(
 
   let score = 0
 
-  score += getColorObjectiveCount(gameState, playerId) * COLOR_OBJECTIVE_SCORE
+  score += getColorObjectiveCount(gameState, playerId) * COLOR_MISSION_SCORE
 
   // TODO: Shape objective scoring
 
