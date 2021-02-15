@@ -37,7 +37,7 @@ export function getBidForDistrict(
   state: MetropolysState,
   district: DistrictId
 ): Bid | undefined {
-  return getBids(state).find(bid => bid.district === district)
+  return state.bids.find(bid => bid.district === district)
 }
 
 export function getDistrict(
@@ -48,30 +48,35 @@ export function getDistrict(
 }
 
 export function getHighestBid(state: MetropolysState): Bid | undefined {
-  const bids = getBids(state)
-  return bids[bids.length - 1]
+  return state.bids[state.bids.length - 1]
 }
 
-export function getPlayer(
-  state: MetropolysState,
-  playerId: PlayerId
-): MetropolysPlayer {
+export function getPlayer(state: MetropolysState, playerId: PlayerId) {
   return state.players[playerId]
 }
 
+export function getCurrentPlayerId(state: MetropolysState): PlayerId | null {
+  return state.currentPlayer
+}
+
+export function getLastRuinsPlayerId(state: MetropolysState): PlayerId | null {
+  return state.lastRuins
+}
+
+export function getMostMetroPlayerId(state: MetropolysState): PlayerId | null {
+  return state.mostMetro
+}
+
 export function getMostMetroCount(state: MetropolysState): number {
-  const { mostMetro } = state
-  if (mostMetro !== null) {
-    return getTokenCount(getPlayer(state, mostMetro), Token.METRO)
+  const playerId = getMostMetroPlayerId(state)
+  if (playerId !== null) {
+    return getTokenCount(getPlayer(state, playerId), Token.METRO)
   } else {
     return 0
   }
 }
 
-export function isAvailable(
-  state: MetropolysState,
-  district: DistrictId
-): boolean {
+export function isAvailable(state: MetropolysState, district: DistrictId) {
   const stateDistrict = getDistrict(state, district)
 
   return (
@@ -79,18 +84,4 @@ export function isAvailable(
     stateDistrict.building === undefined &&
     getBidForDistrict(state, district) === undefined
   )
-}
-
-export function isLastRuinsPlayer(
-  state: MetropolysState,
-  playerId: PlayerId
-): boolean {
-  return state.lastRuins === playerId
-}
-
-export function isMostMetroPlayer(
-  state: MetropolysState,
-  playerId: PlayerId
-): boolean {
-  return state.mostMetro === playerId
 }

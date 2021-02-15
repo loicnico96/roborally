@@ -6,9 +6,9 @@ import { MetropolysContext } from "./model/MetropolysContext"
 import { getTokenCount } from "./model/MetropolysPlayer"
 import {
   Bid,
+  getLastRuinsPlayerId,
   getMostMetroCount,
-  isLastRuinsPlayer,
-  isMostMetroPlayer,
+  getMostMetroPlayerId,
 } from "./model/MetropolysState"
 import { Token } from "./model/Token"
 
@@ -68,7 +68,7 @@ async function gainToken(
     },
   })
 
-  if (token === Token.METRO && !isMostMetroPlayer(state, playerId)) {
+  if (token === Token.METRO && getMostMetroPlayerId(state) !== playerId) {
     const mostMetroCount = getMostMetroCount(state)
     if (newCount > mostMetroCount) {
       ctx.updateState({
@@ -79,7 +79,7 @@ async function gainToken(
     }
   }
 
-  if (token === Token.RUINS && !isLastRuinsPlayer(state, playerId)) {
+  if (token === Token.RUINS && getLastRuinsPlayerId(state) !== playerId) {
     ctx.updateState({
       lastRuins: {
         $set: playerId,

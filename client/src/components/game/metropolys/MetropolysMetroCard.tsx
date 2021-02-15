@@ -9,7 +9,7 @@ export type MetropolysMetroCardProps = Omit<ImageProps, "src">
 const MetropolysMetroCard = (props: MetropolysMetroCardProps) => (
   <img
     src={MetropolysMetroCardImageUrl}
-    title={`'Subway' card\nThis card is worth ${METRO_CARD_SCORE} Prestige Points at the end of the game.`}
+    title={`Subway card\nThis card is worth ${METRO_CARD_SCORE} Prestige Points at the end of the game.`}
     {...props}
   />
 )
