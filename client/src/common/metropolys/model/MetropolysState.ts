@@ -55,7 +55,7 @@ export function getPlayer(state: MetropolysState, playerId: PlayerId) {
   return state.players[playerId]
 }
 
-export function getCurrentPlayerId(state: MetropolysState): PlayerId | null {
+export function getCurrentPlayerId(state: MetropolysState): PlayerId {
   return state.currentPlayer
 }
 

@@ -4,7 +4,7 @@ import { merge, size } from "common/utils/objects"
 
 import { GameStateBasic, PlayerId } from "./GameStateBasic"
 
-const INTERRUPT_WIN = Object.assign(Error("interrupt"), { reason: "win" })
+const INTERRUPT_WIN = Error("__winners__")
 
 export type StateChangeHandler<T, E> = (newState: T, event: E) => Promise<void>
 
@@ -98,7 +98,6 @@ export class GameContext<State extends GameStateBasic, Event> {
 
   updateState(updateSpec: Spec<State>): void {
     this.state = update(this.state, updateSpec)
-    console.log("updateState", updateSpec, this.state)
   }
 
   win(winners: PlayerId[]): never {

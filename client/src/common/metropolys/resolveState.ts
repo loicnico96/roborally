@@ -12,36 +12,34 @@ import {
 } from "./model/MetropolysState"
 import { Token } from "./model/Token"
 
-async function endGame(ctx: MetropolysContext) {
-  const playerScores = ctx.getPlayerOrder().reduce<Record<PlayerId, number>>(
-    (scores, playerId) =>
-      Object.assign(scores, {
-        [playerId]: getPlayerScore(ctx.getState(), playerId, true),
-      }),
-    {}
-  )
-
-  const highestScore = Math.max(...Object.values(playerScores))
-  const winners = ctx.getPlayerOrder().filter(
-    playerId => playerScores[playerId] === highestScore
-    // TODO: Tiebreaker rules
-  )
-
-  ctx.win(winners)
+function nextPlayerTurn(ctx: MetropolysContext, playerId: PlayerId) {
+  ctx.mergeState({ currentPlayer: playerId })
+  ctx.updatePlayer(playerId, player => merge(player, { ready: false }))
 }
 
-async function nextPlayerTurn(ctx: MetropolysContext, playerId: PlayerId) {
-  ctx.updateState({ currentPlayer: { $set: playerId } })
-  ctx.updatePlayer(playerId, { ready: { $set: false } })
-}
-
-async function nextRound(ctx: MetropolysContext, playerId: PlayerId) {
+function nextRound(ctx: MetropolysContext, startingPlayerId: PlayerId) {
   ctx.updateState({ turn: turn => turn + 1 })
-  ctx.updatePlayers(player => merge(player, { pass: false }))
-  await nextPlayerTurn(ctx, playerId)
+  nextPlayerTurn(ctx, startingPlayerId)
 }
 
-async function gainToken(
+function endGame(ctx: MetropolysContext) {
+  let highestPlayerIds: PlayerId[] = []
+  let highestScore: number | null = null
+
+  ctx.getPlayerOrder().forEach(playerId => {
+    const playerScore = getPlayerScore(ctx.getState(), playerId, true)
+    if (highestScore === null || playerScore > highestScore) {
+      highestPlayerIds = [playerId]
+      highestScore = playerScore
+    } else if (playerScore === highestScore) {
+      highestPlayerIds.push(playerId)
+    }
+  })
+
+  ctx.win(highestPlayerIds)
+}
+
+function gainToken(
   ctx: MetropolysContext,
   playerId: PlayerId,
   district: number,
@@ -88,7 +86,7 @@ async function gainToken(
   }
 }
 
-async function winBid(ctx: MetropolysContext, bid: Bid) {
+function winBid(ctx: MetropolysContext, bid: Bid) {
   const { district, height, playerId } = bid
 
   ctx.updateState({
@@ -105,26 +103,21 @@ async function winBid(ctx: MetropolysContext, bid: Bid) {
         },
       },
     },
-    players: {
-      [playerId]: {
-        buildings: {
-          [height]: {
-            $set: false,
-          },
-        },
+  })
+
+  ctx.updatePlayers(player => merge(player, { pass: false }))
+
+  ctx.updatePlayer(playerId, {
+    buildings: {
+      [height]: {
+        $set: false,
       },
     },
   })
 
   const token = ctx.getDistrict(district)?.token
   if (token !== undefined) {
-    await gainToken(ctx, playerId, district, token)
-  }
-
-  if (ctx.isEndOfGame(playerId)) {
-    await endGame(ctx)
-  } else {
-    await nextRound(ctx, playerId)
+    gainToken(ctx, playerId, district, token)
   }
 }
 
@@ -138,9 +131,15 @@ export async function resolveState(ctx: MetropolysContext) {
 
     const nextPlayerId = ctx.getNextPlayerId(highestBid)
     if (nextPlayerId !== undefined) {
-      await nextPlayerTurn(ctx, nextPlayerId)
+      nextPlayerTurn(ctx, nextPlayerId)
     } else {
-      await winBid(ctx, highestBid)
+      winBid(ctx, highestBid)
+
+      if (ctx.isEndOfGame()) {
+        endGame(ctx)
+      } else {
+        nextRound(ctx, highestBid.playerId)
+      }
     }
   }
 }

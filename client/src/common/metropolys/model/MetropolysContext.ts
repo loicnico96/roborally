@@ -7,6 +7,7 @@ import { MetropolysEvent } from "./MetropolysEvent"
 import {
   Bid,
   District,
+  getCurrentPlayerId,
   getDistrict,
   getHighestBid,
   isAvailable,
@@ -26,7 +27,7 @@ export class MetropolysContext extends GameContext<
   }
 
   getCurrentPlayerId(): PlayerId {
-    return this.getState().currentPlayer
+    return getCurrentPlayerId(this.getState())
   }
 
   getNextPlayerId(highestBid: Bid): PlayerId | undefined {
@@ -56,14 +57,24 @@ export class MetropolysContext extends GameContext<
           return false
         }
 
-        return nextPlayer.buildings.some(
+        const hasPlayableBuilding = nextPlayer.buildings.some(
           (available, height) => available && height > highestBid.height
         )
+        if (!hasPlayableBuilding) {
+          this.updatePlayer(nextPlayerId, { pass: { $set: true } })
+          return false
+        }
+
+        return true
       })
   }
 
-  isEndOfGame(playerId: PlayerId): boolean {
-    const { buildings } = this.getPlayer(playerId)
-    return buildings.every(available => !available)
+  isEndOfGame(): boolean {
+    return (
+      this.findPlayer(player => {
+        const { buildings } = player
+        return buildings.every(available => !available)
+      }) !== undefined
+    )
   }
 }
