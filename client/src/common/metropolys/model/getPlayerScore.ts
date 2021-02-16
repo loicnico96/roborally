@@ -2,10 +2,12 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { enumValues } from "common/utils/enums"
 
 import {
+  BuildingSize,
   COLOR_MISSION_SCORE,
   DistrictId,
   FANCY_TOKEN_SCORE,
   getAdjacentDistricts,
+  getBuildingSize,
   getDistrictColor,
   getSector,
   isBridge,
@@ -13,9 +15,12 @@ import {
   METRO_CARD_SCORE,
   METRO_TOKEN_SCORE,
   MissionShape,
+  PlayerCount,
   RUINS_CARD_SCORE,
   RUINS_TOKEN_SCORE,
   Sector,
+  SECTORS,
+  SECTOR_SCORE,
   SHAPE_MISSION_SCORE,
   TOWERS,
 } from "./constants"
@@ -24,10 +29,10 @@ import { getPlayer, MetropolysState } from "./MetropolysState"
 import { Token } from "./Token"
 
 export function getBuildDistricts(
-  gameState: MetropolysState,
+  state: MetropolysState,
   playerId: PlayerId
 ): DistrictId[] {
-  return gameState.districts.reduce<number[]>((result, district, index) => {
+  return state.districts.reduce<number[]>((result, district, index) => {
     if (district.building?.playerId === playerId) {
       result.push(index)
     }
@@ -37,20 +42,20 @@ export function getBuildDistricts(
 }
 
 export function getColorMissionCount(
-  gameState: MetropolysState,
+  state: MetropolysState,
   playerId: PlayerId
 ): number {
-  const { color } = getPlayer(gameState, playerId)
-  return getBuildDistricts(gameState, playerId).filter(
+  const { color } = getPlayer(state, playerId)
+  return getBuildDistricts(state, playerId).filter(
     district => getDistrictColor(district) === color
   ).length
 }
 
 export function getBridgeMissionCount(
-  gameState: MetropolysState,
+  state: MetropolysState,
   playerId: PlayerId
 ): number {
-  const builtDistricts = getBuildDistricts(gameState, playerId)
+  const builtDistricts = getBuildDistricts(state, playerId)
   const remainingDistricts = new Set(builtDistricts)
 
   return builtDistricts.filter(district => {
@@ -72,11 +77,11 @@ export function getBridgeMissionCount(
 }
 
 export function getChainMissionCount(
-  gameState: MetropolysState,
+  state: MetropolysState,
   playerId: PlayerId
 ): number {
   const chains: Set<DistrictId>[] = []
-  const districts = new Set(getBuildDistricts(gameState, playerId))
+  const districts = new Set(getBuildDistricts(state, playerId))
 
   while (districts.size > 0) {
     const chain: Set<DistrictId> = new Set()
@@ -98,10 +103,10 @@ export function getChainMissionCount(
 }
 
 export function getLakeMissionCount(
-  gameState: MetropolysState,
+  state: MetropolysState,
   playerId: PlayerId
 ): number {
-  const districts = new Set(getBuildDistricts(gameState, playerId))
+  const districts = new Set(getBuildDistricts(state, playerId))
 
   return LAKES.filter(adjacentDistricts => {
     const lakeDistricts = adjacentDistricts
@@ -119,10 +124,10 @@ export function getLakeMissionCount(
 }
 
 export function getSectorMissionCount(
-  gameState: MetropolysState,
+  state: MetropolysState,
   playerId: PlayerId
 ): number {
-  const builtDistricts = getBuildDistricts(gameState, playerId)
+  const builtDistricts = getBuildDistricts(state, playerId)
   return enumValues(Sector).filter(
     sector =>
       builtDistricts.filter(district => getSector(district) === sector)
@@ -131,10 +136,10 @@ export function getSectorMissionCount(
 }
 
 export function getTowerMissionCount(
-  gameState: MetropolysState,
+  state: MetropolysState,
   playerId: PlayerId
 ): number {
-  const districts = new Set(getBuildDistricts(gameState, playerId))
+  const districts = new Set(getBuildDistricts(state, playerId))
 
   return TOWERS.filter(adjacentDistricts => {
     const towerDistricts = adjacentDistricts
@@ -152,10 +157,10 @@ export function getTowerMissionCount(
 }
 
 export function getShapeMissionCount(
-  gameState: MetropolysState,
+  state: MetropolysState,
   playerId: PlayerId
 ): number {
-  const { shape } = getPlayer(gameState, playerId)
+  const { shape } = getPlayer(state, playerId)
 
   return {
     [MissionShape.BRIDGES]: getBridgeMissionCount,
@@ -163,24 +168,88 @@ export function getShapeMissionCount(
     [MissionShape.LAKES]: getLakeMissionCount,
     [MissionShape.SECTORS]: getSectorMissionCount,
     [MissionShape.TOWERS]: getTowerMissionCount,
-  }[shape](gameState, playerId)
+  }[shape](state, playerId)
+}
+
+export function getSectorBuildings(
+  state: MetropolysState,
+  sector: Sector,
+  playerId: PlayerId
+): BuildingSize[] {
+  const buildings: BuildingSize[] = []
+
+  state.districts.forEach(({ building }, district) => {
+    if (building?.playerId === playerId && getSector(district) === sector) {
+      buildings.push(getBuildingSize(building.height))
+    }
+  })
+
+  return buildings.sort((sizeA, sizeB) => sizeB - sizeA)
+}
+
+export function getSectorScorePlayerIds(
+  state: MetropolysState,
+  sector: Sector
+): PlayerId[] {
+  const buildings: Record<PlayerId, BuildingSize[]> = {}
+
+  state.playerOrder.forEach(playerId => {
+    buildings[playerId] = getSectorBuildings(state, sector, playerId)
+  })
+
+  const recursive = (playerIds: PlayerId[], index: number): PlayerId[] => {
+    let highestPlayerIds: PlayerId[] = []
+    let highestSize: BuildingSize | null = null
+
+    playerIds.forEach(playerId => {
+      if (buildings[playerId].length > index) {
+        const buildingSize = buildings[playerId][index]
+        if (highestSize === null || buildingSize > highestSize) {
+          highestPlayerIds = [playerId]
+          highestSize = buildingSize
+        } else if (highestSize === buildingSize) {
+          highestPlayerIds = [...highestPlayerIds, playerId]
+        }
+      }
+    })
+
+    switch (highestPlayerIds.length) {
+      case 0:
+        return index === 0 ? [] : highestPlayerIds
+      case 1:
+        return highestPlayerIds
+      default:
+        return recursive(highestPlayerIds, index + 1)
+    }
+  }
+
+  return recursive(state.playerOrder, 0)
+}
+
+export function getSectorCount(
+  state: MetropolysState,
+  playerId: PlayerId
+): number {
+  const playerCount = state.playerOrder.length as PlayerCount
+  return SECTORS[playerCount].filter(sector =>
+    getSectorScorePlayerIds(state, sector).includes(playerId)
+  ).length
 }
 
 export function getPlayerScore(
-  gameState: MetropolysState,
+  state: MetropolysState,
   playerId: PlayerId,
   isEndOfGameScoring: boolean = false
 ): number {
-  const { lastRuins, mostMetro } = gameState
-  const player = getPlayer(gameState, playerId)
+  const player = getPlayer(state, playerId)
+  const { lastRuins, mostMetro } = state
+  const { shape } = player
 
   let score = 0
 
-  score += getColorMissionCount(gameState, playerId) * COLOR_MISSION_SCORE
+  score += getColorMissionCount(state, playerId) * COLOR_MISSION_SCORE
 
-  score +=
-    getShapeMissionCount(gameState, playerId) *
-    SHAPE_MISSION_SCORE[player.shape]
+  score += getShapeMissionCount(state, playerId) * SHAPE_MISSION_SCORE[shape]
 
   score += getTokenCount(player, Token.FANCY) * FANCY_TOKEN_SCORE
 
@@ -197,7 +266,7 @@ export function getPlayerScore(
   }
 
   if (isEndOfGameScoring) {
-    // TODO: Sector scoring (only at end of game)
+    score += getSectorCount(state, playerId) * SECTOR_SCORE
   }
 
   return score

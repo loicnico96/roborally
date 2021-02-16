@@ -43,6 +43,8 @@ export const RUINS_TOKEN_SCORE = -1
 export const METRO_CARD_SCORE = 3
 export const RUINS_CARD_SCORE = -2
 
+export const SECTOR_SCORE = 5
+
 export type DistrictId = number
 
 export type DistrictInfo = {
