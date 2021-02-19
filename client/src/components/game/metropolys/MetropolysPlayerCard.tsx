@@ -1,4 +1,4 @@
-import React, { useCallback } from "react"
+import React, { useCallback, useEffect } from "react"
 import styled from "styled-components"
 
 import {
@@ -7,7 +7,6 @@ import {
   getShapeMissionCount,
 } from "common/metropolys/model/getPlayerScore"
 import {
-  getCurrentPlayerId,
   getHighestBid,
   getLastRuinsPlayerId,
   getMostMetroPlayerId,
@@ -170,13 +169,33 @@ const MetropolysPlayerCard = ({
   const colorMissionCount = useColorMissionCount(playerId)
   const shapeMissionCount = useShapeMissionCount(playerId)
 
-  const isCurrentPlayer = useMetropolysState(getCurrentPlayerId) === playerId
+  const isCurrentPlayer = !playerReady
   const isHighestBid = highestBid?.playerId === playerId
   const isLastRuins = useMetropolysState(getLastRuinsPlayerId) === playerId
   const isMostMetro = useMetropolysState(getMostMetroPlayerId) === playerId
   const isWinner = winners?.includes(playerId) ?? false
 
   const isScoreVisible = isCurrentUser || winners !== undefined
+  const minBidHeight = highestBid ? highestBid.height + 1 : 0
+
+  useEffect(() => {
+    if (isCurrentPlayer && isCurrentUser && selectedHeight === null) {
+      const smallestSelectableHeight = playerBuildings.findIndex(
+        (isAvailable, height) => isAvailable && height >= minBidHeight
+      )
+
+      if (smallestSelectableHeight >= 0) {
+        selectHeight(smallestSelectableHeight)
+      }
+    }
+  }, [
+    isCurrentPlayer,
+    isCurrentUser,
+    minBidHeight,
+    playerBuildings,
+    selectedHeight,
+    selectHeight,
+  ])
 
   return (
     <PlayerCardContainer>
@@ -184,10 +203,10 @@ const MetropolysPlayerCard = ({
         <PlayerCardContentRow>
           <PlayerCardName isPass={playerPass}>
             {playerName}
+            {isCurrentPlayer && " (bidding...)"}
             {isHighestBid && " (highest bid)"}
             {isWinner && " (winner)"}
             {playerPass && " (passed)"}
-            {playerReady || " (bidding...)"}
           </PlayerCardName>
           <PlayerCardScore>
             Score: {isScoreVisible ? playerScore : "??"}
@@ -195,12 +214,10 @@ const MetropolysPlayerCard = ({
         </PlayerCardContentRow>
         <PlayerCardContentRowBuildings>
           {playerBuildings.map((isAvailable, height) => {
-            const isPlayable =
-              !playerPass && (!highestBid || height > highestBid.height)
+            const isPlayable = height >= minBidHeight && !playerPass
             const isSelectable =
-              isCurrentUser && isCurrentPlayer && isAvailable && isPlayable
-            const isSelected =
-              isCurrentUser && isCurrentPlayer && height === selectedHeight
+              isCurrentPlayer && isCurrentUser && isAvailable && isPlayable
+            const isSelected = isSelectable && height === selectedHeight
             const onClick = () => {
               if (isSelectable) {
                 selectHeight(height)
