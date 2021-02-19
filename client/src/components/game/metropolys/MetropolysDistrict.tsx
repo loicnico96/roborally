@@ -10,8 +10,8 @@ import { useAuthContext } from "firestore/auth/AuthContext"
 
 import { useMetropolysContext } from "./hooks/useMetropolysContext"
 import { useMetropolysState } from "./hooks/useMetropolysState"
+import MetropolysToken from "./images/MetropolysToken"
 import MetropolysBuilding from "./MetropolysBuilding"
-import MetropolysToken from "./MetropolysToken"
 import { Positioned } from "./utils/Positioned"
 import { Selectable } from "./utils/Selectable"
 

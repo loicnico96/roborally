@@ -18,12 +18,12 @@ import { PlayerId } from "common/model/GameStateBasic"
 import { useMetropolysContext } from "./hooks/useMetropolysContext"
 import { useMetropolysPlayer } from "./hooks/useMetropolysPlayer"
 import { useMetropolysState } from "./hooks/useMetropolysState"
+import MetropolysMetroCard from "./images/MetropolysMetroCard"
+import MetropolysMissionColorCard from "./images/MetropolysMissionColorCard"
+import MetropolysMissionShapeCard from "./images/MetropolysMissionShapeCard"
+import MetropolysRuinsCard from "./images/MetropolysRuinsCard"
+import MetropolysToken from "./images/MetropolysToken"
 import MetropolysBuilding from "./MetropolysBuilding"
-import MetropolysMetroCard from "./MetropolysMetroCard"
-import MetropolysMissionColorCard from "./MetropolysMissionColorCard"
-import MetropolysMissionShapeCard from "./MetropolysMissionShapeCard"
-import MetropolysRuinsCard from "./MetropolysRuinsCard"
-import MetropolysToken from "./MetropolysToken"
 import {
   getPlayerBuildings,
   getPlayerColor,
