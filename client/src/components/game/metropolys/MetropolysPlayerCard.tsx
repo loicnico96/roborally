@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from "react"
+import React, { useCallback } from "react"
 import styled from "styled-components"
 
 import {
@@ -178,25 +178,6 @@ const MetropolysPlayerCard = ({
   const isScoreVisible = isCurrentUser || winners !== undefined
   const minBidHeight = highestBid ? highestBid.height + 1 : 0
 
-  useEffect(() => {
-    if (isCurrentPlayer && isCurrentUser && selectedHeight === null) {
-      const smallestSelectableHeight = playerBuildings.findIndex(
-        (isAvailable, height) => isAvailable && height >= minBidHeight
-      )
-
-      if (smallestSelectableHeight >= 0) {
-        selectHeight(smallestSelectableHeight)
-      }
-    }
-  }, [
-    isCurrentPlayer,
-    isCurrentUser,
-    minBidHeight,
-    playerBuildings,
-    selectedHeight,
-    selectHeight,
-  ])
-
   return (
     <PlayerCardContainer>
       <PlayerCardContentContainer>
@@ -217,7 +198,8 @@ const MetropolysPlayerCard = ({
             const isPlayable = height >= minBidHeight && !playerPass
             const isSelectable =
               isCurrentPlayer && isCurrentUser && isAvailable && isPlayable
-            const isSelected = isSelectable && height === selectedHeight
+            const isSelected =
+              isCurrentPlayer && isCurrentUser && height === selectedHeight
             const onClick = () => {
               if (isSelectable) {
                 selectHeight(height)

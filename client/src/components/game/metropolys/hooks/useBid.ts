@@ -26,11 +26,7 @@ export function useBid(): [() => Promise<void>, boolean] {
   const roomId = useRoomId()
 
   const { userId } = useAuthContext()
-  const {
-    resetSelection,
-    selectedDistrict,
-    selectedHeight,
-  } = useMetropolysContext()
+  const { selectedDistrict, selectedHeight } = useMetropolysContext()
 
   const isEnabled = useMetropolysState(
     useCallback(
@@ -52,10 +48,8 @@ export function useBid(): [() => Promise<void>, boolean] {
         game: GameType.METROPOLYS,
         roomId,
       })
-
-      resetSelection()
     }
-  }, [isEnabled, resetSelection, roomId, selectedDistrict, selectedHeight])
+  }, [isEnabled, roomId, selectedDistrict, selectedHeight])
 
   return [onBid, isEnabled]
 }

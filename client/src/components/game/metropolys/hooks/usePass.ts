@@ -7,7 +7,6 @@ import { useAuthContext } from "firestore/auth/AuthContext"
 import { triggerGameAction } from "functions/triggers"
 import { useRoomId } from "hooks/useRoomId"
 
-import { useMetropolysContext } from "./useMetropolysContext"
 import { useMetropolysState } from "./useMetropolysState"
 
 export function isAbleToPass(
@@ -21,7 +20,6 @@ export function usePass(): [() => Promise<void>, boolean] {
   const roomId = useRoomId()
 
   const { userId } = useAuthContext()
-  const { resetSelection } = useMetropolysContext()
 
   const isEnabled = useMetropolysState(
     useCallback(state => isAbleToPass(state, userId), [userId])
@@ -36,10 +34,8 @@ export function usePass(): [() => Promise<void>, boolean] {
           pass: true,
         },
       })
-
-      resetSelection()
     }
-  }, [isEnabled, resetSelection, roomId])
+  }, [isEnabled, roomId])
 
   return [onPass, isEnabled]
 }

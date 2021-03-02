@@ -47,7 +47,6 @@ const BoardViewport = styled.div`
 `
 
 const GamePage = () => {
-  const currentPlayerId = useMetropolysState(state => state.currentPlayer)
   const playerOrder = useMetropolysState(getPlayerOrder)
   const districts = getAvailableDistricts(playerOrder.length as PlayerCount)
 
@@ -58,7 +57,9 @@ const GamePage = () => {
       <ContentWrapper>
         <ContentMain>
           <BoardView>
-            {currentPlayerId === userId && <MetropolysActionBanner />}
+            {userId !== null && playerOrder.includes(userId) && (
+              <MetropolysActionBanner playerId={userId} />
+            )}
             <BoardViewport>
               <BoardImage src={MetropolysBoardImage} />
               {districts.map(district => (
