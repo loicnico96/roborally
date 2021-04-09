@@ -56,6 +56,15 @@ const MetropolysBuildingContainer = Selectable(styledWithProps<
   justify-content: center;
   opacity: ${props => props.opacity};
   width: ${props => props.width}px;
+  ${props =>
+    props.color === "transparent"
+      ? ""
+      : `
+    box-shadow: 1px 1px 1px rgba(0,0,0,0.5);
+    &:hover {
+      box-shadow: 2px 2px 2px rgba(0,0,0,0.5);
+    }
+  `}
 `)
 
 function getHeightLabel(height: number): string {
