@@ -239,7 +239,7 @@ export function getSectorCount(
 export function getPlayerScore(
   state: MetropolysState,
   playerId: PlayerId,
-  isEndOfGameScoring: boolean = false
+  isEndOfGameScoring: boolean = true
 ): number {
   const player = getPlayer(state, playerId)
   const { lastRuins, mostMetro } = state

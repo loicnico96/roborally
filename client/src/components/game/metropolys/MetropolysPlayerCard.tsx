@@ -4,6 +4,7 @@ import styled from "styled-components"
 import {
   getColorMissionCount,
   getPlayerScore,
+  getSectorCount,
   getShapeMissionCount,
 } from "common/metropolys/model/getPlayerScore"
 import {
@@ -21,6 +22,7 @@ import MetropolysMetroCard from "./images/MetropolysMetroCard"
 import MetropolysMissionColorCard from "./images/MetropolysMissionColorCard"
 import MetropolysMissionShapeCard from "./images/MetropolysMissionShapeCard"
 import MetropolysRuinsCard from "./images/MetropolysRuinsCard"
+import MetropolysSectorToken from "./images/MetropolysSectorToken"
 import MetropolysToken from "./images/MetropolysToken"
 import MetropolysBuilding from "./MetropolysBuilding"
 import {
@@ -65,7 +67,7 @@ const PlayerCardContentRow = styled.div`
 `
 
 const PlayerCardContentRowBuildings = styled(PlayerCardContentRow)`
-  gap: 16px;
+  justify-content: space-between;
 `
 
 const PlayerCardName = styled.div`
@@ -78,7 +80,7 @@ const PlayerCardName = styled.div`
 `
 
 const PlayerBuilding = styled(MetropolysBuilding)`
-  align-self: end;
+  align-self: flex-end;
 `
 
 const PlayerCardScore = styled.div``
@@ -99,6 +101,13 @@ const PlayerCardColorImage = styled(MetropolysMissionColorCard)`
 const PlayerCardShapeImage = styled(MetropolysMissionShapeCard)`
   cursor: help;
   height: 72px;
+  margin-right: 4px;
+  width: 48px;
+`
+
+const PlayerCardSectorTokenImage = styled(MetropolysSectorToken)`
+  cursor: help;
+  height: 48px;
   margin-right: 4px;
   width: 48px;
 `
@@ -129,10 +138,7 @@ const PlayerCardRuinsImage = styled(MetropolysRuinsCard)`
 
 function usePlayerScore(playerId: PlayerId): number {
   return useMetropolysState(
-    useCallback(
-      state => getPlayerScore(state, playerId, state.winners !== undefined),
-      [playerId]
-    )
+    useCallback(state => getPlayerScore(state, playerId), [playerId])
   )
 }
 
@@ -145,6 +151,12 @@ function useColorMissionCount(playerId: PlayerId): number {
 function useShapeMissionCount(playerId: PlayerId): number {
   return useMetropolysState(
     useCallback(state => getShapeMissionCount(state, playerId), [playerId])
+  )
+}
+
+function usePlayerSectorCount(playerId: PlayerId): number {
+  return useMetropolysState(
+    useCallback(state => getSectorCount(state, playerId), [playerId])
   )
 }
 
@@ -168,6 +180,7 @@ const MetropolysPlayerCard = ({
 
   const colorMissionCount = useColorMissionCount(playerId)
   const shapeMissionCount = useShapeMissionCount(playerId)
+  const playerSectorCount = usePlayerSectorCount(playerId)
 
   const isCurrentPlayer = !playerReady
   const isHighestBid = highestBid?.playerId === playerId
@@ -215,6 +228,7 @@ const MetropolysPlayerCard = ({
                 playerId={playerId}
                 onClick={onClick}
                 opacity={isPlayable ? 1.0 : 0.3}
+                size={30}
                 transparent={!isAvailable}
               />
             )
@@ -234,6 +248,10 @@ const MetropolysPlayerCard = ({
               isHidden={!isScoreVisible}
             />
             {isScoreVisible ? shapeMissionCount : "??"}
+          </PlayerCardCounter>
+          <PlayerCardCounter>
+            <PlayerCardSectorTokenImage />
+            {playerSectorCount}
           </PlayerCardCounter>
           <PlayerCardCounter>
             <PlayerCardTokenImage token={Token.FANCY} />

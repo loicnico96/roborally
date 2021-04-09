@@ -2,6 +2,8 @@ import React, { useCallback } from "react"
 import styled from "styled-components"
 
 import {
+  DistrictColor,
+  getDistrictColor,
   getDistrictPosition,
   isAdjacent,
 } from "common/metropolys/model/constants"
@@ -70,6 +72,14 @@ const MetropolysDistrict = ({ district }: MetropolysDistrictProps) => {
     }
   }, [district, isSelectable, selectDistrict])
 
+  const colorLabel = {
+    [DistrictColor.BLUE]: "Administration",
+    [DistrictColor.GRAY]: "Industrial",
+    [DistrictColor.GREEN]: "Lodgings",
+    [DistrictColor.ORANGE]: "Park",
+    [DistrictColor.RED]: "Mall",
+  }[getDistrictColor(district)]
+
   return (
     <>
       {building === undefined && bid === undefined && token === undefined && (
@@ -77,6 +87,7 @@ const MetropolysDistrict = ({ district }: MetropolysDistrictProps) => {
           isSelectable={isSelectable}
           isSelected={isSelected}
           onClick={onClick}
+          title={colorLabel}
           x={x}
           y={y}
         />

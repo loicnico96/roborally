@@ -1,4 +1,5 @@
 import React, { useEffect } from "react"
+import styled from "styled-components"
 
 import { getHighestBid } from "common/metropolys/model/MetropolysState"
 import { PlayerId } from "common/model/GameStateBasic"
@@ -15,6 +16,15 @@ import { getPlayerBuildings, getPlayerReady } from "./utils/getters"
 export type MetropolysActionBannerProps = {
   playerId: PlayerId
 }
+
+const ActionBanner = styled.div`
+  background-color: red;
+  border-top: 1px solid #888;
+  box-shadow: 0px 2px 2px #888;
+  padding: 8px;
+  text-align: center;
+  width: 100%;
+`
 
 const MetropolysActionBanner = ({ playerId }: MetropolysActionBannerProps) => {
   const [onBid, isBidEnabled] = useBid()
@@ -63,7 +73,7 @@ const MetropolysActionBanner = ({ playerId }: MetropolysActionBannerProps) => {
   }
 
   return (
-    <div>
+    <ActionBanner id="MetropolysActionBanner">
       {"It's your turn! Choose an action: "}
       <AsyncButton disabled={!isBidEnabled} onClick={onBid}>
         Bid
@@ -71,7 +81,7 @@ const MetropolysActionBanner = ({ playerId }: MetropolysActionBannerProps) => {
       <AsyncButton disabled={!isPassEnabled} onClick={onPass}>
         Pass
       </AsyncButton>
-    </div>
+    </ActionBanner>
   )
 }
 

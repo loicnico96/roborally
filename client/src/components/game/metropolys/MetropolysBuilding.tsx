@@ -19,23 +19,31 @@ export type PlayerBuildingProps = DivProps & {
   opacity?: number
   playerId: PlayerId
   showHeight?: boolean
+  size?: number
   transparent?: boolean
 }
 
 export const BUILDING_COLORS = ["red", "lightblue", "white", "gray"]
-export const BUILDING_WIDTH = 24
-export const BUILDING_HEIGHT = {
-  [BuildingSize.SMALL]: BUILDING_WIDTH * 1.0,
-  [BuildingSize.MEDIUM]: BUILDING_WIDTH * 1.5,
-  [BuildingSize.LARGE]: BUILDING_WIDTH * 2.0,
+export const BUILDING_WIDTH = 30
+export const BUILDING_HEIGHT: Record<BuildingSize, number> = {
+  [BuildingSize.SMALL]: 1.0,
+  [BuildingSize.MEDIUM]: 1.5,
+  [BuildingSize.LARGE]: 2.0,
+}
+
+export const BUILDING_TOOLTIP: Record<BuildingSize, string> = {
+  [BuildingSize.SMALL]: "Small building",
+  [BuildingSize.MEDIUM]: "Medium building",
+  [BuildingSize.LARGE]: "Tall building",
 }
 
 const MetropolysBuildingContainer = Selectable(styledWithProps<
   "div",
   {
     color: string
+    height: number
     opacity: number
-    size: BuildingSize
+    width: number
   }
 >("div")`
   align-items: center;
@@ -44,10 +52,10 @@ const MetropolysBuildingContainer = Selectable(styledWithProps<
   border-style: solid;
   color: black;
   display: flex;
-  height: ${props => BUILDING_HEIGHT[props.size]}px;
+  height: ${props => props.height}px;
   justify-content: center;
   opacity: ${props => props.opacity};
-  width: ${BUILDING_WIDTH}px;
+  width: ${props => props.width}px;
 `)
 
 function getHeightLabel(height: number): string {
@@ -61,6 +69,7 @@ const MetropolysBuilding = ({
   opacity = 1.0,
   playerId,
   showHeight = true,
+  size = BUILDING_WIDTH,
   transparent = false,
   ...props
 }: PlayerBuildingProps) => {
@@ -70,10 +79,12 @@ const MetropolysBuilding = ({
   return (
     <MetropolysBuildingContainer
       color={transparent ? "transparent" : BUILDING_COLORS[playerIndex]}
+      height={size * BUILDING_HEIGHT[getBuildingSize(height)]}
       isSelectable={isSelectable}
       isSelected={isSelected}
       opacity={opacity}
-      size={getBuildingSize(height)}
+      title={BUILDING_TOOLTIP[getBuildingSize(height)]}
+      width={size}
       {...props}
     >
       {showHeight ? getHeightLabel(height) : null}
