@@ -1,6 +1,7 @@
-import { useState } from "react"
+import { useMemo, useState } from "react"
 
 import { Collection } from "common/firestore/collections"
+import { GameType } from "common/GameSettings"
 import { RoomData } from "common/model/RoomData"
 import { SortDirection } from "common/utils/arrays"
 import { renderError } from "components/ui/PageError"
@@ -18,15 +19,30 @@ import { useRoomCollection } from "./hooks/useRoomCollection"
 
 export type RoomListProviderProps = {
   children: (rooms: LoadedResource<RoomData>[]) => JSX.Element
+  gameType?: GameType
 }
 
-const RoomListProvider = ({ children }: RoomListProviderProps) => {
+const RoomListProvider = ({ children, gameType }: RoomListProviderProps) => {
   const [roomsResource, setRoomsResource] = useState<
     Resource<LoadedResource<RoomData>[]>
   >(getLoadingResource(Collection.ROOM))
 
+  const filters = useMemo(() => {
+    if (gameType) {
+      return [
+        {
+          field: "game",
+          value: gameType,
+        },
+      ]
+    }
+
+    return []
+  }, [gameType])
+
   const collectionRef = useRoomCollection()
   useCollectionLoader(collectionRef, setRoomsResource, {
+    filters,
     sortDirection: SortDirection.DESC,
     sortField: "createdAt",
   })
