@@ -9,12 +9,18 @@ export type RoomListProps = {
   rooms: LoadedResource<RoomData>[]
 }
 
-const RoomList = ({ rooms }: RoomListProps) => (
-  <div>
-    {rooms.map(room => (
-      <RoomListItem key={room.id} roomId={room.id} room={room.data} />
-    ))}
-  </div>
-)
+const RoomList = ({ rooms }: RoomListProps) => {
+  if (rooms.length === 0) {
+    return <div>No rooms are available.</div>
+  }
+
+  return (
+    <div>
+      {rooms.map(room => (
+        <RoomListItem key={room.id} roomId={room.id} room={room.data} />
+      ))}
+    </div>
+  )
+}
 
 export default RoomList
