@@ -1,11 +1,11 @@
 import React from "react"
 
-import MetropolysMissionColorCardBack from "assets/metropolys/missionColorBack.png"
-import MetropolysMissionColorCardBlue from "assets/metropolys/missionColorBlue.jpg"
-import MetropolysMissionColorCardGray from "assets/metropolys/missionColorGray.jpg"
-import MetropolysMissionColorCardGreen from "assets/metropolys/missionColorGreen.jpg"
-import MetropolysMissionColorCardOrange from "assets/metropolys/missionColorOrange.jpg"
-import MetropolysMissionColorCardRed from "assets/metropolys/missionColorRed.jpg"
+import MetropolysMissionColorCardBack from "assets/metropolys/cards/missionColorBack.png"
+import MetropolysMissionColorCardBlue from "assets/metropolys/cards/missionColorBlue.jpg"
+import MetropolysMissionColorCardGray from "assets/metropolys/cards/missionColorGray.jpg"
+import MetropolysMissionColorCardGreen from "assets/metropolys/cards/missionColorGreen.jpg"
+import MetropolysMissionColorCardOrange from "assets/metropolys/cards/missionColorOrange.jpg"
+import MetropolysMissionColorCardRed from "assets/metropolys/cards/missionColorRed.jpg"
 import {
   COLOR_MISSION_SCORE,
   DistrictColor,

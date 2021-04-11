@@ -1,6 +1,6 @@
 import React from "react"
 
-import MetropolysRuinsCardImageUrl from "assets/metropolys/cardRuins.jpg"
+import MetropolysRuinsCardImageUrl from "assets/metropolys/cards/cardRuins.jpg"
 import { RUINS_CARD_SCORE } from "common/metropolys/model/constants"
 import { ImageProps } from "utils/dom"
 

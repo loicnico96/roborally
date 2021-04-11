@@ -1,6 +1,6 @@
 import React from "react"
 
-import MetropolysTokenSector from "assets/metropolys/tokenSector.png"
+import MetropolysTokenSector from "assets/metropolys/tokens/tokenSector.png"
 import { SECTOR_SCORE } from "common/metropolys/model/constants"
 import { ImageProps } from "utils/dom"
 

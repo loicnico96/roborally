@@ -1,13 +1,13 @@
 import React from "react"
 
-import Robot0 from "assets/robots/Robot0.png"
-import Robot1 from "assets/robots/Robot1.png"
-import Robot2 from "assets/robots/Robot2.png"
-import Robot3 from "assets/robots/Robot3.png"
-import Robot4 from "assets/robots/Robot4.png"
-import Robot5 from "assets/robots/Robot5.png"
-import Robot6 from "assets/robots/Robot6.png"
-import Robot7 from "assets/robots/Robot7.png"
+import Robot0 from "assets/roborally/robots/Robot0.png"
+import Robot1 from "assets/roborally/robots/Robot1.png"
+import Robot2 from "assets/roborally/robots/Robot2.png"
+import Robot3 from "assets/roborally/robots/Robot3.png"
+import Robot4 from "assets/roborally/robots/Robot4.png"
+import Robot5 from "assets/roborally/robots/Robot5.png"
+import Robot6 from "assets/roborally/robots/Robot6.png"
+import Robot7 from "assets/roborally/robots/Robot7.png"
 
 export const ROBOT_IMAGES = [
   Robot0,

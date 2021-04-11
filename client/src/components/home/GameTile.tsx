@@ -13,7 +13,7 @@ export type GameTileProps = {
   gameType: GameType
 }
 
-const StyledTile = styled(Box)`
+const StyledBox = styled(Box)`
   align-items: center;
   box-sizing: border-box;
   display: flex;
@@ -43,9 +43,9 @@ const GameTile = ({ gameType }: GameTileProps) => {
 
   return (
     <Link to={linkTo} title="Click to show rooms">
-      <StyledTile>
+      <StyledBox>
         <StyledImage src={imageUrl} />
-      </StyledTile>
+      </StyledBox>
       <StyledLabel>{getGameLabel(gameType)}</StyledLabel>
     </Link>
   )

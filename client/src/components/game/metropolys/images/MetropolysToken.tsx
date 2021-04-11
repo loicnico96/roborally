@@ -1,8 +1,8 @@
 import React from "react"
 
-import MetropolysTokenFancy from "assets/metropolys/tokenFancy.png"
-import MetropolysTokenMetro from "assets/metropolys/tokenMetro.png"
-import MetropolysTokenRuins from "assets/metropolys/tokenRuins.png"
+import MetropolysTokenFancy from "assets/metropolys/tokens/tokenFancy.png"
+import MetropolysTokenMetro from "assets/metropolys/tokens/tokenMetro.png"
+import MetropolysTokenRuins from "assets/metropolys/tokens/tokenRuins.png"
 import {
   FANCY_TOKEN_SCORE,
   METRO_CARD_SCORE,

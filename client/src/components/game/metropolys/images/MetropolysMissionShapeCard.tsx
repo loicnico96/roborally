@@ -1,11 +1,11 @@
 import React from "react"
 
-import MetropolysMissionShapeCardBack from "assets/metropolys/missionShapeBack.png"
-import MetropolysMissionShapeCardBridges from "assets/metropolys/missionShapeBridges.jpg"
-import MetropolysMissionShapeCardChains from "assets/metropolys/missionShapeChains.jpg"
-import MetropolysMissionShapeCardLakes from "assets/metropolys/missionShapeLakes.jpg"
-import MetropolysMissionShapeCardSectors from "assets/metropolys/missionShapeSectors.jpg"
-import MetropolysMissionShapeCardTowers from "assets/metropolys/missionShapeTowers.jpg"
+import MetropolysMissionShapeCardBack from "assets/metropolys/cards/missionShapeBack.png"
+import MetropolysMissionShapeCardBridges from "assets/metropolys/cards/missionShapeBridges.jpg"
+import MetropolysMissionShapeCardChains from "assets/metropolys/cards/missionShapeChains.jpg"
+import MetropolysMissionShapeCardLakes from "assets/metropolys/cards/missionShapeLakes.jpg"
+import MetropolysMissionShapeCardSectors from "assets/metropolys/cards/missionShapeSectors.jpg"
+import MetropolysMissionShapeCardTowers from "assets/metropolys/cards/missionShapeTowers.jpg"
 import {
   SHAPE_MISSION_SCORE,
   MissionShape,

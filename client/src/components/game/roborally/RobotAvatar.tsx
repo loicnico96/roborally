@@ -1,7 +1,7 @@
 import React from "react"
 import styled from "styled-components"
 
-import { ReactComponent as SleepIcon } from "assets/icons/Sleep.svg"
+import { ReactComponent as SleepIcon } from "assets/roborally/icons/Sleep.svg"
 import { PlayerId } from "common/model/GameStateBasic"
 
 import { EVENT_DURATION_NORMAL } from "../GameProvider"
