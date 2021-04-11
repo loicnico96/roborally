@@ -1,7 +1,7 @@
 import React from "react"
 import { BrowserRouter, Switch, Route, Redirect } from "react-router-dom"
 
-import HomeRoute from "components/HomeRoute"
+import HomeRoute from "components/home/HomeRoute"
 import LoginRoute from "components/login/LoginRoute"
 import RoomRoute from "components/room/RoomRoute"
 import RoomListRoute from "components/roomList/RoomListRoute"
