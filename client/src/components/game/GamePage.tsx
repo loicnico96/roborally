@@ -2,12 +2,12 @@ import React from "react"
 
 import { GameType } from "common/GameSettings"
 
-import GamePageMetropolys from "./metropolys/GamePage"
-import GamePageRoborally from "./roborally/GamePage"
-
 export type GamePageProps = {
   gameType: GameType
 }
+
+const GamePageMetropolys = React.lazy(() => import("./metropolys/GamePage"))
+const GamePageRoborally = React.lazy(() => import("./roborally/GamePage"))
 
 const GamePage = ({ gameType }: GamePageProps) => {
   switch (gameType) {

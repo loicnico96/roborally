@@ -6,6 +6,7 @@
   "author": "loicnico96 <loicnico96@gmail.com>",
   "license": "UNLICENSED",
   "scripts": {
+    "app:analyze": "cd client && yarn analyze",
     "app:build": "cd client && yarn build",
     "app:lint": "cd client && yarn lint",
     "app:lint:fix": "cd client && yarn lint:fix",
