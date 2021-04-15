@@ -11,6 +11,7 @@ import Box from "components/ui/Box"
 import { useAsyncHandler } from "hooks/useAsyncHandler"
 import { useRoomId } from "hooks/useRoomId"
 import { useRoomOptions } from "hooks/useRoomOptions"
+import { useTranslations } from "hooks/useTranslations"
 import { SelectEvent } from "utils/dom"
 
 import BoardSelector from "./BoardSelector"
@@ -60,6 +61,7 @@ function checkCheckpoints(options: RoborallyOptions): RoborallyOptions {
 
 const RoomOptionsRoborally = () => {
   const roomId = useRoomId()
+  const t = useTranslations()
   const options = useRoomOptions(roomId, GameType.ROBORALLY)
   const [changeOptions, isEnabled] = useChangeRoomOptions(roomId)
   const [changeOptionsSafe, isChanging] = useAsyncHandler(changeOptions)
@@ -138,11 +140,11 @@ const RoomOptionsRoborally = () => {
 
   return (
     <RoborallyOptionsContainer>
-      <RoborallyOptionsTitle>Options</RoborallyOptionsTitle>
+      <RoborallyOptionsTitle>{t.room.optionsTitle}</RoborallyOptionsTitle>
       {boardIds.map((boardId, index) => (
         <RoborallyOptionsRow key={`select-board-${index}`}>
           <RoborallyOptionsRowLabel>
-            Board {index + 1}:
+            {t.roborally.options.board.label({ index: index + 1 })}
           </RoborallyOptionsRowLabel>
           <BoardSelector
             isChangeDisabled={isChangeDisabled}
@@ -156,7 +158,7 @@ const RoomOptionsRoborally = () => {
       {isCanAddBoard && isEnabled && (
         <RoborallyOptionsRow key={`select-board-${boardCount}`}>
           <RoborallyOptionsRowLabel>
-            Board {boardCount + 1}:
+            {t.roborally.options.board.label({ index: boardCount + 1 })}
           </RoborallyOptionsRowLabel>
           <BoardSelector
             isChangeDisabled={isChangeDisabled}
@@ -166,7 +168,9 @@ const RoomOptionsRoborally = () => {
         </RoborallyOptionsRow>
       )}
       <RoborallyOptionsRow>
-        <RoborallyOptionsRowLabel>Checkpoints:</RoborallyOptionsRowLabel>
+        <RoborallyOptionsRowLabel>
+          {t.roborally.options.checkpoints.label}
+        </RoborallyOptionsRowLabel>
         <select
           disabled={isChangeDisabled}
           onChange={onChangeCheckpoints}
@@ -185,7 +189,7 @@ const RoomOptionsRoborally = () => {
             key={index}
             rowCount={boardCountX}
             src={getBoardImage(boardId)}
-            title={`Board ${index + 1}`}
+            title={t.roborally.options.board.tooltip({ index: index + 1 })}
           />
         ))}
       </RoborallyOptionsBoardImageContainer>

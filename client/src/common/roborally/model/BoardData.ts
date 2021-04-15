@@ -34,6 +34,13 @@ export type LaserData = {
   type: LaserType
 }
 
+export enum BoardCategory {
+  ORIGINAL = "Original",
+  ARMED_AND_DANGEROUS = "ArmedAndDangerous",
+  CRASH_AND_BURN = "CrashAndBurn",
+  CUSTOM = "Custom",
+}
+
 export enum BoardId {
   // Official boards
   BLAST_FURNACE = "BlastFurnace",
@@ -80,6 +87,31 @@ export type BoardData = {
   dimensions: Dimension
   features: FeatureType[]
   lasers: LaserData[]
+}
+
+const BOARD_CATEGORIES: Record<BoardId, BoardCategory> = {
+  [BoardId.ARKHAM_ASYLUM]: BoardCategory.CUSTOM,
+  [BoardId.BLAST_FURNACE]: BoardCategory.CRASH_AND_BURN,
+  [BoardId.CANNERY_ROW]: BoardCategory.ORIGINAL,
+  [BoardId.CHASM]: BoardCategory.ARMED_AND_DANGEROUS,
+  [BoardId.CHESS]: BoardCategory.ORIGINAL,
+  [BoardId.CHOP_SHOP]: BoardCategory.ORIGINAL,
+  [BoardId.CIRCUIT_TRAP]: BoardCategory.ARMED_AND_DANGEROUS,
+  [BoardId.CROSS]: BoardCategory.ORIGINAL,
+  [BoardId.EXCHANGE]: BoardCategory.ORIGINAL,
+  [BoardId.FLOOD_ZONE]: BoardCategory.ARMED_AND_DANGEROUS,
+  [BoardId.GEAR_BOX]: BoardCategory.ARMED_AND_DANGEROUS,
+  [BoardId.ISLAND]: BoardCategory.ORIGINAL,
+  [BoardId.MACHINE_SHOP]: BoardCategory.CRASH_AND_BURN,
+  [BoardId.LASER_MAZE]: BoardCategory.ARMED_AND_DANGEROUS,
+  [BoardId.MAELSTROM]: BoardCategory.ORIGINAL,
+  [BoardId.PIT_MAZE]: BoardCategory.ORIGINAL,
+  [BoardId.SPIN_ZONE]: BoardCategory.ORIGINAL,
+  [BoardId.VAULT]: BoardCategory.ORIGINAL,
+}
+
+export function getBoardCategory(boardId: BoardId): BoardCategory {
+  return BOARD_CATEGORIES[boardId]
 }
 
 export function getEmptyBoard(x: number, y: number): BoardData {

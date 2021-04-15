@@ -7,6 +7,7 @@ import { useFirestoreLoader } from "firestore"
 import { useActions } from "hooks/useActions"
 import { getRoomResource } from "hooks/useRoomData"
 import { useStore } from "hooks/useStore"
+import { useTranslations } from "hooks/useTranslations"
 import { isLoading } from "utils/resources"
 
 import { useRoomRef } from "./hooks/useRoomRef"
@@ -41,6 +42,8 @@ export function useRoomError(roomId: RoomId): Error | null {
 }
 
 const RoomProvider = ({ children, roomId }: RoomProviderProps) => {
+  const t = useTranslations()
+
   const { setRoomResource } = useActions()
 
   const roomLoading = useRoomLoading(roomId)
@@ -50,7 +53,7 @@ const RoomProvider = ({ children, roomId }: RoomProviderProps) => {
   useFirestoreLoader(roomRef, setRoomResource)
 
   if (roomLoading) {
-    return renderLoader("Loading room...")
+    return renderLoader(t.room.pageLoading)
   } else if (roomError !== null) {
     return renderError(roomError)
   } else {

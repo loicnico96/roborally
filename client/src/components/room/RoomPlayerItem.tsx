@@ -6,6 +6,7 @@ import { RoomId } from "common/model/RoomData"
 import Box from "components/ui/Box"
 import { useRoomData } from "hooks/useRoomData"
 import { useRoomId } from "hooks/useRoomId"
+import { useTranslations } from "hooks/useTranslations"
 
 import { getOwnerId } from "./utils/getters"
 
@@ -31,9 +32,10 @@ const RoomPlayerItem = ({ playerId }: RoomListItemProps) => {
   const roomId = useRoomId()
   const ownerId = useRoomData(roomId, getOwnerId)
   const playerName = usePlayerName(roomId, playerId)
+  const t = useTranslations()
   return (
     <RoomPlayerItemContainer>
-      {ownerId === playerId ? `${playerName} (owner)` : playerName}
+      {ownerId === playerId ? t.room.owner({ playerName }) : playerName}
     </RoomPlayerItemContainer>
   )
 }

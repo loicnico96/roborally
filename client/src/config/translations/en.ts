@@ -44,13 +44,53 @@ const CONFIG: TranslationConfig = {
       SpinZone: "Spin Zone",
       Vault: "Vault",
     },
+    boardCategory: {
+      ArmedAndDangerous: "Armed and Dangerous",
+      CrashAndBurn: "Crash and Burn",
+      Custom: "Custom",
+      Original: "Original",
+    },
     options: {
       boards: replace("Boards: {{boardNames}}"),
+      board: {
+        add: {
+          label: "Add a new board",
+        },
+        label: replace("Board {{index}}:"),
+        random: {
+          label: "Random",
+          tooltip: "Select a random board",
+        },
+        remove: {
+          label: "Remove",
+          tooltip: "Remove this board",
+        },
+        tooltip: replace("Board {{index}}"),
+      },
+      checkpoints: {
+        label: "Checkpoints:",
+      },
     },
   },
   room: {
+    closeRoom: {
+      label: "Close room",
+    },
+    enterRoom: {
+      label: "Enter room",
+    },
+    leaveRoom: {
+      label: "Leave room",
+    },
+    optionsTitle: "Options",
+    owner: replace("{{playerName}} (owner)"),
+    pageLoading: "Loading room",
+    pageTitle: "Room",
     players: replace("Players: {{playerNames}}"),
     roomTitle: replace("{{gameType}} - {{roomStatus}}"),
+    startGame: {
+      label: "Start game",
+    },
     status: {
       finished: "Finished",
       ongoing: "Ongoing",

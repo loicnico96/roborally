@@ -1,9 +1,14 @@
 import React from "react"
 
-import { BoardId } from "common/roborally/model/BoardData"
+import {
+  BoardCategory,
+  BoardId,
+  getBoardCategory,
+} from "common/roborally/model/BoardData"
 import { sortByAlpha } from "common/utils/arrays"
 import { randomEnumValue } from "common/utils/enums"
 import { validateEnum } from "common/utils/validation"
+import { TranslationConfig, useTranslations } from "hooks/useTranslations"
 import { SelectEvent } from "utils/dom"
 
 export type BoardSelectorProps = {
@@ -12,13 +17,6 @@ export type BoardSelectorProps = {
   onChange: (boardId: BoardId) => void
   onRemove?: () => void
   value: BoardId | null
-}
-
-enum BoardCategory {
-  ORIGINAL = "Original",
-  ARMED_AND_DANGEROUS = "ArmedAndDangerous",
-  CRASH_AND_BURN = "CrashAndBurn",
-  CUSTOM = "Custom",
 }
 
 const SELECT_NONE = "none"
@@ -30,67 +28,15 @@ const BOARD_CATEGORY_ORDER: BoardCategory[] = [
   BoardCategory.CUSTOM,
 ]
 
-function getBoardCategoryName(category: BoardCategory): string {
-  return {
-    [BoardCategory.ORIGINAL]: "Original",
-    [BoardCategory.ARMED_AND_DANGEROUS]: "Armed and Dangerous",
-    [BoardCategory.CRASH_AND_BURN]: "Crash and Burn",
-    [BoardCategory.CUSTOM]: "Custom",
-  }[category]
-}
-
-function getBoardCategory(boardId: BoardId): BoardCategory {
-  return {
-    [BoardId.ARKHAM_ASYLUM]: BoardCategory.CUSTOM,
-    [BoardId.BLAST_FURNACE]: BoardCategory.CRASH_AND_BURN,
-    [BoardId.CANNERY_ROW]: BoardCategory.ORIGINAL,
-    [BoardId.CHASM]: BoardCategory.ARMED_AND_DANGEROUS,
-    [BoardId.CHESS]: BoardCategory.ORIGINAL,
-    [BoardId.CHOP_SHOP]: BoardCategory.ORIGINAL,
-    [BoardId.CIRCUIT_TRAP]: BoardCategory.ARMED_AND_DANGEROUS,
-    [BoardId.CROSS]: BoardCategory.ORIGINAL,
-    [BoardId.EXCHANGE]: BoardCategory.ORIGINAL,
-    [BoardId.FLOOD_ZONE]: BoardCategory.ARMED_AND_DANGEROUS,
-    [BoardId.GEAR_BOX]: BoardCategory.ARMED_AND_DANGEROUS,
-    [BoardId.ISLAND]: BoardCategory.ORIGINAL,
-    [BoardId.MACHINE_SHOP]: BoardCategory.CRASH_AND_BURN,
-    [BoardId.LASER_MAZE]: BoardCategory.ARMED_AND_DANGEROUS,
-    [BoardId.MAELSTROM]: BoardCategory.ORIGINAL,
-    [BoardId.PIT_MAZE]: BoardCategory.ORIGINAL,
-    [BoardId.SPIN_ZONE]: BoardCategory.ORIGINAL,
-    [BoardId.VAULT]: BoardCategory.ORIGINAL,
-  }[boardId]
-}
-
-function getBoardName(boardId: BoardId): string {
-  return {
-    [BoardId.ARKHAM_ASYLUM]: "Arkham Asylum",
-    [BoardId.BLAST_FURNACE]: "Blast Furnace",
-    [BoardId.CANNERY_ROW]: "Cannery Row",
-    [BoardId.CHASM]: "Chasm",
-    [BoardId.CHESS]: "Chess",
-    [BoardId.CHOP_SHOP]: "Chop Shop",
-    [BoardId.CIRCUIT_TRAP]: "Circuit Trap",
-    [BoardId.CROSS]: "Cross",
-    [BoardId.EXCHANGE]: "Exchange",
-    [BoardId.FLOOD_ZONE]: "Flood Zone",
-    [BoardId.GEAR_BOX]: "Gear Box",
-    [BoardId.ISLAND]: "Island",
-    [BoardId.LASER_MAZE]: "Laser Maze",
-    [BoardId.MACHINE_SHOP]: "Machine Shop",
-    [BoardId.MAELSTROM]: "Maelstrom",
-    [BoardId.PIT_MAZE]: "Pit Maze",
-    [BoardId.SPIN_ZONE]: "Spin Zone",
-    [BoardId.VAULT]: "Vault",
-  }[boardId]
-}
-
-function getBoardsInCategory(category: BoardCategory): BoardId[] {
+function getBoardsInCategory(
+  category: BoardCategory,
+  t: TranslationConfig
+): BoardId[] {
   const boardIds = Object.values(BoardId).filter(
     boardId => getBoardCategory(boardId) === category
   )
 
-  return sortByAlpha(boardIds, boardId => getBoardName(boardId))
+  return sortByAlpha(boardIds, boardId => t.roborally.board[boardId])
 }
 
 const BoardSelector = ({
@@ -100,6 +46,8 @@ const BoardSelector = ({
   onRemove,
   value,
 }: BoardSelectorProps) => {
+  const t = useTranslations()
+
   function onSelectBoardId(event: SelectEvent) {
     if (event.target.value !== SELECT_NONE) {
       const boardId = validateEnum(BoardId)(event.target.value)
@@ -125,14 +73,14 @@ const BoardSelector = ({
       >
         {value === null && (
           <option key={SELECT_NONE} value={SELECT_NONE}>
-            Add a board
+            {t.roborally.options.board.add.label}
           </option>
         )}
         {BOARD_CATEGORY_ORDER.map(category => (
-          <optgroup key={category} label={getBoardCategoryName(category)}>
-            {getBoardsInCategory(category).map(boardId => (
+          <optgroup key={category} label={t.roborally.boardCategory[category]}>
+            {getBoardsInCategory(category, t).map(boardId => (
               <option key={boardId} value={boardId}>
-                {getBoardName(boardId)}
+                {t.roborally.board[boardId]}
               </option>
             ))}
           </optgroup>
@@ -141,17 +89,17 @@ const BoardSelector = ({
       <button
         disabled={isChangeDisabled}
         onClick={onSelectBoardIdRandom}
-        title="Select a random board"
+        title={t.roborally.options.board.random.tooltip}
       >
-        Random
+        {t.roborally.options.board.random.label}
       </button>
       {onRemove !== undefined && (
         <button
           disabled={isRemoveDisabled}
           onClick={onRemove}
-          title="Remove this board"
+          title={t.roborally.options.board.remove.tooltip}
         >
-          Remove
+          {t.roborally.options.board.remove.label}
         </button>
       )}
     </div>

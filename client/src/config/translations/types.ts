@@ -1,6 +1,6 @@
 import { GameType } from "common/GameSettings"
 import { RoomStatus } from "common/model/RoomData"
-import { BoardId } from "common/roborally/model/BoardData"
+import { BoardCategory, BoardId } from "common/roborally/model/BoardData"
 
 export type TranslationConfig = {
   games: Record<GameType, { name: string }>
@@ -20,13 +20,48 @@ export type TranslationConfig = {
   }
   roborally: {
     board: Record<BoardId, string>
+    boardCategory: Record<BoardCategory, string>
     options: {
       boards: Replace<"boardNames">
+      board: {
+        add: {
+          label: string
+        }
+        label: Replace<"index">
+        random: {
+          label: string
+          tooltip: string
+        }
+        remove: {
+          label: string
+          tooltip: string
+        }
+        tooltip: Replace<"index">
+      }
+      checkpoints: {
+        label: string
+      }
     }
   }
   room: {
+    closeRoom: {
+      label: string
+    }
+    enterRoom: {
+      label: string
+    }
+    leaveRoom: {
+      label: string
+    }
+    optionsTitle: string
+    owner: Replace<"playerName">
+    pageLoading: string
+    pageTitle: string
     players: Replace<"playerNames">
     roomTitle: Replace<"gameType" | "roomStatus">
+    startGame: {
+      label: string
+    }
     status: Record<RoomStatus, string>
   }
   roomList: {

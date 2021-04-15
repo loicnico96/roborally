@@ -5,6 +5,7 @@ import AsyncButton from "components/ui/AsyncButton"
 import PageContent from "components/ui/PageContent"
 import { useRoomData } from "hooks/useRoomData"
 import { useRoomId } from "hooks/useRoomId"
+import { useTranslations } from "hooks/useTranslations"
 
 import { useCloseRoom } from "./hooks/useCloseRoom"
 import { useEnterRoom } from "./hooks/useEnterRoom"
@@ -29,6 +30,7 @@ const RoomPageColumn = styled.div`
 const RoomPage = () => {
   const roomId = useRoomId()
   const playerIds = useRoomData(roomId, getPlayerIds)
+  const t = useTranslations()
   const [startGame, isStartGameEnabled] = useStartGame(roomId)
   const [enterRoom, isEnterRoomEnabled] = useEnterRoom(roomId)
   const [leaveRoom, isLeaveRoomEnabled] = useLeaveRoom(roomId)
@@ -41,16 +43,24 @@ const RoomPage = () => {
           <RoomPlayerItem key={playerId} playerId={playerId} />
         ))}
         {isStartGameEnabled && (
-          <AsyncButton onClick={startGame}>Start game</AsyncButton>
+          <AsyncButton onClick={startGame}>
+            {t.room.startGame.label}
+          </AsyncButton>
         )}
         {isEnterRoomEnabled && (
-          <AsyncButton onClick={enterRoom}>Enter room</AsyncButton>
+          <AsyncButton onClick={enterRoom}>
+            {t.room.enterRoom.label}
+          </AsyncButton>
         )}
         {isLeaveRoomEnabled && (
-          <AsyncButton onClick={leaveRoom}>Leave room</AsyncButton>
+          <AsyncButton onClick={leaveRoom}>
+            {t.room.leaveRoom.label}
+          </AsyncButton>
         )}
         {isCloseRoomEnabled && (
-          <AsyncButton onClick={closeRoom}>Close room</AsyncButton>
+          <AsyncButton onClick={closeRoom}>
+            {t.room.closeRoom.label}
+          </AsyncButton>
         )}
       </RoomPageColumn>
       <RoomPageColumn>
