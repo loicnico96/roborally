@@ -1,6 +1,8 @@
 import React, { useCallback } from "react"
 import styled from "styled-components"
 
+import { useTranslations } from "hooks/useTranslations"
+
 export type AuthPersistCheckboxProps = {
   isPersistEnabled: boolean
   setPersistEnabled: (enabled: boolean) => void
@@ -22,6 +24,8 @@ const AuthPersistCheckbox = ({
   isPersistEnabled,
   setPersistEnabled,
 }: AuthPersistCheckboxProps) => {
+  const t = useTranslations()
+
   const onToggle = useCallback(() => {
     setPersistEnabled(!isPersistEnabled)
   }, [isPersistEnabled, setPersistEnabled])
@@ -30,7 +34,7 @@ const AuthPersistCheckbox = ({
     <AuthPersistCheckboxContainer>
       <AuthPersistCheckboxInput
         checked={isPersistEnabled}
-        name="Remember me"
+        name={t.login.rememberMe}
         onChange={onToggle}
         type="checkbox"
       />

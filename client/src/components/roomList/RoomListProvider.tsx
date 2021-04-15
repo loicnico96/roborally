@@ -7,6 +7,7 @@ import { SortDirection } from "common/utils/arrays"
 import { renderError } from "components/ui/PageError"
 import { renderLoader } from "components/ui/PageLoader"
 import { useCollectionLoader } from "firestore/useCollectionLoader"
+import { useTranslations } from "hooks/useTranslations"
 import {
   Resource,
   isLoading,
@@ -23,6 +24,8 @@ export type RoomListProviderProps = {
 }
 
 const RoomListProvider = ({ children, gameType }: RoomListProviderProps) => {
+  const t = useTranslations()
+
   const [roomsResource, setRoomsResource] = useState<
     Resource<LoadedResource<RoomData>[]>
   >(getLoadingResource(Collection.ROOM))
@@ -48,7 +51,7 @@ const RoomListProvider = ({ children, gameType }: RoomListProviderProps) => {
   })
 
   if (isLoading(roomsResource)) {
-    return renderLoader("Loading rooms...")
+    return renderLoader(t.roomList.pageLoading)
   } else if (isError(roomsResource)) {
     return renderError(roomsResource.error)
   } else {

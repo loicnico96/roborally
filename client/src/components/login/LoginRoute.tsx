@@ -10,6 +10,7 @@ import { useAuthContext } from "firestore/auth/AuthContext"
 import { useSignInAnonymous } from "firestore/auth/useSignInAnonymous"
 import { useSignInWithGoogle } from "firestore/auth/useSignInWithGoogle"
 import { useSearchParams } from "hooks/useSearchParams"
+import { useTranslations } from "hooks/useTranslations"
 import { ROUTES } from "utils/navigation"
 
 import AuthPersistCheckbox from "./AuthPersistCheckbox"
@@ -18,6 +19,7 @@ const DEFAULT_PERSISTENCE = false
 const NAVIGATION_PARENTS = [BREADCRUMB_HOME]
 
 const LoginRoute = () => {
+  const t = useTranslations()
   const callbackRoute = useSearchParams().get("callback")
   const [isPersistEnabled, setPersistEnabled] = useState(DEFAULT_PERSISTENCE)
   const { isAuthenticated } = useAuthContext()
@@ -33,12 +35,14 @@ const LoginRoute = () => {
 
   return (
     <PageContainer>
-      <PageHeader parents={NAVIGATION_PARENTS} title="Login" />
+      <PageHeader parents={NAVIGATION_PARENTS} title={t.login.pageTitle} />
       <PageContent>
         <div>
-          <AsyncButton onClick={signInAnonymous}>Sign in as guest</AsyncButton>
+          <AsyncButton onClick={signInAnonymous}>
+            {t.login.signInAnonymous}
+          </AsyncButton>
           <AsyncButton onClick={signInWithGoogle}>
-            Sign in with Google
+            {t.login.signInWithGoogle}
           </AsyncButton>
         </div>
         <AuthPersistCheckbox

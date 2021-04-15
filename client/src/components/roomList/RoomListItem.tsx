@@ -3,9 +3,9 @@ import { Link } from "react-router-dom"
 import styled from "styled-components"
 
 import { GameType } from "common/GameSettings"
-import { RoomData, RoomId, RoomStatus } from "common/model/RoomData"
-import { BoardId } from "common/roborally/model/BoardData"
+import { RoomData, RoomId } from "common/model/RoomData"
 import Box from "components/ui/Box"
+import { useTranslations, TranslationConfig } from "hooks/useTranslations"
 import { ROUTES } from "utils/navigation"
 
 export type RoomListItemProps = {
@@ -13,65 +13,35 @@ export type RoomListItemProps = {
   room: RoomData
 }
 
-function formatRoomOptions(room: RoomData): string {
+function formatRoomOptions(t: TranslationConfig, room: RoomData): string[] {
   switch (room.game) {
     case GameType.ROBORALLY: {
       const { options } = room as RoomData<GameType.ROBORALLY>
-      const boardNames = options.boardIds.map(
-        boardId =>
-          ({
-            [BoardId.ARKHAM_ASYLUM]: "Arkham Asylum",
-            [BoardId.BLAST_FURNACE]: "Blast Furnace",
-            [BoardId.CANNERY_ROW]: "Cannery Row",
-            [BoardId.CHASM]: "Chasm",
-            [BoardId.CHESS]: "Chess",
-            [BoardId.CHOP_SHOP]: "Chop Shop",
-            [BoardId.CIRCUIT_TRAP]: "Circuit Trap",
-            [BoardId.CROSS]: "Cross",
-            [BoardId.EXCHANGE]: "Exchange",
-            [BoardId.FLOOD_ZONE]: "Flood Zone",
-            [BoardId.GEAR_BOX]: "Gear Box",
-            [BoardId.ISLAND]: "Island",
-            [BoardId.LASER_MAZE]: "Laser Maze",
-            [BoardId.MACHINE_SHOP]: "Machine Shop",
-            [BoardId.MAELSTROM]: "Maelstrom",
-            [BoardId.PIT_MAZE]: "Pit Maze",
-            [BoardId.SPIN_ZONE]: "Spin Zone",
-            [BoardId.VAULT]: "Vault",
-          }[boardId])
-      )
+      const boardNames = options.boardIds
+        .map(boardId => t.roborally.board[boardId])
+        .join(", ")
 
-      return `Boards: ${boardNames.join(", ")}`
+      return [t.roborally.options.boards({ boardNames })]
     }
 
     default:
-      return ""
+      return []
   }
 }
 
-function formatRoomInfo(room: RoomData): string {
-  const gameName = {
-    metropolys: "Metropolys",
-    roborally: "Roborally",
-  }[room.game]
+function formatRoomInfo(t: TranslationConfig, room: RoomData): string {
+  const gameType = t.games[room.game].name
+  const roomStatus = t.room.status[room.status]
 
-  const statusName = {
-    [RoomStatus.OPENED]: "Open",
-    [RoomStatus.ONGOING]: "Ongoing",
-    [RoomStatus.FINISHED]: "Finished",
-  }[room.status]
-
-  const playerNames = room.playerOrder.map(
-    playerId => room.players[playerId].name
-  )
+  const playerNames = room.playerOrder
+    .map(playerId => room.players[playerId].name)
+    .join(", ")
 
   return [
-    `${gameName.toUpperCase()} - ${statusName.toUpperCase()}`,
-    formatRoomOptions(room),
-    `Players: ${playerNames.join(", ")}`,
-  ]
-    .filter(Boolean)
-    .join("\n")
+    t.room.roomTitle({ gameType, roomStatus }).toUpperCase(),
+    ...formatRoomOptions(t, room),
+    t.room.players({ playerNames }),
+  ].join("\n")
 }
 
 const RoomListItemContainer = styled(Box)`
@@ -79,10 +49,14 @@ const RoomListItemContainer = styled(Box)`
   white-space: pre-line;
 `
 
-const RoomListItem = ({ roomId, room }: RoomListItemProps) => (
-  <Link to={ROUTES.room(roomId)}>
-    <RoomListItemContainer>{formatRoomInfo(room)}</RoomListItemContainer>
-  </Link>
-)
+const RoomListItem = ({ roomId, room }: RoomListItemProps) => {
+  const t = useTranslations()
+
+  return (
+    <Link to={ROUTES.room(roomId)}>
+      <RoomListItemContainer>{formatRoomInfo(t, room)}</RoomListItemContainer>
+    </Link>
+  )
+}
 
 export default RoomListItem

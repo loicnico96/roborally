@@ -2,8 +2,7 @@ import React, { useCallback } from "react"
 
 import { GameType } from "common/GameSettings"
 import { enumValues, isEnum } from "common/utils/enums"
-
-import { getGameLabel } from "./utils/getters"
+import { useTranslations } from "hooks/useTranslations"
 
 export type SelectProps = React.SelectHTMLAttributes<HTMLSelectElement>
 
@@ -15,6 +14,8 @@ export type GameSelectProps = Omit<SelectProps, "onChange" | "value"> & {
 const VALUE_ALL = "all"
 
 const GameSelect = ({ gameType, onChange, ...props }: GameSelectProps) => {
+  const t = useTranslations()
+
   const onSelect = useCallback(
     (e: React.ChangeEvent<HTMLSelectElement>) => {
       const { value } = e.target
@@ -26,11 +27,11 @@ const GameSelect = ({ gameType, onChange, ...props }: GameSelectProps) => {
   return (
     <select {...props} onChange={onSelect} value={gameType ?? VALUE_ALL}>
       <option key={VALUE_ALL} value={VALUE_ALL}>
-        All games
+        {t.roomList.allGames}
       </option>
       {enumValues(GameType).map(game => (
         <option key={game} value={game}>
-          {getGameLabel(game)}
+          {t.games[game].name}
         </option>
       ))}
     </select>

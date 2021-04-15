@@ -6,6 +6,7 @@ import { enumValues } from "common/utils/enums"
 import PageContainer from "components/ui/PageContainer"
 import PageContent from "components/ui/PageContent"
 import PageHeader from "components/ui/PageHeader"
+import { useTranslations } from "hooks/useTranslations"
 
 import GameTile from "./GameTile"
 
@@ -14,15 +15,19 @@ const StyledPageContent = styled(PageContent)`
   gap: 0px 48px;
 `
 
-const HomeRoute = () => (
-  <PageContainer>
-    <PageHeader title="Home" />
-    <StyledPageContent>
-      {enumValues(GameType).map(gameType => (
-        <GameTile key={gameType} gameType={gameType} />
-      ))}
-    </StyledPageContent>
-  </PageContainer>
-)
+const HomeRoute = () => {
+  const t = useTranslations()
+
+  return (
+    <PageContainer>
+      <PageHeader title={t.home.pageTitle} />
+      <StyledPageContent>
+        {enumValues(GameType).map(game => (
+          <GameTile key={game} game={game} />
+        ))}
+      </StyledPageContent>
+    </PageContainer>
+  )
+}
 
 export default HomeRoute

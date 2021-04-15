@@ -2,11 +2,11 @@ import React, { useCallback } from "react"
 import styled from "styled-components"
 
 import AsyncButton from "components/ui/AsyncButton"
+import { useTranslations } from "hooks/useTranslations"
 
 import GameSelect from "./GameSelect"
 import { useCreateRoom } from "./hooks/useCreateRoom"
 import { useGameParam } from "./hooks/useGameParam"
-import { getGameLabel } from "./utils/getters"
 
 const StyledContainer = styled.div`
   margin-bottom: 24px;
@@ -18,6 +18,8 @@ const StyledGameSelect = styled(GameSelect)`
 `
 
 const RoomListPageHeader = () => {
+  const t = useTranslations()
+
   const { gameType, setGameType } = useGameParam()
   const [createRoom, isCreateRoomEnabled] = useCreateRoom()
 
@@ -28,8 +30,8 @@ const RoomListPageHeader = () => {
   }, [createRoom, gameType])
 
   const createRoomTooltip = gameType
-    ? `Create a room for ${getGameLabel(gameType)}`
-    : "You must select a game"
+    ? t.roomList.createRoom.tooltip({ gameType })
+    : t.roomList.createRoom.noGameSelected
 
   return (
     <StyledContainer>
@@ -39,7 +41,7 @@ const RoomListPageHeader = () => {
         disabled={!isCreateRoomEnabled || !gameType}
         title={createRoomTooltip}
       >
-        Create room
+        {t.roomList.createRoom.label}
       </AsyncButton>
     </StyledContainer>
   )

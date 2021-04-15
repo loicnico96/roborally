@@ -5,12 +5,12 @@ import styled from "styled-components"
 import HomeImageMetropolys from "assets/metropolys/home.jpg"
 import HomeImageRoborally from "assets/roborally/home.jpg"
 import { GameType } from "common/GameSettings"
-import { getGameLabel } from "components/roomList/utils/getters"
 import Box from "components/ui/Box"
+import { useTranslations } from "hooks/useTranslations"
 import { ROUTES, withSearchParams } from "utils/navigation"
 
 export type GameTileProps = {
-  gameType: GameType
+  game: GameType
 }
 
 const StyledBox = styled(Box)`
@@ -33,20 +33,21 @@ const StyledLabel = styled.div`
   text-align: center;
 `
 
-const GameTile = ({ gameType }: GameTileProps) => {
-  const linkTo = withSearchParams(ROUTES.roomList(), { game: gameType })
+const IMAGES = {
+  [GameType.METROPOLYS]: HomeImageMetropolys,
+  [GameType.ROBORALLY]: HomeImageRoborally,
+}
 
-  const imageUrl = {
-    [GameType.METROPOLYS]: HomeImageMetropolys,
-    [GameType.ROBORALLY]: HomeImageRoborally,
-  }[gameType]
+const GameTile = ({ game }: GameTileProps) => {
+  const linkTo = withSearchParams(ROUTES.roomList(), { game })
+  const t = useTranslations()
 
   return (
-    <Link to={linkTo} title="Click to show rooms">
+    <Link to={linkTo} title={t.gameTile.tooltip}>
       <StyledBox>
-        <StyledImage src={imageUrl} />
+        <StyledImage src={IMAGES[game]} />
       </StyledBox>
-      <StyledLabel>{getGameLabel(gameType)}</StyledLabel>
+      <StyledLabel>{t.games[game].name}</StyledLabel>
     </Link>
   )
 }
